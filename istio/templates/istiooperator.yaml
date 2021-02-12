@@ -1,0 +1,52 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: {{ include "istio.fullname" . }}
+  labels:
+    {{- include "istio.labels" . | nindent 4 }}
+spec:
+  profile: default
+  {{ with .Values.components }}
+  components:
+    pilot:
+      enabled: true
+      k8s:
+        nodeSelector:
+          {{- toYaml $.Values.nodeSelector | nindent 10 }}
+        tolerations:
+          {{- toYaml $.Values.tolerations | nindent 10 }}
+    ingressGateways:
+    {{- with .defaultIngressGateway }}
+    - enabled: {{ .enabled }}
+      name: "{{ .name }}"
+      k8s:
+        nodeSelector:
+          {{- toYaml $.Values.nodeSelector | nindent 10 }}
+        tolerations:
+          {{- toYaml $.Values.tolerations | nindent 10 }}
+        serviceAnnotations:
+          {{- if .service.azureLoadBalancerInternal }}
+          service.beta.kubernetes.io/azure-load-balancer-internal: "{{ .service.azureLoadBalancerInternal }}"
+          {{- end }}
+        service:
+          type: {{ .service.type }}
+          loadBalancerIP: {{ .service.loadBalancerIP }}
+          ports:
+          - port: 15021
+            targetPort: 15021
+            name: status-port
+          - port: 80
+            targetPort: 8080
+            name: http2
+          - port: 443
+            targetPort: 8443
+            name: https
+            # This is the port where sni routing happens
+          - port: 15443
+            targetPort: 15443
+            name: tls
+    {{- end }}
+    {{- range .ingressGateways }}
+    - {{ toYaml . | indent 6 }}
+    {{ end }}
+  {{ end }}

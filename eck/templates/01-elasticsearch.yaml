@@ -1,0 +1,75 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
+spec:
+  isCA: true
+  dnsNames:
+    - es-{{ .Values.elasticsearch.name }}-es-http
+    - es-{{ .Values.elasticsearch.name }}-es-http.{{ .Values.elasticsearch.namespace }}.svc
+    - es-{{ .Values.elasticsearch.name }}-es-http.{{ .Values.elasticsearch.namespace }}.svc.cluster.local
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned
+  secretName: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
+
+---
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: es-{{ .Values.elasticsearch.name }}
+#  namespace: {{ .Release.namespace }}
+spec:
+  version: 7.10.2
+  {{- with .Values.elasticsearch.secureSettings }}
+  secureSettings:
+  - secretName: {{ toYaml . }}
+  {{- end }}
+  nodeSets:
+  {{- with .Values.elasticsearch.nodeSets }}
+    {{- toYaml . | nindent 2 }}
+  {{- end }}
+  http:
+    service:
+      metadata:
+        annotations:
+        {{- with .Values.elasticsearch.http.service.metadata.annotations }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      spec:
+      {{- with .Values.elasticsearch.http.service.spec }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+#    tls:
+#      certificate:
+#        secretName: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
+
+---
+{{- if .Values.elasticsearch.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+  {{- with .Values.elasticsearch.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  name: elasticsearch-http
+#  namespace: {{ .Release.namespace }}
+spec:
+  rules:
+  - host: {{ .Values.elasticsearch.ingress.url }}
+    http:
+      paths:
+      - backend:
+          serviceName: es-{{ .Values.elasticsearch.name }}-es-http
+          servicePort: 9200
+        path: /
+  tls:
+  - hosts:
+    - {{ .Values.elasticsearch.ingress.url }}
+    secretName: es-{{ .Values.elasticsearch.name }}-ingress-cert
+  {{- end }}

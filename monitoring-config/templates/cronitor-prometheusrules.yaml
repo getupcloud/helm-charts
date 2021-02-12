@@ -1,0 +1,21 @@
+{{ if .Values.cronitor.enabled }}
+apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+kind: PrometheusRule
+metadata:
+  name: {{ include "monitoring-config.fullname" . }}-cronitor
+  labels:
+    {{- include "monitoring-config.labels" . | nindent 4 }}
+    release: prometheus-operator
+spec:
+  groups:
+  - name: cronitor.rules
+    rules:
+    - alert: CronitorWatchdog
+      expr: vector(time()) % 120 < 60
+      labels:
+        severity: none
+      annotations:
+        description: This is a Watchdog meant to ensure that the entire Alerting pipeline
+          is functional, posting continuos alerts to cronitor.io
+        summary: Cronitor watchdog alert
+{{ end }}

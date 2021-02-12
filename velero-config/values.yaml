@@ -1,0 +1,31 @@
+schedules:
+  storageClasses:
+    enabled: true
+    schedule: '0 0 */7 * *'
+    ttl: 720h0m0s
+    storageLocation: default
+    #labelSelector: {}
+
+  volumes:
+    enabled: true
+    schedule: '0 3 * * *'
+    ttl: 168h0m0s
+    storageLocation: default
+    #labelSelector: {}
+
+  resources:
+    enabled: true
+    schedule: '0 */12 * * *'
+    ttl: 720h0m0s
+    storageLocation: default
+    includedNamespaces:
+    - "*"
+    excludedNamespaces:
+    - kube-system
+    - kube-public
+    - monitoring
+    - velero
+    includedResources:
+    - "*"
+    includeClusterResources: true
+    #labelSelector: {}

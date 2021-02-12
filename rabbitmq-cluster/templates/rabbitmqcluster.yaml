@@ -1,0 +1,26 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ include "rabbitmq-cluster.fullname" . }}
+  labels:
+    {{- include "rabbitmq-cluster.labels" . | nindent 4 }}
+spec:
+  affinity:
+    {{- toYaml .Values.affinity | nindent 4 }}
+  image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+  override:
+    {{ toYaml .Values.override | nindent 4}}
+  persistence:
+    {{- toYaml .Values.persistence | nindent 4 }}
+  rabbitmq:
+    additionalConfig: {{ .Values.additionalConfig }}
+  replicas: {{ .Values.replicas }}
+  resources:
+    {{- toYaml .Values.resources | nindent 4 }}
+  service:
+    type: ClusterIP
+  terminationGracePeriodSeconds: 300
+  tls:
+    {{- toYaml .Values.tls | nindent 4 }}
+  tolerations:
+    {{- toYaml .Values.tolerations | nindent 4 }}

@@ -1,0 +1,62 @@
+{{ if .Values.enabled }}
+apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+kind: PrometheusRule
+metadata:
+  name: {{ include "monitoring-config.fullname" . }}-velero
+  labels:
+    {{- include "monitoring-config.labels" . | nindent 4 }}
+    release: prometheus-operator
+spec:
+  groups:
+  - name: velero.rules
+    rules:
+    - alert: BackupNotActive
+      expr: absent(kube_pod_container_status_ready{namespace="velero"} == 1)
+      for: 10m
+      labels:
+        service: backup
+        severity: critical
+      annotations:
+        description: "Velero is not installed or has stopped"
+        summary: "Velero not active"
+
+    - alert: BackupNotConfigured
+      expr: velero_backup_total == 0
+      for: 1h
+      labels:
+        service: backup
+        severity: critical
+      annotations:
+        description: "No backups found"
+        summary: "Velero has not created any backups in the last hour. Please check Schedules."
+
+    - alert: BackupNotConfigured
+      expr: rate(velero_backup_total[1h]) < 0
+      for: 1h
+      labels:
+        service: backup
+        severity: critical
+      annotations:
+        description: "No new backups found"
+        summary: "Velero has not created any backups in the last hour. Please check Schedules."
+
+    - alert: BackupFailed
+      expr: velero_backup_failure_total > 0
+      for: 10m
+      labels:
+        service: backup
+        severity: warning
+      annotations:
+        description: "Velero backup failed"
+        summary: "Some velero backups has failed"
+
+    - alert: BackupFailed
+      expr: velero_backup_failure_total > 1
+      for: 10m
+      labels:
+        service: backup
+        severity: critical
+      annotations:
+        description: "Velero backup failed"
+        summary: "Too many velero backups has failed"
+{{ end }}

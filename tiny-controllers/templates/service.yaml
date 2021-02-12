@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tiny-controllers.fullname" . }}
+  {{- with .Values.serviceAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 8 }}
+  {{- end }}
+  labels:
+    {{- include "tiny-controllers.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - name: validator
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+{{- if .Values.metrics.enabled }}
+  - name: metrics
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+{{- end }}
+  selector:
+    {{- include "tiny-controllers.selectorLabels" . | nindent 4 }}

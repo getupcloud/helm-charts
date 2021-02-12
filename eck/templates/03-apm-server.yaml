@@ -1,0 +1,89 @@
+{{- if .Values.apm.enabled }}
+---
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: apm-{{ .Values.elasticsearch.name }}
+#  namespace: {{ .Release.namespace }}
+spec:
+  version: 7.10.2
+  count: {{ .Values.apm.count }}
+  elasticsearchRef:
+    name: es-{{ .Values.elasticsearch.name }}
+#    namespace: {{ .Release.namespace }}
+  kibanaRef:
+    name: kb-{{ .Values.elasticsearch.name }}
+#    namespace: {{ .Release.namespace }}
+  http:
+    service:
+      {{- with .Values.apm.service.annotations }}
+      metadata:
+        annotations:
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
+      spec:
+      {{- with .Values.apm.service.type }}
+        type: {{ toYaml . }}
+      {{- end }}
+#    tls:
+#      certificate:
+#        secretName: apm-{{ .Values.elasticsearch.name }}-ingress-cert
+  podTemplate:
+    metadata:
+      labels:
+      {{- with .Values.apm.pod.labels }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+        app: apm-server
+    spec:
+      containers:
+      - name: apm-server
+        {{- with .Values.apm.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.apm.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.apm.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end }}
+
+---
+{{- if .Values.apm.ingress.enabled }}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+  {{- with .Values.apm.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Accept:,Accept-Encoding,Accept-Language:,Cache-Control,Connection,DNT,Pragma,Host,Referer,Upgrade-Insecure-Requests,User-Agent,elastic-apm-traceparent"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-max-age: "1728000"
+  name: apm-http
+#  namespace: {{ .Release.namespace }}
+spec:
+  rules:
+  - host: {{ .Values.apm.ingress.url }}
+    http:
+      paths:
+      - backend:
+          serviceName: apm-{{ .Values.elasticsearch.name }}-apm-http
+          servicePort: 8200
+        path: /
+  tls:
+  - hosts:
+    - {{ .Values.apm.ingress.url }}
+    secretName: apm-{{ .Values.elasticsearch.name }}-ingress-cert
+  {{- end }}

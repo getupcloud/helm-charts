@@ -1,0 +1,167 @@
+elasticsearch:
+  name: esearch
+  secureSettings:
+    esearch-secret
+
+  nodeSets:
+  - name: master
+    count: 1
+    config:
+      node.roles: ["master"]
+    podTemplate:
+      metadata:
+        labels:
+          app: elasticsearch
+          elastic: master
+      spec:
+        nodeSelector: {}
+          # role: elastic
+        tolerations: []
+        #- effect: NoSchedule
+        #  key: dedicated
+        #  value: elastic
+        #- effect: NoSchedule
+        #  key: log
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: 3Gi
+              cpu: 1000m
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms2g -Xmx2g"
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: default
+  - name: datanode
+    count: 1
+    config:
+      node.roles: ["data", "ingest", "ml", "transform"]
+    podTemplate:
+      metadata:
+        labels:
+          app: elasticsearch
+          elastic: datanode
+      spec:
+        nodeSelector: {}
+          # role: elastic
+        tolerations: []
+        #- effect: NoSchedule
+        #  key: dedicated
+        #  value: elastic
+        #- effect: NoSchedule
+        #  key: log
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: 3Gi
+              cpu: 1000m
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms2g -Xmx2g"
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: default
+
+  http:
+    service:
+      metadata:
+        annotations: {}
+      spec:
+        type: ClusterIP
+ 
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned
+    url: elastic.example.com
+
+kibana:
+  enabled: true
+  count: 1
+  xpack:
+    ## PLEASE, USE RANDOM KEYS BELOW
+    security:
+      encryptionKey: dGhpcy1pcy1teS1zdXBlci11bnNlY3VyZS1rZXktSS1zaG91bGQtaGF2ZS1jcmVhdGVkLWEtbW9yZS1zZWN1cmUta2V5Cg==
+    encryptedSavedObjects:
+      encryptionKey: aGVyZS1pLWFtLXVzaW5nLWEtZGVmYXVsdC1pbnNlY3VyZS1rZXktYWdhaW4tLS1zaWdoCg==
+  service:
+    annotations: {}
+    type: ClusterIP
+  pod:
+    labels: []
+  nodeSelector: {}
+    # role: elastic
+  tolerations: []
+  #- effect: NoSchedule
+  #  key: elastic
+  #  value: true
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned
+    url: kibana.example.com
+
+
+apm:
+  enabled: true
+  count: 1
+  service:
+    annotations: {}
+    type: ClusterIP
+  pod:
+    labels: []
+  nodeSelector: {}
+    # role: elastic
+  tolerations: []
+  #- effect: NoSchedule
+  #  key: elastic
+  #  value: true
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 500m
+    requests:
+      memory: 128Mi
+      cpu: 50m
+  # APM just work serving LoadBalancer service, APM URL must be set to IP of apm service LoadBalancer
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: selfsigned
+    url: apm.example.com
+

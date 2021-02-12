@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tiny-controllers.fullname" . }}
+  labels:
+    {{- include "tiny-controllers.labels" . | nindent 4 }}
+data:
+  config.yaml: |-
+    resources:
+    {{- with .Values.controllers }}
+    {{- if .job.enabled }}
+    - group: batch
+      version: v1
+      kind: Job
+      reconciler:
+        exec:
+          command: /app/main.py
+          args:
+          - job
+          - reconcile
+          debug: false
+    {{- end }}
+
+    {{- if .node.enabled }}
+    - group: ""
+      version: v1
+      kind: Node
+      reconciler:
+        exec:
+          command: /app/main.py
+          args:
+          - node
+          - reconcile
+          debug: false
+    {{- end }}
+
+    {{- if .volume.enabled }}
+    - kind: PersistentVolume
+      group: ""
+      version: v1
+      resyncPeriod: 10m
+      reconciler:
+        exec:
+          command: /app/main.py
+          args:
+          - volume
+          - reconcile
+          debug: false
+      references:
+      - group: ""
+        version: v1
+        kind: PersistentVolumeClaim
+        nameFieldPath: ".spec.claimRef.name"
+        namespaceFieldPath: ".spec.claimRef.namespace"
+    {{- end }}
+
+    {{- if $.Values.validatingwebhook.enabled }}
+    webhook:
+      port: 8443
+      tls:
+        certFile: /etc/tls/tls.crt
+        keyFile: /etc/tls/tls.key
+    {{- end }}
+    {{- end }}

@@ -1,0 +1,6 @@
+priorityClasses:
+- name: high-priority
+  value: 1000000
+  globalDefault: false
+  description: High priority class for base system pods
+

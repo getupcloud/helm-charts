@@ -1,0 +1,58 @@
+# Default values for istio.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+profile: default
+
+components:
+  pilot:
+    enabled: true
+
+  defaultIngressGateway:
+    enabled: true
+    name: istio-ingressgateway
+    service:
+      type: "LoadBalancer"
+      #loadBalancerIP: null
+      #azureLoadBalancerInternal: "false"
+      #awsLoadBalancerInternal: "false"
+      #gcpLoadBalancerInternal: "false"
+
+  # User-defined ingressGateways.
+  # Set values from https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#GatewaySpec
+  #ingressGateways:
+  #- enabled: true
+  #  name: default-ingress-gateway
+  #  service:
+  #    type: "LoadBalancer"
+  #    #loadBalancerIP: null
+  #    #azureLoadBalancerInternal: "false"
+  #    #awsLoadBalancerInternal: "false"
+  #    #gcpLoadBalancerInternal: "false"
+
+# TODO: https://istio.io/latest/docs/ops/integrations/
+#addonComponents:
+#  grafana:
+#    enabled: false
+#  kiali:
+#    enabled: false
+#  prometheus:
+#    enabled: false
+#  tracing:
+#    enabled: false
+
+mtls:
+- enabled: false
+  name: default
+  mode: PERMISSIVE
+  #selector:
+  #  matchLabels:
+  #    app: finance
+
+nodeSelector:
+  role: infra
+
+tolerations:
+- key: dedicated
+  value: infra
+  effect: NoSchedule

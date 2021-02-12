@@ -1,0 +1,24 @@
+prometheusOperatorCRDsApiVersion: monitoring.coreos.com/v1
+
+cronitor:
+  enabled: false
+  id: ""
+
+backup:
+  velero:
+    enabled: true
+
+ingress:
+  auth:
+    basic_username: "monitoring"
+    basic_password: "monitoring"
+
+loki:
+  namespace: logging
+  canary:
+    tolerations:
+    - key: dedicated
+      value: infra
+      effect: NoSchedule
+    nodeSelector:
+      role: infra

@@ -1,0 +1,75 @@
+apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+kind: PrometheusRule
+metadata:
+  labels:
+    release: prometheus-operator
+  name: loki
+spec:
+  groups:
+  - name: loki.rules
+    rules:
+    - alert: LokiIsDown
+      expr: absent(up{job="loki-headless"}) == 1 or up{job="loki-headless"} == 0
+      for: 10m
+      labels:
+        service: loki
+        severity: critical
+      annotations:
+        description: Loki is not running
+        summary: Loki Down
+
+    # https://github.com/kyma-project/kyma/pull/4521/files#diff-507bfc7114ff579b32730b9f4d51dfc2
+    - alert: LoggingKBPSHigh
+      expr: rate(loki_distributor_bytes_received_total[5m])/1024 > 4096
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        message: |
+            Data throughput for logging too high: {{ "{{" }} $value {{ "}}" }} KB/s
+        summary: |
+            Data throughput for logging too high: {{ "{{" }} $value {{ "}}" }} KB/s
+
+    - alert: LoggingHighRequestCount
+      expr: rate(loki_request_duration_seconds_sum{route="loki_api_v1_push"}[5m]) > 100
+      for: 30m
+      labels:
+        severity: critical
+      annotations:
+        message: |
+            High number of logging requests: {{ "{{ $value }}" }} req/s
+        summary: |
+            High number of logging requests: {{ "{{ $value }}" }} req/s
+
+    - alert: LoggingFailedRequestPercentage
+      expr: sum(rate(loki_request_duration_seconds_sum{job="loki-headless",route="loki_api_v1_push",status_code!~"2.*"}[5m]))
+        / sum(rate(loki_request_duration_seconds_sum{job="loki-headless",route="loki_api_v1_push"}[5m])) * 100 > 30
+      for: 30m
+      labels:
+        severity: critical
+      annotations:
+        message: |
+            High percentage of failing requests for logging: {{ "{{ $value }}%" }}
+        summary: |
+            High percentage of failing requests for logging: {{ "{{ $value }}%" }}
+
+    - alert: LokiCanaryIsDown
+      annotations:
+        description: Loki Canary is not running
+        summary: Loki Canary Down
+      expr: absent(up{job="loki-canary"}) == 1 or up{job="loki-canary"} == 0
+      for: 10m
+      labels:
+        service: loki
+        severity: critical
+
+    - alert: LokiCanaryLostEntries
+      annotations:
+        description: Loki Canary is missing too many log entries
+        summary: Loki Canary missing entries
+      expr: sum(rate(loki_canary_missing_entries[1m])) > 1
+      for: 10m
+      labels:
+        service: loki
+        severity: critical
+

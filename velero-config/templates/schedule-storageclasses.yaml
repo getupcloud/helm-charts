@@ -1,0 +1,35 @@
+{{ with .Values.schedules.storageClasses }}
+{{ if .enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: storage-classes
+spec:
+  schedule: {{ .schedule }}
+  template:
+    includedNamespaces:
+    - kube-system
+
+    excludedNamespaces: null
+
+    includedResources:
+    - storageclasses.storage.k8s.io
+
+    excludedResources: null
+
+    includeClusterResources: true
+
+    hooks:
+      resources: null
+
+    {{ if .labelSelector }}
+    labelSelector: {{- toYaml .labelSelector | nindent 6 }}
+    {{ end }}
+
+    snapshotVolumes: false
+
+    storageLocation: {{ .storageLocation }}
+
+    ttl: {{ .ttl }}
+{{ end }}
+{{ end }}

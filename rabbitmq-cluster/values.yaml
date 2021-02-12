@@ -1,0 +1,67 @@
+# Default values for rabbitmq-cluster.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicas: 1
+
+ingress:
+  hosts:
+  - host: rabbitmq.example.com
+    path: /rabbitmq
+
+  tls: []
+  #- hosts:
+  #  - rabbitmq.example.co
+  #  secretName: rabbitmq-cert
+
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+service:
+  type: ClusterIP
+  amqp:
+    port: 5672
+  management:
+    port: 15672
+
+nodePortService:
+  enabled: false
+  nodePort: 30672
+
+image:
+  name: rabbitmq
+  tag: 3.8.9-management
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: role
+          operator: In
+          values:
+          - infra
+
+override: {}
+
+persistence:
+  storage: 10Gi
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+tls: {}
+
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
+# Must be string block, not YAML
+additionalConfig: |
+  management.path_prefix = /rabbitmq

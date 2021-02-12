@@ -1,0 +1,25 @@
+{{ with .Values.ingress }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    {{ toYaml .annotations | nindent 4 }}
+  name: {{ include "rabbitmq-cluster.fullname" $ }}
+  labels:
+    {{- include "rabbitmq-cluster.labels" $ | nindent 4 }}
+spec:
+  rules:
+  {{- range .hosts }}
+  - host: {{ .host }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "rabbitmq-cluster.fullname" $ }}
+          servicePort: {{ $.Values.service.management.port }}
+        path: {{ .path }}
+  {{- end }}
+  {{- with .tls }}
+  tls:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

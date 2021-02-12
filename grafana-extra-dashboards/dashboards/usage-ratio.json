@@ -1,0 +1,706 @@
+ {
+   "annotations": {
+     "list": [
+       {
+         "builtIn": 1,
+         "datasource": "-- Grafana --",
+         "enable": true,
+         "expr": "sum(increase(haproxy_server_http_responses_total{code=\"2xx\"}[1m])) by (code, exported_namespace, route)",
+         "hide": true,
+         "iconColor": "#1f78c1",
+         "limit": 100,
+         "name": "Annotations & Alerts",
+         "showIn": 0,
+         "step": "10s",
+         "type": "dashboard"
+       }
+     ]
+   },
+   "editable": true,
+   "gnetId": null,
+   "graphTooltip": 0,
+   "iteration": 1573225048537,
+   "links": [],
+   "panels": [
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "fill": 1,
+       "gridPos": {
+         "h": 8,
+         "w": 24,
+         "x": 0,
+         "y": 0
+       },
+       "id": 9,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "max": true,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "links": [],
+       "nullPointMode": "null",
+       "percentage": false,
+       "pointradius": 5,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [
+         {
+           "alias": "/3xx/",
+           "color": "#1f78c1"
+         },
+         {
+           "alias": "/4xx/",
+           "color": "#e5ac0e"
+         },
+         {
+           "alias": "/5xx/",
+           "color": "#bf1b00"
+         },
+         {
+           "alias": "/2xx/",
+           "color": "#7eb26d"
+         }
+       ],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "  sum(increase(haproxy_server_http_responses_total{exported_namespace=~\"^($namespace)$\", route=~\"^($route)$\"}[1m])) by (code, exported_namespace, route)",
+           "format": "time_series",
+           "interval": "",
+           "intervalFactor": 1,
+           "legendFormat": "{{ exported_namespace }} / {{ route }} / {{ code }}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "HTTP Status Codes (count)",
+       "tooltip": {
+         "shared": false,
+         "sort": 0,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": 0,
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "aliasColors": {},
+       "bars": true,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "fill": 1,
+       "gridPos": {
+         "h": 8,
+         "w": 24,
+         "x": 0,
+         "y": 8
+       },
+       "id": 10,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "max": true,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "total": false,
+         "values": true
+       },
+       "lines": false,
+       "linewidth": 1,
+       "links": [],
+       "nullPointMode": "null",
+       "percentage": true,
+       "pointradius": 5,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [
+         {
+           "alias": "/3xx/",
+           "color": "#1f78c1"
+         },
+         {
+           "alias": "/4xx/",
+           "color": "#e5ac0e"
+         },
+         {
+           "alias": "/5xx/",
+           "color": "#bf1b00"
+         },
+         {
+           "alias": "/2xx/",
+           "color": "#7eb26d"
+         }
+       ],
+       "spaceLength": 10,
+       "stack": true,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "sum(irate(haproxy_server_http_responses_total{exported_namespace=~\"^($namespace)$\", route=~\"^($route)$\"}[1m])) by (code, exported_namespace, route)",
+           "format": "time_series",
+           "interval": "",
+           "intervalFactor": 1,
+           "legendFormat": "{{ exported_namespace }} / {{ route }} / {{ code }}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "HTTP Status Codes (ratio)",
+       "tooltip": {
+         "shared": false,
+         "sort": 0,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": 0,
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "fill": 1,
+       "gridPos": {
+         "h": 8,
+         "w": 24,
+         "x": 0,
+         "y": 16
+       },
+       "id": 4,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "max": false,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "links": [],
+       "nullPointMode": "null",
+       "percentage": false,
+       "pointradius": 5,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "(\n  sum(\n    rate(\n      container_cpu_usage_seconds_total{namespace=~\"^($namespace)$\", image!=\"\", container_name!=\"POD\", pod_name=~\".*[[podname]].*\"}[5m]\n    )\n  ) by (\n      pod_name, container_name, namespace\n  )\n  /\n  sum(\n    container_spec_cpu_quota{namespace=~\"^($namespace)$\", image!=\"\", container_name!=\"POD\", pod_name=~\".*[[podname]].*\"}\n    /\n    container_spec_cpu_period{namespace=~\"^($namespace)$\", image!=\"\", container_name!=\"POD\", pod_name=~\".*[[podname]].*\"}\n  ) by (\n    pod_name, container_name, namespace\n  )\n) < (\n  $up_to_percentage / 100\n)",
+           "format": "time_series",
+           "hide": false,
+           "interval": "",
+           "intervalFactor": 1,
+           "legendFormat": "{{ namespace }} / {{ pod_name }} / {{ container_name }}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "CPU Usage (ratio)",
+       "tooltip": {
+         "shared": false,
+         "sort": 0,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": 1,
+           "format": "percentunit",
+           "label": "",
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "fill": 1,
+       "gridPos": {
+         "h": 7,
+         "w": 24,
+         "x": 0,
+         "y": 24
+       },
+       "id": 2,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "max": false,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "links": [],
+       "nullPointMode": "null",
+       "percentage": false,
+       "pointradius": 0.5,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "container_memory_usage_bytes{name!=\"\", container_name!=\"POD\", namespace=~\"^($namespace)$\", pod_name=~\".*[[podname]].*\"}\n/\non(name, namespace, pod_name, container_name) container_spec_memory_limit_bytes{name!=\"\", container_name!=\"POD\", pod_name=~\".*[[podname]].*\"}\n<\n($up_to_percentage / 100)",
+           "format": "time_series",
+           "interval": "",
+           "intervalFactor": 1,
+           "legendFormat": "{{ namespace }} / {{pod_name}} / {{ container_name }} ",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "Memory Usage (ratio)",
+       "tooltip": {
+         "shared": false,
+         "sort": 0,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": 1,
+           "format": "percentunit",
+           "label": "",
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "fill": 1,
+       "gridPos": {
+         "h": 8,
+         "w": 24,
+         "x": 0,
+         "y": 31
+       },
+       "id": 7,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "max": false,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "links": [],
+       "nullPointMode": "null",
+       "percentage": false,
+       "pointradius": 5,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "kubelet_volume_stats_used_bytes{namespace=~\"^($namespace)$\"} / kubelet_volume_stats_capacity_bytes{namespace=~\"^($namespace)$\"}",
+           "format": "time_series",
+           "hide": false,
+           "interval": "",
+           "intervalFactor": 1,
+           "legendFormat": "{{ namespace }} / {{ persistentvolumeclaim }}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [
+         {
+           "colorMode": "critical",
+           "fill": true,
+           "line": false,
+           "op": "gt",
+           "value": 0.85,
+           "yaxis": "left"
+         }
+       ],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "Storage Usage (ratio)",
+       "tooltip": {
+         "shared": false,
+         "sort": 0,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": 1,
+           "format": "percentunit",
+           "label": "Usage",
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     }
+   ],
+   "refresh": false,
+   "schemaVersion": 16,
+   "style": "dark",
+   "tags": [],
+   "templating": {
+     "list": [
+       {
+         "allValue": null,
+         "current": {
+           "selected": false,
+           "text": "100",
+           "value": "100"
+         },
+         "hide": 0,
+         "includeAll": false,
+         "label": "Up to usage percentage",
+         "multi": false,
+         "name": "up_to_percentage",
+         "options": [
+           {
+             "selected": true,
+             "text": "100",
+             "value": "100"
+           },
+           {
+             "selected": false,
+             "text": "90",
+             "value": "90"
+           },
+           {
+             "selected": false,
+             "text": "80",
+             "value": "80"
+           },
+           {
+             "selected": false,
+             "text": "70",
+             "value": "70"
+           },
+           {
+             "selected": false,
+             "text": "60",
+             "value": "60"
+           },
+           {
+             "selected": false,
+             "text": "50",
+             "value": "50"
+           },
+           {
+             "selected": false,
+             "text": "40",
+             "value": "40"
+           },
+           {
+             "selected": false,
+             "text": "30",
+             "value": "30"
+           },
+           {
+             "selected": false,
+             "text": "20",
+             "value": "20"
+           },
+           {
+             "selected": false,
+             "text": "10",
+             "value": "10"
+           },
+           {
+             "selected": false,
+             "text": "5",
+             "value": "5"
+           },
+           {
+             "selected": false,
+             "text": "2",
+             "value": "2"
+           },
+           {
+             "selected": false,
+             "text": "1",
+             "value": "1"
+           }
+         ],
+         "query": "100,90,80,70,60,50,40,30,20,10,5,2,1",
+         "skipUrlSync": false,
+         "type": "custom"
+       },
+       {
+         "allValue": null,
+         "current": {
+           "tags": [],
+           "text": "dev",
+           "value": [
+             "dev"
+           ]
+         },
+         "datasource": "Prometheus",
+         "hide": 0,
+         "includeAll": true,
+         "label": "Namespace",
+         "multi": true,
+         "name": "namespace",
+         "options": [],
+         "query": "label_values(kube_pod_info, namespace)",
+         "refresh": 1,
+         "regex": "",
+         "skipUrlSync": false,
+         "sort": 5,
+         "tagValuesQuery": "",
+         "tags": [],
+         "tagsQuery": "",
+         "type": "query",
+         "useTags": false
+       },
+       {
+         "current": {
+           "text": "",
+           "value": ""
+         },
+         "hide": 0,
+         "label": "Pod",
+         "name": "podname",
+         "options": [
+           {
+             "text": "",
+             "value": ""
+           }
+         ],
+         "query": "",
+         "skipUrlSync": false,
+         "type": "textbox"
+       },
+       {
+         "allValue": null,
+         "current": {
+           "text": "All",
+           "value": [
+             "$__all"
+           ]
+         },
+         "datasource": "Prometheus",
+         "hide": 0,
+         "includeAll": true,
+         "label": "Route",
+         "multi": true,
+         "name": "route",
+         "options": [],
+         "query": "label_values(haproxy_server_up{exported_namespace=~\"^($namespace)$\"}, route)",
+         "refresh": 1,
+         "regex": "",
+         "skipUrlSync": false,
+         "sort": 5,
+         "tagValuesQuery": "",
+         "tags": [],
+         "tagsQuery": "",
+         "type": "query",
+         "useTags": false
+       }
+     ]
+   },
+   "time": {
+     "from": "now-1h",
+     "to": "now"
+   },
+   "timepicker": {
+     "refresh_intervals": [
+       "5s",
+       "10s",
+       "30s",
+       "1m",
+       "5m",
+       "15m",
+       "30m",
+       "1h",
+       "2h",
+       "1d"
+     ],
+     "time_options": [
+       "5m",
+       "15m",
+       "1h",
+       "6h",
+       "12h",
+       "24h",
+       "2d",
+       "7d",
+       "30d"
+     ]
+   },
+   "timezone": "",
+   "title": "Usage ratio",
+   "uid": "vcH6ZKoZk",
+   "version": 1
+ }

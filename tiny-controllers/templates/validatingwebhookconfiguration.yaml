@@ -1,0 +1,39 @@
+{{- if .Values.validatingwebhook.enabled }}
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "tiny-controlles.fullname" . }}
+  {{- range $_, $controller := .Values.controllers }}
+    annotations:
+      {{- if $.Values.validatingwebhook.certmanager.enabled }}
+      inject-ca-from: {{ $.Release.Namespace }}/{{ include "tiny-controlles.fullname" . }}
+      {{- end }}
+      {{- if $controller.enabled and $controller.validatingwebhook and $controller.validatingwebhook.annotations }}
+      {{- toYaml $controller.validatingwebhook.annotations | nindent 6 }}
+      {{- end }}
+ {{- end }}
+  labels:
+    {{- include "tiny-controllers.labels" . | nindent 4 }}
+webhooks:
+{{/* example webhook
+{{- if .controllers.namespace.enabled }}
+- name: project.controller.tiny.io
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    resources:
+    - namespaces
+    operations:
+    - CREATE
+    - UPDATE
+  failurePolicy: Ignore
+  clientConfig:
+    service:
+      name: {{ include "tiny-controlles.fullname" . }}
+      namespace: {{ .Release.Namespace }}
+      path: /v1/namespace/validate
+{{- end }}
+*/}}
+{{- end }}

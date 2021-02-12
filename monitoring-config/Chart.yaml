@@ -1,0 +1,6 @@
+apiVersion: v2
+name: monitoring-config
+description: A Helm chart for monitoring configurations
+type: application
+version: 0.1.0
+appVersion: 0.1.0

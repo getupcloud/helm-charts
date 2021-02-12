@@ -1,0 +1,1675 @@
+ {
+   "annotations": {
+     "list": [
+       {
+         "builtIn": 1,
+         "datasource": "-- Grafana --",
+         "enable": true,
+         "hide": true,
+         "iconColor": "rgba(0, 211, 255, 1)",
+         "limit": 100,
+         "name": "Annotations & Alerts",
+         "showIn": 0,
+         "type": "dashboard"
+       },
+       {
+         "datasource": "Loki",
+         "enable": true,
+         "expr": "{container=\"loki-canary\"} |~ \"error\"",
+         "hide": false,
+         "iconColor": "rgba(255, 96, 96, 1)",
+         "limit": 100,
+         "name": "Loki  - errors",
+         "showIn": 0,
+         "tags": [],
+         "target": {},
+         "type": "tags"
+       }
+     ]
+   },
+   "description": "loki-canary deployed on k8s and with metrics gathered by Prometheus 2.x",
+   "editable": true,
+   "gnetId": 11489,
+   "graphTooltip": 1,
+   "id": 16,
+   "links": [],
+   "panels": [
+     {
+       "collapsed": false,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 0
+       },
+       "id": 38,
+       "panels": [],
+       "title": "Loki logs",
+       "type": "row"
+     },
+     {
+       "datasource": "Loki",
+       "description": "anything except \"ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp\"",
+       "gridPos": {
+         "h": 6,
+         "w": 24,
+         "x": 0,
+         "y": 1
+       },
+       "id": 37,
+       "options": {
+         "showTime": true,
+         "sortOrder": "Descending"
+       },
+       "targets": [
+         {
+           "expr": "{container=\"loki-canary\"} !=\"ppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp\"",
+           "refId": "A"
+         }
+       ],
+       "timeFrom": null,
+       "timeShift": null,
+       "title": "Loki logs",
+       "type": "logs"
+     },
+     {
+       "collapsed": false,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 7
+       },
+       "id": 22,
+       "panels": [],
+       "title": "Missing entries",
+       "type": "row"
+     },
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "decimals": 0,
+       "fill": 1,
+       "fillGradient": 0,
+       "gridPos": {
+         "h": 6,
+         "w": 12,
+         "x": 0,
+         "y": 8
+       },
+       "id": 12,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "hideEmpty": false,
+         "hideZero": false,
+         "max": false,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "sort": "current",
+         "sortDesc": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "nullPointMode": "null",
+       "options": {
+         "dataLinks": []
+       },
+       "percentage": false,
+       "pointradius": 2,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "sum(rate(loki_canary_missing_entries_total[1m])) by (pod)",
+           "legendFormat": "{{pod}}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeRegions": [],
+       "timeShift": null,
+       "title": "Missing entries rate",
+       "tooltip": {
+         "shared": true,
+         "sort": 2,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": null,
+           "format": "short",
+           "label": "",
+           "logBase": 1,
+           "max": null,
+           "min": "0",
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "aliasColors": {},
+       "bars": false,
+       "dashLength": 10,
+       "dashes": false,
+       "datasource": "Prometheus",
+       "decimals": 0,
+       "fill": 1,
+       "fillGradient": 0,
+       "gridPos": {
+         "h": 6,
+         "w": 12,
+         "x": 12,
+         "y": 8
+       },
+       "id": 2,
+       "legend": {
+         "alignAsTable": true,
+         "avg": false,
+         "current": true,
+         "hideEmpty": false,
+         "hideZero": false,
+         "max": false,
+         "min": false,
+         "rightSide": true,
+         "show": true,
+         "sort": "current",
+         "sortDesc": true,
+         "total": false,
+         "values": true
+       },
+       "lines": true,
+       "linewidth": 1,
+       "nullPointMode": "null",
+       "options": {
+         "dataLinks": []
+       },
+       "percentage": false,
+       "pointradius": 2,
+       "points": false,
+       "renderer": "flot",
+       "seriesOverrides": [],
+       "spaceLength": 10,
+       "stack": false,
+       "steppedLine": false,
+       "targets": [
+         {
+           "expr": "sum(loki_canary_missing_entries_total) by (pod)",
+           "legendFormat": "{{pod}}",
+           "refId": "A"
+         }
+       ],
+       "thresholds": [],
+       "timeFrom": null,
+       "timeRegions": [],
+       "timeShift": null,
+       "title": "Missing entries",
+       "tooltip": {
+         "shared": true,
+         "sort": 2,
+         "value_type": "individual"
+       },
+       "type": "graph",
+       "xaxis": {
+         "buckets": null,
+         "mode": "time",
+         "name": null,
+         "show": true,
+         "values": []
+       },
+       "yaxes": [
+         {
+           "decimals": null,
+           "format": "short",
+           "label": "",
+           "logBase": 1,
+           "max": null,
+           "min": "0",
+           "show": true
+         },
+         {
+           "format": "short",
+           "label": null,
+           "logBase": 1,
+           "max": null,
+           "min": null,
+           "show": true
+         }
+       ],
+       "yaxis": {
+         "align": false,
+         "alignLevel": null
+       }
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 14
+       },
+       "id": 34,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 9
+           },
+           "id": 7,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_websocket_missing_entries_total[1m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Websocket missing entries rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 9
+           },
+           "id": 18,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_websocket_missing_entries_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Websocket missing entries",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Websocket missing entries",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 15
+       },
+       "id": 32,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 10
+           },
+           "id": 8,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_ws_reconnects_total[1m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Websocket reconnects rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 10
+           },
+           "id": 16,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_ws_reconnects_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Websocket reconnects",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Websocket reconnects",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 16
+       },
+       "id": 28,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 5
+           },
+           "id": 4,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "hideEmpty": true,
+             "hideZero": false,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_out_of_order_entries_total[1m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Out of order entries rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 5
+           },
+           "id": 15,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "hideEmpty": true,
+             "hideZero": false,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_out_of_order_entries_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Out of order entries",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Out of order entries",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 17
+       },
+       "id": 26,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 6
+           },
+           "id": 14,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_unexpected_entries_total[1m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Unexpected entries rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 6
+           },
+           "id": 6,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_unexpected_entries_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Unexpected entries",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Unexpected entries",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 18
+       },
+       "id": 24,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 7
+           },
+           "id": 3,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_duplicate_entries_total[5m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Duplicate entries rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 7
+           },
+           "id": 13,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_duplicate_entries_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Duplicate entries",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Duplicate entries",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 19
+       },
+       "id": 30,
+       "panels": [
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 8
+           },
+           "id": 5,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "rate(loki_canary_entries_total[1m])",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Total entries rate",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         },
+         {
+           "aliasColors": {},
+           "bars": false,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "decimals": 0,
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 8
+           },
+           "id": 17,
+           "legend": {
+             "alignAsTable": true,
+             "avg": false,
+             "current": true,
+             "max": false,
+             "min": false,
+             "rightSide": true,
+             "show": true,
+             "sort": "current",
+             "sortDesc": true,
+             "total": false,
+             "values": true
+           },
+           "lines": true,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_entries_total",
+               "legendFormat": "{{pod}}",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Total entries",
+           "tooltip": {
+             "shared": true,
+             "sort": 2,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "time",
+             "name": null,
+             "show": true,
+             "values": []
+           },
+           "yaxes": [
+             {
+               "decimals": null,
+               "format": "short",
+               "label": "",
+               "logBase": 1,
+               "max": null,
+               "min": "0",
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Total entries",
+       "type": "row"
+     },
+     {
+       "collapsed": true,
+       "datasource": "Prometheus",
+       "gridPos": {
+         "h": 1,
+         "w": 24,
+         "x": 0,
+         "y": 20
+       },
+       "id": 20,
+       "panels": [
+         {
+           "cards": {
+             "cardPadding": null,
+             "cardRound": null
+           },
+           "color": {
+             "cardColor": "#b4ff00",
+             "colorScale": "sqrt",
+             "colorScheme": "interpolateSpectral",
+             "exponent": 0.5,
+             "mode": "spectrum"
+           },
+           "dataFormat": "timeseries",
+           "datasource": "Prometheus",
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 0,
+             "y": 9
+           },
+           "heatmap": {},
+           "hideZeroBuckets": false,
+           "highlightCards": true,
+           "id": 10,
+           "legend": {
+             "show": false
+           },
+           "options": {},
+           "reverseYBuckets": false,
+           "targets": [
+             {
+               "expr": "loki_canary_response_latency_seconds_bucket",
+               "format": "time_series",
+               "refId": "A"
+             }
+           ],
+           "timeFrom": null,
+           "timeShift": null,
+           "title": "Response latency",
+           "tooltip": {
+             "show": true,
+             "showHistogram": true
+           },
+           "type": "heatmap",
+           "xAxis": {
+             "show": true
+           },
+           "xBucketNumber": null,
+           "xBucketSize": null,
+           "yAxis": {
+             "decimals": null,
+             "format": "s",
+             "logBase": 1,
+             "max": null,
+             "min": null,
+             "show": true,
+             "splitFactor": null
+           },
+           "yBucketBound": "auto",
+           "yBucketNumber": null,
+           "yBucketSize": null
+         },
+         {
+           "aliasColors": {},
+           "bars": true,
+           "dashLength": 10,
+           "dashes": false,
+           "datasource": "Prometheus",
+           "fill": 1,
+           "fillGradient": 0,
+           "gridPos": {
+             "h": 6,
+             "w": 12,
+             "x": 12,
+             "y": 9
+           },
+           "id": 35,
+           "legend": {
+             "avg": false,
+             "current": false,
+             "max": false,
+             "min": false,
+             "show": false,
+             "total": false,
+             "values": false
+           },
+           "lines": false,
+           "linewidth": 1,
+           "nullPointMode": "null",
+           "options": {
+             "dataLinks": []
+           },
+           "percentage": false,
+           "pluginVersion": "6.4.2",
+           "pointradius": 2,
+           "points": false,
+           "renderer": "flot",
+           "seriesOverrides": [],
+           "spaceLength": 10,
+           "stack": false,
+           "steppedLine": false,
+           "targets": [
+             {
+               "expr": "loki_canary_response_latency_seconds_bucket",
+               "format": "time_series",
+               "refId": "A"
+             }
+           ],
+           "thresholds": [],
+           "timeFrom": null,
+           "timeRegions": [],
+           "timeShift": null,
+           "title": "Response latency",
+           "tooltip": {
+             "shared": false,
+             "sort": 1,
+             "value_type": "individual"
+           },
+           "type": "graph",
+           "xaxis": {
+             "buckets": null,
+             "mode": "histogram",
+             "name": null,
+             "show": true,
+             "values": [
+               "total"
+             ]
+           },
+           "yaxes": [
+             {
+               "format": "s",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             },
+             {
+               "format": "short",
+               "label": null,
+               "logBase": 1,
+               "max": null,
+               "min": null,
+               "show": true
+             }
+           ],
+           "yaxis": {
+             "align": false,
+             "alignLevel": null
+           }
+         }
+       ],
+       "title": "Other",
+       "type": "row"
+     }
+   ],
+   "refresh": "10s",
+   "schemaVersion": 20,
+   "style": "dark",
+   "tags": [
+     "loki",
+     "loki-canary"
+   ],
+   "templating": {
+     "list": []
+   },
+   "time": {
+     "from": "now-1h",
+     "to": "now"
+   },
+   "timepicker": {
+     "refresh_intervals": [
+       "5s",
+       "10s",
+       "30s",
+       "1m",
+       "5m",
+       "15m",
+       "30m",
+       "1h",
+       "2h",
+       "1d"
+     ]
+   },
+   "timezone": "utc",
+   "title": "Loki-Canary",
+   "uid": "rySrU2LZk",
+   "version": 1
+ }

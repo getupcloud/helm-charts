@@ -1,0 +1,33 @@
+{{ with .Values.schedules.volumes }}
+{{ if .enabled }}
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: volumes
+spec:
+  schedule: {{ .schedule }}
+  template:
+    includedNamespaces: {{- toYaml .includedNamespaces | nindent 6}}
+
+    excludedNamespaces: {{- toYaml .excludedNamespaces | nindent 6 }}
+
+    includedResources:
+    - persistentvolumeclaims
+    - persistentvolumes
+
+    includeClusterResources: true
+
+    hooks:
+      resources: null
+
+    {{ if .labelSelector }}
+    labelSelector: {{- toYaml .labelSelector | nindent 6 }}
+    {{ end }}
+
+    snapshotVolumes: true
+
+    storageLocation: {{ .storageLocation }}
+
+    ttl: {{ .ttl }}
+{{ end }}
+{{ end }}

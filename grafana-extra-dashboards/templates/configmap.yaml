@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grafana-extra-dashboards.fullname" . }}
+  labels:
+    {{- include "grafana-extra-dashboards.labels" . | nindent 4 }}
+data:
+  mock: ""
+  {{- $files := .Files }}
+
+  {{ with .Values }}
+  {{ if .ingressNginx.enabled }}
+  ingress-nginx.json: |-
+    {{ $files.Get "dashboards/ingress-nginx.json" | nindent 4 }}
+
+  {{- end }}
+
+  {{ if .loki.enabled }}
+  loki-promtail.json: |-
+    {{ $files.Get "dashboards/loki-promtail.json" | nindent 4 }}
+  loki-canary.json: |-
+    {{ $files.Get "dashboards/loki-canary.json" | nindent 4 }}
+  {{- end }}
+
+  {{ if .usageRatio.enabled }}
+  usage-ratio.json: |-
+    {{ $files.Get "dashboards/usage-ratio.json" | nindent 4 }}
+  {{- end}}
+
+  {{ if .kong.enabled }}
+  kong-official.json: |-
+    {{ $files.Get "dashboards/kong-official.json" | nindent 4 }}
+  kong-services.json: |-
+    {{ $files.Get "dashboards/kong-services.json" | nindent 4 }}
+  {{- end }}
+
+  {{- range $path, $data := .files }}
+  {{ base $path }}: |-
+    {{ $data | b64dec | nindent 4 }}
+  {{- end }}
+  {{- end }}

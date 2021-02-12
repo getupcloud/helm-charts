@@ -1,0 +1,18 @@
+{{- if .Values.nodePortService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rabbitmq-cluster.fullname" . }}-nodeport
+  labels:
+    {{- include "rabbitmq-cluster.labels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+  - name: amqp
+    port: {{ .Values.service.amqp.port }}
+    protocol: TCP
+    targetPort: 5672
+    nodePort: {{ .Values.nodePortService.nodePort }}
+  selector:
+    app.kubernetes.io/name: {{ include "rabbitmq-cluster.fullname" . }}
+{{- end }}

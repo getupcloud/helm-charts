@@ -1,0 +1,15 @@
+acme_email: "example@example.com"
+ingress_class: "nginx"
+
+cluster_issuer_selfsigned:
+  enabled: true
+
+cluster_issuer_letsencrypt:
+  enabled: true
+
+cluster_issuer_dns01:
+  enabled: false
+  aws_region: ""
+  aws_zones: ""
+  aws_access_key_id: ""
+  aws_secret_access_key: ""

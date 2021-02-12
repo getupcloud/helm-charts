@@ -1,0 +1,266 @@
+apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+kind: PrometheusRule
+metadata:
+  name: {{ include "monitoring-config.fullname" . }}
+  labels:
+    {{- include "monitoring-config.labels" . | nindent 4 }}
+    release: prometheus-operator
+spec:
+  groups:
+  - name: extra.rules
+    rules:
+    - alert: TooManyPodsOnNamespace
+      expr: sum(kube_pod_info) by (namespace) > 200
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        description: There are more than 150 pods on namespace {{ "{{ $labels.namespace }}" }}
+        summary: "Too many pods on namespace {{ "{{ $labels.namespace }}" }}"
+
+    - alert: TooManyJobsOnNamespace
+      expr: sum(kube_job_info) by (namespace) > 200
+      for: 30m
+      labels:
+        severity: warning
+      annotations:
+        description: "There are more than 150 jobs on namespace {{ "{{ $labels.namespace }}" }}"
+        summary: "Too many jobs on namespace {{ "{{ $labels.namespace }}" }}"
+
+    - alert: TooManyDockerOperationErrors
+      expr: sum(rate(kubelet_docker_operations_errors[10m])) by (operation_type) > 1
+      for: 10m
+      labels:
+        severity: critical
+      annotations:
+        description: "There are too many docker {{ "{{ $labels.operation_type }}" }} errors on namespace {{ "{{ $labels.namespace }}" }}"
+        summary: "Too many jobs on namespace {{ "{{ $labels.namespace }}" }}"
+
+    - alert: NodeDiskRunningFull
+      annotations:
+        message: Device {{ "{{ $labels.device }}" }} on node {{ "{{ $labels.instance }}" }} will be full within the next 24 hours.
+      expr: '(node:node_filesystem_usage: > 0.70) and (predict_linear(node:node_filesystem_avail:[6h], 3600 * 24) < 0)'
+      for: 1h
+      labels:
+        severity: critical
+
+    - alert: NodeDiskRunningFull
+      annotations:
+        message: Device {{ "{{ $labels.device }}" }} on node {{ "{{ $labels.instance }}" }} has reached {{ "{{ $value }}%" }} of free space.
+      expr: 'node:node_filesystem_avail: * 100 < 15'
+      for: 1h
+      labels:
+        severity: critical
+
+    - alert: AlertmanagerFailedReload
+      annotations:
+        message: Reloading Alertmanager's configuration has failed for {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod}}" }}.
+      expr: alertmanager_config_last_reload_successful{job="prometheus-operator-alertmanager",namespace="monitoring"}
+        == 0
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: EndpointDown
+      annotations:
+        description: Blackbox Exporter could not reach endpoint {{ "{{ $labels.instance }}" }} for 5 minutes
+        summary: Endpoint {{ "{{ $labels.instance }}" }} down
+      expr: probe_success == 0
+      for: 5m
+      labels:
+        service: endpoint
+        severity: critical
+
+    - alert: HighNumberOfFailedProposals
+      annotations:
+        description: Etcd instance {{ "{{ $labels.instance }}" }} has seen {{ "{{ $value }}" }} proposal
+          failures within the last hour
+        summary: a high number of failed proposals within the etcd cluster are happening
+      expr: increase(etcd_server_proposal_failed_total{job="kube-etcd"}[1h]) > 5
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: PrometheusOperatorNodeLookupErrors
+      annotations:
+        message: Errors while reconciling Prometheus in {{ "{{ $labels.namespace }}" }} Namespace.
+      expr: rate(prometheus_operator_node_address_lookup_errors_total{job="prometheus-operator-operator",namespace="monitoring"}[5m])
+        > 0.1
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: NodeClockSkewDetected
+      annotations:
+        message: Clock on {{ "{{ $labels.instance }}" }} is out of sync by more than 300s.
+          Ensure NTP is configured correctly on this host.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-nodeclockskewdetected
+        summary: Clock skew detected.
+      expr: |-
+        (
+          node_timex_offset_seconds > 0.05
+        and
+          deriv(node_timex_offset_seconds[5m]) >= 0
+        )
+        or
+        (
+          node_timex_offset_seconds < -0.05
+        and
+          deriv(node_timex_offset_seconds[5m]) <= 0
+        )
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: KubeClientCertificateExpiration
+      annotations:
+        message: A client certificate used to authenticate to the apiserver is expiring
+          in less than 7.0 days.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeclientcertificateexpiration
+      expr: apiserver_client_certificate_expiration_seconds_count{job="apiserver"}
+        > 0 and on(job) histogram_quantile(0.01, sum by (job, le) (rate(apiserver_client_certificate_expiration_seconds_bucket{job="apiserver"}[5m])))
+        < 604800
+      labels:
+        severity: critical
+
+    - alert: KubeNodeNotReady
+      annotations:
+        message: '{{ "{{ $labels.node }}" }} has been unready for more than 15 minutes.'
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubenodenotready
+      expr: kube_node_status_condition{job="kube-state-metrics",condition="Ready",status="true"}
+        == 0
+      for: 15m
+      labels:
+        severity: critical
+
+    - alert: KubeAPILatencyHigh
+      annotations:
+        message: The API server has an abnormal latency of {{ "{{ $value }}" }} seconds
+          for {{ "{{ $labels.verb }}" }} {{ "{{ $labels.resource }}" }}.
+        runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-kubeapilatencyhigh
+      expr: |-
+        (
+          cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"}
+          >
+          on (verb) group_left()
+          (
+            avg by (verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"} >= 0)
+            +
+            2*stddev by (verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"} >= 0)
+          )
+        ) > on (verb) group_left()
+        1.2 * avg by (verb) (cluster:apiserver_request_duration_seconds:mean5m{job="apiserver"} >= 0)
+        and on (verb,resource)
+        cluster_quantile:apiserver_request_duration_seconds:histogram_quantile{job="apiserver",quantile="0.99"}
+        >
+        1
+      for: 1h
+      labels:
+        severity: critical
+
+    - alert: EtcdHighNumberOfFailedHTTPRequests
+      annotations:
+        message: |
+          {{ "{{ $value }}%" }} of requests for {{ "{{ $labels.method }}" }} failed on etcd instance {{ "{{ $labels.instance }}" }}
+      expr: |-
+        sum(rate(etcd_http_failed_total{job=~".*etcd.*", code!="404"}[5m])) BY (method) / sum(rate(etcd_http_received_total{job=~".*etcd.*"}[5m]))
+        BY (method) > 0.05
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: PrometheusNotConnectedToAlertmanagers
+      annotations:
+        description: Prometheus {{ "{{ $labels.namespace}}" }}/{{ "{{ $labels.pod}}" }} is not connected
+          to any Alertmanagers.
+        summary: Prometheus is not connected to any Alertmanagers.
+      expr: |-
+        # Without max_over_time, failed scrapes could create false negatives, see
+        # https://www.robustperception.io/alerting-on-gauges-in-prometheus-2-0 for details.
+        max_over_time(prometheus_notifications_alertmanagers_discovered{job="prometheus-operator-prometheus",namespace="monitoring"}[5m]) < 1
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: PrometheusTSDBReloadsFailing
+      annotations:
+        description: Prometheus {{ "{{ $labels.namespace}}" }}/{{ "{{ $labels.pod}}" }} has detected
+          {{ "{{ $value | humanize }}" }} reload failures over the last 3h.
+        summary: Prometheus has issues reloading blocks from disk.
+      expr: increase(prometheus_tsdb_reloads_failures_total{job="prometheus-operator-prometheus",namespace="monitoring"}[3h])
+        > 0
+      for: 4h
+      labels:
+        severity: critical
+
+    - alert: PrometheusTSDBCompactionsFailing
+      annotations:
+        description: Prometheus {{ "{{ $labels.namespace}}" }}/{{ "{{ $labels.pod}}" }} has detected
+          {{ "{{ $value | humanize }}" }} compaction failures over the last 3h.
+        summary: Prometheus has issues compacting blocks.
+      expr: increase(prometheus_tsdb_compactions_failed_total{job="prometheus-operator-prometheus",namespace="monitoring"}[3h])
+        > 0
+      for: 4h
+      labels:
+        severity: critical
+
+    - alert: PrometheusNotIngestingSamples
+      annotations:
+        description: Prometheus {{ "{{ $labels.namespace}}" }}/{{ "{{ $labels.pod}}" }} is not ingesting
+          samples.
+        summary: Prometheus is not ingesting samples.
+      expr: rate(prometheus_tsdb_head_samples_appended_total{job="prometheus-operator-prometheus",namespace="monitoring"}[5m])
+        <= 0
+      for: 10m
+      labels:
+        severity: critical
+
+    - alert: NodeIsTaintedForTooLong
+      annotations:
+        description: Node {{ "{{ $labels.instance }}" }} has taint {{ "{{ $labels.key }}" }}={{ "{{ $labels.value }}" }}:{{ "{{ $labels.effect }}" }} for more than 1h.
+        summary: Node has taints for +1h.
+      expr: kube_node_spec_taint{key="NodeWithImpairedVolumes"}
+      for: 1h
+      labels:
+        severity: warning
+
+    - alert: NodeIsTaintedForTooLong
+      annotations:
+        description: Node {{ "{{ $labels.instance }}" }} has taint {{ "{{ $labels.key }}" }}={{ "{{ $labels.value }}" }}:{{ "{{ $labels.effect }}" }} for more than 6h.
+        summary: Node has taints for +6h.
+      expr: kube_node_spec_taint{key="NodeWithImpairedVolumes"}
+      for: 6h
+      labels:
+        severity: critical
+
+    - alert: NodeHasPodsEvicted
+      annotations:
+        description: Node {{ "{{ $labels.instance }}" }} has {{ "{{ $value }}" }} eviction(s) by {{ "{{ $labels.eviction_signal }}"}}.
+        summary: Node has evicted pods.
+      expr: sum(rate(kubelet_evictions[5m])) by (instance, eviction_signal) > 0
+      for: 30m
+      labels:
+        severity: critical
+
+    - alert: NodeHasOOMKill
+      annotations:
+        description: Node {{ "{{ $labels.instance }}" }} has too many tasks killed by out of memory (OOMKill).
+        summary: Node has too many oom-killed processes.
+      expr: sum(rate(node_vmstat_oom_kill[2m])) by (instance) > 0
+      for: 5m
+      labels:
+        severity: critical
+
+    ## Removed by https://github.com/prometheus-community/helm-charts/commit/000410dc1ecaaf29f28705f328241172d12b5d3c#diff-34450e94baaebe1e5f9172814267ae07b78f44d2839f21c28047f5778778b121
+    ## We need for disk usage alerts
+    - expr: |-
+        max by (instance, namespace, pod, device) ((node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"}
+        - node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+        / node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+      record: 'node:node_filesystem_usage:'
+    - expr: max by (instance, namespace, pod, device) (node_filesystem_avail_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"} / node_filesystem_size_bytes{fstype=~"ext[234]|btrfs|xfs|zfs"})
+      record: 'node:node_filesystem_avail:'
+    - expr: |-
+        sum(irate(node_network_receive_bytes_total{job="node-exporter",device!~"veth.+"}[1m])) +
+        sum(irate(node_network_transmit_bytes_total{job="node-exporter",device!~"veth.+"}[1m]))
+      record: :node_net_utilisation:sum_irate

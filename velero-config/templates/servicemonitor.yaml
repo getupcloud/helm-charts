@@ -1,0 +1,19 @@
+{{ if .Values.enabled }}
+apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: velero
+    release: prometheus-operator
+  name: prometheus-operator-velero
+spec:
+  endpoints:
+  - path: /metrics
+    targetPort: 8085
+  namespaceSelector:
+    matchNames:
+    - velero
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: velero
+{{ end }}

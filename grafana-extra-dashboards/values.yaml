@@ -1,0 +1,18 @@
+# Default values for grafana-extra-dashboards.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+ingressNginx:
+  enabled: true
+
+loki:
+  enabled: true
+
+usageRatio:
+  enabled: true
+
+kong:
+  enabled: false
+
+# Include extra files. Key is filename, value is json data
+extraDashboards: {}
