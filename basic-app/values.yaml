@@ -73,10 +73,12 @@ service:
 
 configMap:
   enabled: false
+  mountPath: ""
   data: {}
 
 secret:
   enabled: false
+  mountPath: ""
   data: {}
 
 #############

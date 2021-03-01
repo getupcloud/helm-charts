@@ -41,8 +41,16 @@ spec:
             protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-{{ if .Values.storage.enabled }}
           volumeMounts:
+{{ if and .Values.secret.enabled .Values.secret.mountPath != "" }}
+            - mountPath: {{ .Values.secret.mountPath }}
+              name: {{ .Release.Name }}-data
+{{- end }}
+{{ if and .Values.configMap.enabled .Values.configMap.mountPath != "" }}
+            - mountPath: {{ .Values.configMap.mountPath }}
+              name: {{ .Release.Name }}-data
+{{- end }}
+{{ if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
@@ -58,8 +66,18 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{ if .Values.storage.enabled }}
       volumes:
+{{ if and .Values.secret.enabled .Values.secret.mountPath != "" }}
+        - name: {{ .Release.Name }}-secret
+          secret:
+            secretName: {{ .Release.Name }}-secret
+{{ end }}
+{{ if and .Values.configMap.enabled .Values.configMap.mountPath != "" }}
+        - name: {{ .Release.Name }}-config
+          configMap:
+            name: {{ .Release.Name }}-config
+{{ end }}
+{{ if .Values.storage.enabled }}
         - name: {{ .Release.Name }}-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-data
