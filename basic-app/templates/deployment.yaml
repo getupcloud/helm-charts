@@ -42,11 +42,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-{{ if and .Values.secret.enabled (not eq .Values.secret.mountPath "") }}
+{{ if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
             - mountPath: {{ .Values.secret.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
-{{ if and .Values.configMap.enabled (not eq .Values.configMap.mountPath "") }}
+{{ if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
             - mountPath: {{ .Values.configMap.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
@@ -67,12 +67,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-{{ if and .Values.secret.enabled (not eq .Values.secret.mountPath "") }}
+{{ if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
         - name: {{ .Release.Name }}-secret
           secret:
             secretName: {{ .Release.Name }}-secret
 {{ end }}
-{{ if and .Values.configMap.enabled (not eq .Values.configMap.mountPath "") }}
+{{ if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
         - name: {{ .Release.Name }}-config
           configMap:
             name: {{ .Release.Name }}-config
