@@ -13,7 +13,9 @@ spec:
   persistence:
     {{- toYaml .Values.persistence | nindent 4 }}
   rabbitmq:
-    additionalConfig: {{ .Values.additionalConfig }}
+{{- if .Values.additionalConfig }}
+    additionalConfig: |{{ .Values.additionalConfig | nindent 6 }}
+{{ end }}
   replicas: {{ .Values.replicas }}
   resources:
     {{- toYaml .Values.resources | nindent 4 }}
