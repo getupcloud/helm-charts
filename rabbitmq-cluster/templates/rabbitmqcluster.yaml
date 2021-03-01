@@ -9,7 +9,7 @@ spec:
     {{- toYaml .Values.affinity | nindent 4 }}
   image: {{ .Values.image.name }}:{{ .Values.image.tag }}
   override:
-    {{ toYaml .Values.override | nindent 4}}
+    {{- toYaml .Values.override | nindent 4}}
   persistence:
     {{- toYaml .Values.persistence | nindent 4 }}
   rabbitmq:
