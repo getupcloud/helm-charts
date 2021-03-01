@@ -33,15 +33,15 @@ image:
   name: rabbitmq
   tag: 3.8.9-management
 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: role
-          operator: In
-          values:
-          - infra
+affinity: {}
+#   nodeAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      nodeSelectorTerms:
+#      - matchExpressions:
+#        - key: role
+#          operator: In
+#          values:
+#          - infra
 
 override: {}
 
