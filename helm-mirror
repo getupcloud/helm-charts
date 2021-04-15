@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import yaml
+import requests
+from urllib.parse import urlparse, urljoin
+
+if len(sys.argv) != 4:
+  print("Usage: {sys.argv[0]} [root-dir] [repo-prefix] [repo-url]")
+  print("Examples:")
+  print(" helm-mirror ./repo prometheus-community https://prometheus-community.github.io/helm-charts")
+  print(" helm-mirror /var/www/charts internal/prometheus-community https://prometheus-community.github.io/helm-charts")
+  sys.exit(1)
+
+repo_root = sys.argv[1]
+repo_prefix = sys.argv[2]
+root = os.path.join(repo_root, repo_prefix)
+
+def save_url(root, url):
+  parsed_url = urlparse(url)
+  path = os.path.join(root, parsed_url.path.lstrip('/'))
+  filename = os.path.basename(path) 
+
+  if os.path.exists(path):
+    print(f'exists: {parsed_url.geturl()}')
+    return parsed_url.path
+
+  print(f'get: {url}')
+  response = requests.get(url)
+ 
+  os.makedirs(os.path.dirname(path), exist_ok=True)
+
+  #print(f'save: {path}')
+  with open(path, 'wb') as fd:
+    for chunk in response.iter_content(chunk_size=4096):
+        fd.write(chunk)
+
+  return parsed_url.path
+
+for repo in sys.argv[3:]:
+  repo_index = '/'.join([repo.strip('/'), 'index.yaml'])
+  print(f'Index: {repo_index}')
+  index = yaml.load(requests.get(repo_index).text, Loader=yaml.FullLoader)
+
+  for name, charts in index['entries'].items():
+    for chart in charts:
+      url = chart['urls'][0]
+      chart_url = urljoin(repo_index, url)
+      path = save_url(root, chart_url)
+      chart['urls'] = [ os.path.join(os.path.join('/', repo_prefix), path.lstrip('/')) ]
+
+  index_url = urlparse(repo_index)
+  index_filename = os.path.join(root, index_url.path.lstrip('/'))
+  print(f'Saving index: {index_filename}')
+  os.makedirs(os.path.dirname(index_filename), exist_ok=True)
+  with open(index_filename, 'w') as fd:
+    fd.write(yaml.dump(index, default_flow_style=False))
