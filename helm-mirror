@@ -23,15 +23,15 @@ def save_url(root, url):
   filename = os.path.basename(path) 
 
   if os.path.exists(path):
-    print(f'exists: {parsed_url.geturl()}')
+    print(f'exists: {parsed_url.geturl()} -> {path}')
     return parsed_url.path
 
-  print(f'get: {url}')
+  print(f'get: {url} -> ', end='')
   response = requests.get(url)
- 
+
   os.makedirs(os.path.dirname(path), exist_ok=True)
 
-  #print(f'save: {path}')
+  print(f'{path}')
   with open(path, 'wb') as fd:
     for chunk in response.iter_content(chunk_size=4096):
         fd.write(chunk)
