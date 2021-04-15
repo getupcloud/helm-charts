@@ -2,8 +2,6 @@
 
 set -x
 
-AWS_S3_BUCKET=${1:-getup-helm-mirror}
-HELM_REPO_PREFIX=${2:-getupcloud}
-shift 2
+AWS_S3_BUCKET=${AWS_S3_BUCKET:-getup-helm-mirror}
 
-aws "$@" s3 sync repo/ s3://${AWS_S3_BUCKET}/${HELM_REPO_PREFIX}
+aws "$@" s3 sync repo/ s3://${AWS_S3_BUCKET}/
