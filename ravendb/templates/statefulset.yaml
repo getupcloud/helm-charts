@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "ravendb.fullname" . }}
+  labels:
+    {{- include "ravendb.labels" . | indent 4 }}
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 10
+  selector:
+  labels:
+    matchLabels:
+      {{- include "ravendb.labels" . | indent 6 }}
+  serviceName: {{ include "ravendb.fullname" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "ravendb.labels" . | indent 8 }}
+    spec:
+{{- with .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | indent 8 }}
+{{- end }}
+      containers:
+      - env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPat : metadata.oame
+        - name: RAVEN_ARGS
+          value: --log-to-console --config-path /config/settings-$(POD_NAME).json
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: ravendb
+        ports:
+        - containerPort: 443
+          name: http-api
+          protocol: TCP
+        - containerPort: 38888
+          name: tcp-server
+          protocol: TCP
+        - containerPort: 161
+          name: snmp
+          protocol: TCP
+{{- with .Values.resources }}
+        resources:
+          {{- toYaml . | indent 10 }}
+{{- end }}
+        volumeMounts:
+{{- if .Values.persistence }}
+        - mountPath: /data
+          name: data
+{{- end }}
+        - mountPath: /ssl
+          name: ssl
+        - mountPath: /license
+          name: license
+        - mountPath: /config
+          name: config
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - "kill -INT $(pidof Raven.Server)"
+
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+{{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      labels:
+        {{- include "ravendb.labels" . | indent 8 }}
+      name: {{ include "ravendb.fullname" . }}-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Gi
+      storageClassName: local-path-raven
+      volumeMode: Filesystem
+
