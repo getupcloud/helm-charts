@@ -1,22 +1,27 @@
 #!/bin/bash
 
-set -x
-
+debug=false
 full=false
 no_mirror=false
 
 while [ $# -gt 0 ]; do
   case $1 in
-    -f|--full) full=true; shift;;
-    -n|--no-mirror) no_mirror=true; shift;;
+    -d|--debug) debug=true;;
+    -f|--full) full=true;;
+    -n|--no-mirror) no_mirror=true;;
+    -h|--help|help) echo "Usage: $0 [-f|--full] [-n|--no-mirror]"; exit 0;;
+    *) echo "Usage: $0 [-f|--full] [-n|--no-mirror]"; exit 1
   esac
+  shift
 done
+
+$debug && set -x
 
 if $full; then
   rm -rf repo
 fi
 
-charts=( $(ls -d */ | grep -vw repo) )
+charts=( $(ls -d */ | grep -vwE '^(dev|repo)/$') ) # exclude dirs dev/ and repo/
 
 mkdir -p repo/getupcloud
 
