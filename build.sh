@@ -3,9 +3,12 @@
 set -x
 
 full=false
+no_mirror=false
+
 while [ $# -gt 0 ]; do
   case $1 in
     -f|--full) full=true; shift;;
+    -n|--no-mirror) no_mirror=true; shift;;
   esac
 done
 
@@ -13,12 +16,14 @@ if $full; then
   rm -rf repo
 fi
 
-charts=( $(ls -1d */) )
+charts=( $(ls -d */ | grep -vw repo) )
 
 mkdir -p repo/getupcloud
 
 helm package -d repo/getupcloud "${charts[@]}"
 helm repo index repo/getupcloud
+
+$no_mirror && exit
 
 ./helm-mirror repo/ prometheus-community https://prometheus-community.github.io/helm-charts
 ./helm-mirror repo/ autoscaler https://kubernetes.github.io/autoscaler
