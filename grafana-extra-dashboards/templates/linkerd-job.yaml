@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   job.json: "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\":
@@ -799,4 +799,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-job
-{{- end }}
+`}}{{- end }}

@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   grafana.json: "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\":
@@ -348,4 +348,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-grafana
-{{- end }}
+`}}{{- end }}

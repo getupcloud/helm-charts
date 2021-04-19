@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   prometheus.json: |
@@ -1343,4 +1343,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-prometheus
-{{- end }}
+`}}{{- end }}

@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   namespace.json: "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\":
@@ -337,4 +337,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-namespace
-{{- end }}
+`}}{{- end }}

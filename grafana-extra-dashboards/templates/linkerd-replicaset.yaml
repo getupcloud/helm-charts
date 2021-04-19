@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   replicaset.json: "{\n    \"annotations\": {\n      \"list\": [\n        {\n          \"builtIn\":
@@ -857,4 +857,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-replicaset
-{{- end }}
+`}}{{- end }}

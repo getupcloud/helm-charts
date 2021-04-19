@@ -1,4 +1,4 @@
-{{ if .Values.linkerd.enabled -}}
+{{ if .Values.linkerd.enabled -}}{{ `
 apiVersion: v1
 data:
   kubernetes.json: |-
@@ -2253,4 +2253,4 @@ kind: ConfigMap
 metadata:
   creationTimestamp: null
   name: linkerd-kubernetes
-{{- end }}
+`}}{{- end }}
