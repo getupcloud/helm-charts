@@ -14,5 +14,8 @@ usageRatio:
 kong:
   enabled: false
 
+linkerd:
+  enabled: false
+
 # Include extra files. Key is filename, value is json data
 extraDashboards: {}

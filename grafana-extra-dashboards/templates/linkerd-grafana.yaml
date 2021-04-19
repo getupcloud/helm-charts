@@ -1,0 +1,351 @@
+{{ if .Values.linkerd.enabled -}}
+apiVersion: v1
+data:
+  grafana.json: "{\n  \"annotations\": {\n    \"list\": [\n      {\n        \"builtIn\":
+    1,\n        \"datasource\": \"-- Grafana --\",\n        \"enable\": true,\n        \"hide\":
+    true,\n        \"iconColor\": \"rgba(0, 211, 255, 1)\",\n        \"name\": \"Annotations
+    & Alerts\",\n        \"type\": \"dashboard\"\n      }\n    ]\n  },\n  \"description\":
+    \"Metrics about Grafana\",\n  \"editable\": true,\n  \"gnetId\": null,\n  \"graphTooltip\":
+    0,\n  \"id\": null,\n  \"links\": [\n    {\n      \"icon\": \"external link\",\n
+    \     \"tags\": [],\n      \"targetBlank\": true,\n      \"title\": \"Available
+    metrics\",\n      \"type\": \"link\",\n      \"url\": \"/metrics\"\n    },\n    {\n
+    \     \"icon\": \"external link\",\n      \"tags\": [],\n      \"title\": \"Grafana
+    docs\",\n      \"type\": \"link\",\n      \"url\": \"http://docs.grafana.org/\"\n
+    \   },\n    {\n      \"icon\": \"external link\",\n      \"tags\": [],\n      \"title\":
+    \"Prometheus docs\",\n      \"type\": \"link\",\n      \"url\": \"http://prometheus.io/docs/introduction/overview/\"\n
+    \   }\n  ],\n  \"panels\": [\n    {\n      \"cacheTimeout\": null,\n      \"colorBackground\":
+    false,\n      \"colorValue\": true,\n      \"colors\": [\n        \"rgba(222,
+    3, 3, 0.9)\",\n        \"rgb(234, 245, 234)\",\n        \"rgb(235, 244, 235)\"\n
+    \     ],\n      \"datasource\": \"prometheus\",\n      \"decimals\": 0,\n      \"format\":
+    \"none\",\n      \"gauge\": {\n        \"maxValue\": 100,\n        \"minValue\":
+    0,\n        \"show\": false,\n        \"thresholdLabels\": false,\n        \"thresholdMarkers\":
+    true\n      },\n      \"gridPos\": {\n        \"h\": 5,\n        \"w\": 4,\n        \"x\":
+    0,\n        \"y\": 0\n      },\n      \"id\": 4,\n      \"interval\": null,\n
+    \     \"links\": [],\n      \"mappingType\": 1,\n      \"mappingTypes\": [\n        {\n
+    \         \"name\": \"value to text\",\n          \"value\": 1\n        },\n        {\n
+    \         \"name\": \"range to text\",\n          \"value\": 2\n        }\n      ],\n
+    \     \"maxDataPoints\": 100,\n      \"nullPointMode\": \"connected\",\n      \"nullText\":
+    null,\n      \"options\": {},\n      \"postfix\": \"\",\n      \"postfixFontSize\":
+    \"50%\",\n      \"prefix\": \"\",\n      \"prefixFontSize\": \"50%\",\n      \"rangeMaps\":
+    [\n        {\n          \"from\": \"null\",\n          \"text\": \"N/A\",\n          \"to\":
+    \"null\"\n        }\n      ],\n      \"sparkline\": {\n        \"fillColor\":
+    \"rgba(31, 118, 189, 0.18)\",\n        \"full\": false,\n        \"lineColor\":
+    \"rgb(31, 120, 193)\",\n        \"show\": false\n      },\n      \"tableColumn\":
+    \"\",\n      \"targets\": [\n        {\n          \"expr\": \"up{job=\\\"grafana\\\"}\",\n
+    \         \"format\": \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    2,\n          \"refId\": \"A\",\n          \"step\": 60\n        }\n      ],\n
+    \     \"thresholds\": \"1, 10000\",\n      \"title\": \"Active instances\",\n
+    \     \"type\": \"singlestat\",\n      \"valueFontSize\": \"120%\",\n      \"valueMaps\":
+    [\n        {\n          \"op\": \"=\",\n          \"text\": \":(\",\n          \"value\":
+    \"0\"\n        }\n      ],\n      \"valueName\": \"avg\"\n    },\n    {\n      \"cacheTimeout\":
+    null,\n      \"colorBackground\": false,\n      \"colorValue\": false,\n      \"colors\":
+    [\n        \"rgba(245, 54, 54, 0.9)\",\n        \"rgba(237, 129, 40, 0.89)\",\n
+    \       \"rgba(50, 172, 45, 0.97)\"\n      ],\n      \"datasource\": \"prometheus\",\n
+    \     \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\": 100,\n
+    \       \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
+    false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
+    5,\n        \"w\": 4,\n        \"x\": 4,\n        \"y\": 0\n      },\n      \"id\":
+    8,\n      \"interval\": null,\n      \"links\": [],\n      \"mappingType\": 1,\n
+    \     \"mappingTypes\": [\n        {\n          \"name\": \"value to text\",\n
+    \         \"value\": 1\n        },\n        {\n          \"name\": \"range to
+    text\",\n          \"value\": 2\n        }\n      ],\n      \"maxDataPoints\":
+    100,\n      \"nullPointMode\": \"connected\",\n      \"nullText\": null,\n      \"options\":
+    {},\n      \"postfix\": \"\",\n      \"postfixFontSize\": \"50%\",\n      \"prefix\":
+    \"\",\n      \"prefixFontSize\": \"50%\",\n      \"rangeMaps\": [\n        {\n
+    \         \"from\": \"null\",\n          \"text\": \"N/A\",\n          \"to\":
+    \"null\"\n        }\n      ],\n      \"sparkline\": {\n        \"fillColor\":
+    \"rgba(31, 118, 189, 0.18)\",\n        \"full\": false,\n        \"lineColor\":
+    \"rgb(31, 120, 193)\",\n        \"show\": false\n      },\n      \"tableColumn\":
+    \"\",\n      \"targets\": [\n        {\n          \"expr\": \"grafana_stat_totals_dashboard\",\n
+    \         \"format\": \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    2,\n          \"refId\": \"A\",\n          \"step\": 60\n        }\n      ],\n
+    \     \"thresholds\": \"\",\n      \"title\": \"Dashboard count\",\n      \"type\":
+    \"singlestat\",\n      \"valueFontSize\": \"120%\",\n      \"valueMaps\": [\n
+    \       {\n          \"op\": \"=\",\n          \"text\": \"N/A\",\n          \"value\":
+    \"null\"\n        }\n      ],\n      \"valueName\": \"avg\"\n    },\n    {\n      \"cacheTimeout\":
+    null,\n      \"colorBackground\": false,\n      \"colorValue\": false,\n      \"colors\":
+    [\n        \"rgba(245, 54, 54, 0.9)\",\n        \"rgba(237, 129, 40, 0.89)\",\n
+    \       \"rgba(50, 172, 45, 0.97)\"\n      ],\n      \"datasource\": \"prometheus\",\n
+    \     \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\": 100,\n
+    \       \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
+    false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
+    5,\n        \"w\": 4,\n        \"x\": 8,\n        \"y\": 0\n      },\n      \"id\":
+    9,\n      \"interval\": null,\n      \"links\": [],\n      \"mappingType\": 1,\n
+    \     \"mappingTypes\": [\n        {\n          \"name\": \"value to text\",\n
+    \         \"value\": 1\n        },\n        {\n          \"name\": \"range to
+    text\",\n          \"value\": 2\n        }\n      ],\n      \"maxDataPoints\":
+    100,\n      \"nullPointMode\": \"connected\",\n      \"nullText\": null,\n      \"options\":
+    {},\n      \"postfix\": \"\",\n      \"postfixFontSize\": \"50%\",\n      \"prefix\":
+    \"\",\n      \"prefixFontSize\": \"50%\",\n      \"rangeMaps\": [\n        {\n
+    \         \"from\": \"null\",\n          \"text\": \"N/A\",\n          \"to\":
+    \"null\"\n        }\n      ],\n      \"sparkline\": {\n        \"fillColor\":
+    \"rgba(31, 118, 189, 0.18)\",\n        \"full\": false,\n        \"lineColor\":
+    \"rgb(31, 120, 193)\",\n        \"show\": false\n      },\n      \"tableColumn\":
+    \"\",\n      \"targets\": [\n        {\n          \"expr\": \"grafana_stat_total_users\",\n
+    \         \"format\": \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    2,\n          \"refId\": \"A\",\n          \"step\": 60\n        }\n      ],\n
+    \     \"thresholds\": \"\",\n      \"title\": \"User count\",\n      \"type\":
+    \"singlestat\",\n      \"valueFontSize\": \"120%\",\n      \"valueMaps\": [\n
+    \       {\n          \"op\": \"=\",\n          \"text\": \"N/A\",\n          \"value\":
+    \"null\"\n        }\n      ],\n      \"valueName\": \"avg\"\n    },\n    {\n      \"cacheTimeout\":
+    null,\n      \"colorBackground\": false,\n      \"colorValue\": false,\n      \"colors\":
+    [\n        \"rgba(245, 54, 54, 0.9)\",\n        \"rgba(237, 129, 40, 0.89)\",\n
+    \       \"rgba(50, 172, 45, 0.97)\"\n      ],\n      \"datasource\": \"prometheus\",\n
+    \     \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\": 100,\n
+    \       \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
+    false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
+    5,\n        \"w\": 4,\n        \"x\": 12,\n        \"y\": 0\n      },\n      \"id\":
+    10,\n      \"interval\": null,\n      \"links\": [],\n      \"mappingType\": 1,\n
+    \     \"mappingTypes\": [\n        {\n          \"name\": \"value to text\",\n
+    \         \"value\": 1\n        },\n        {\n          \"name\": \"range to
+    text\",\n          \"value\": 2\n        }\n      ],\n      \"maxDataPoints\":
+    100,\n      \"nullPointMode\": \"connected\",\n      \"nullText\": null,\n      \"options\":
+    {},\n      \"postfix\": \"\",\n      \"postfixFontSize\": \"50%\",\n      \"prefix\":
+    \"\",\n      \"prefixFontSize\": \"50%\",\n      \"rangeMaps\": [\n        {\n
+    \         \"from\": \"null\",\n          \"text\": \"N/A\",\n          \"to\":
+    \"null\"\n        }\n      ],\n      \"sparkline\": {\n        \"fillColor\":
+    \"rgba(31, 118, 189, 0.18)\",\n        \"full\": false,\n        \"lineColor\":
+    \"rgb(31, 120, 193)\",\n        \"show\": false\n      },\n      \"tableColumn\":
+    \"\",\n      \"targets\": [\n        {\n          \"expr\": \"grafana_stat_total_playlists\",\n
+    \         \"format\": \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    2,\n          \"refId\": \"A\",\n          \"step\": 60\n        }\n      ],\n
+    \     \"thresholds\": \"\",\n      \"title\": \"Playlist count\",\n      \"type\":
+    \"singlestat\",\n      \"valueFontSize\": \"120%\",\n      \"valueMaps\": [\n
+    \       {\n          \"op\": \"=\",\n          \"text\": \"N/A\",\n          \"value\":
+    \"null\"\n        }\n      ],\n      \"valueName\": \"avg\"\n    },\n    {\n      \"columns\":
+    [],\n      \"datasource\": \"prometheus\",\n      \"fontSize\": \"100%\",\n      \"gridPos\":
+    {\n        \"h\": 5,\n        \"w\": 4,\n        \"x\": 16,\n        \"y\": 0\n
+    \     },\n      \"id\": 17,\n      \"links\": [],\n      \"options\": {},\n      \"pageSize\":
+    null,\n      \"scroll\": false,\n      \"showHeader\": true,\n      \"sort\":
+    {\n        \"col\": 0,\n        \"desc\": true\n      },\n      \"styles\": [\n
+    \       {\n          \"alias\": \"Time\",\n          \"dateFormat\": \"YYYY-MM-DD
+    HH:mm:ss\",\n          \"link\": false,\n          \"pattern\": \"Time\",\n          \"type\":
+    \"hidden\"\n        },\n        {\n          \"alias\": \"\",\n          \"colorMode\":
+    null,\n          \"colors\": [\n            \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237,
+    129, 40, 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"decimals\":
+    0,\n          \"pattern\": \"/.*/\",\n          \"thresholds\": [],\n          \"type\":
+    \"number\",\n          \"unit\": \"short\"\n        }\n      ],\n      \"targets\":
+    [\n        {\n          \"expr\": \"topk(1, grafana_info)\",\n          \"format\":
+    \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    2,\n          \"legendFormat\": \"{{version}}\",\n          \"refId\": \"A\",\n
+    \         \"step\": 20\n        }\n      ],\n      \"title\": \"Grafana version\",\n
+    \     \"transform\": \"timeseries_to_rows\",\n      \"type\": \"table\"\n    },\n
+    \   {\n      \"content\": \"<br />\\n<br />\\n<center>\\n<img src=\\\"public/img/grafana_icon.svg\\\"
+    \ style=\\\"height: 60px;\\\">\\n<span style=\\\"color: red;font-size:3rem;line-height:
+    2rem;\\\">\U0001F496</span>\\n<img src=\\\"public/app/plugins/datasource/prometheus/img/prometheus_logo.svg\\\"
+    alt=\\\"Prometheus logo\\\" style=\\\"height: 60px;\\\">\\n</center>\",\n      \"gridPos\":
+    {\n        \"h\": 5,\n        \"w\": 4,\n        \"x\": 20,\n        \"y\": 0\n
+    \     },\n      \"id\": 16,\n      \"links\": [],\n      \"mode\": \"html\",\n
+    \     \"options\": {},\n      \"title\": \"\",\n      \"transparent\": true,\n
+    \     \"type\": \"text\"\n    },\n    {\n      \"aliasColors\": {\n        \"400\":
+    \"#447EBC\",\n        \"500\": \"#BF1B00\"\n      },\n      \"bars\": false,\n
+    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n
+    \     \"fill\": 1,\n      \"gridPos\": {\n        \"h\": 10,\n        \"w\": 10,\n
+    \       \"x\": 0,\n        \"y\": 5\n      },\n      \"height\": \"\",\n      \"id\":
+    15,\n      \"legend\": {\n        \"avg\": false,\n        \"current\": false,\n
+    \       \"max\": false,\n        \"min\": false,\n        \"show\": true,\n        \"total\":
+    false,\n        \"values\": false\n      },\n      \"lines\": true,\n      \"linewidth\":
+    2,\n      \"links\": [],\n      \"nullPointMode\": \"null as zero\",\n      \"options\":
+    {},\n      \"percentage\": false,\n      \"pointradius\": 5,\n      \"points\":
+    false,\n      \"renderer\": \"flot\",\n      \"seriesOverrides\": [\n        {}\n
+    \     ],\n      \"spaceLength\": 10,\n      \"stack\": false,\n      \"steppedLine\":
+    false,\n      \"targets\": [\n        {\n          \"expr\": \"sum by (statuscode)
+    (irate(http_request_total{job='grafana'}[5m]))\",\n          \"format\": \"time_series\",\n
+    \         \"intervalFactor\": 3,\n          \"legendFormat\": \"{{statuscode}}\",\n
+    \         \"refId\": \"B\",\n          \"step\": 15,\n          \"target\": \"dev.grafana.cb-office.alerting.active_alerts\"\n
+    \       }\n      ],\n      \"thresholds\": [],\n      \"timeFrom\": null,\n      \"timeRegions\":
+    [],\n      \"timeShift\": null,\n      \"title\": \"http status codes\",\n      \"tooltip\":
+    {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\": \"individual\"\n
+    \     },\n      \"type\": \"graph\",\n      \"xaxis\": {\n        \"buckets\":
+    null,\n        \"mode\": \"time\",\n        \"name\": null,\n        \"show\":
+    true,\n        \"values\": []\n      },\n      \"yaxes\": [\n        {\n          \"format\":
+    \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\":
+    null,\n          \"min\": null,\n          \"show\": true\n        },\n        {\n
+    \         \"format\": \"short\",\n          \"label\": null,\n          \"logBase\":
+    1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
+    \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
+    null\n      }\n    },\n    {\n      \"aliasColors\": {\n        \"400\": \"#447EBC\",\n
+    \       \"500\": \"#BF1B00\"\n      },\n      \"bars\": false,\n      \"dashLength\":
+    10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n      \"fill\":
+    1,\n      \"gridPos\": {\n        \"h\": 10,\n        \"w\": 10,\n        \"x\":
+    10,\n        \"y\": 5\n      },\n      \"height\": \"\",\n      \"id\": 11,\n
+    \     \"legend\": {\n        \"avg\": false,\n        \"current\": false,\n        \"max\":
+    false,\n        \"min\": false,\n        \"show\": true,\n        \"total\": false,\n
+    \       \"values\": false\n      },\n      \"lines\": true,\n      \"linewidth\":
+    2,\n      \"links\": [],\n      \"nullPointMode\": \"null as zero\",\n      \"options\":
+    {},\n      \"percentage\": false,\n      \"pointradius\": 5,\n      \"points\":
+    false,\n      \"renderer\": \"flot\",\n      \"seriesOverrides\": [\n        {}\n
+    \     ],\n      \"spaceLength\": 10,\n      \"stack\": false,\n      \"steppedLine\":
+    false,\n      \"targets\": [\n        {\n          \"expr\": \"sum(irate(grafana_api_response_status_total[5m]))\",\n
+    \         \"format\": \"time_series\",\n          \"intervalFactor\": 4,\n          \"legendFormat\":
+    \"api\",\n          \"refId\": \"A\",\n          \"step\": 20\n        },\n        {\n
+    \         \"expr\": \"sum(irate(grafana_proxy_response_status_total[5m]))\",\n
+    \         \"format\": \"time_series\",\n          \"intervalFactor\": 4,\n          \"legendFormat\":
+    \"proxy\",\n          \"refId\": \"B\",\n          \"step\": 20\n        },\n
+    \       {\n          \"expr\": \"sum(irate(grafana_page_response_status_total[5m]))\",\n
+    \         \"format\": \"time_series\",\n          \"intervalFactor\": 4,\n          \"legendFormat\":
+    \"web\",\n          \"refId\": \"C\",\n          \"step\": 20\n        }\n      ],\n
+    \     \"thresholds\": [],\n      \"timeFrom\": null,\n      \"timeRegions\": [],\n
+    \     \"timeShift\": null,\n      \"title\": \"Requests by routing group\",\n
+    \     \"tooltip\": {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\":
+    \"individual\"\n      },\n      \"type\": \"graph\",\n      \"xaxis\": {\n        \"buckets\":
+    null,\n        \"mode\": \"time\",\n        \"name\": null,\n        \"show\":
+    true,\n        \"values\": []\n      },\n      \"yaxes\": [\n        {\n          \"format\":
+    \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\":
+    null,\n          \"min\": null,\n          \"show\": true\n        },\n        {\n
+    \         \"format\": \"short\",\n          \"label\": null,\n          \"logBase\":
+    1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
+    \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
+    null\n      }\n    },\n    {\n      \"columns\": [],\n      \"datasource\": \"prometheus\",\n
+    \     \"fontSize\": \"100%\",\n      \"gridPos\": {\n        \"h\": 10,\n        \"w\":
+    4,\n        \"x\": 20,\n        \"y\": 5\n      },\n      \"height\": \"\",\n
+    \     \"id\": 12,\n      \"links\": [],\n      \"options\": {},\n      \"pageSize\":
+    null,\n      \"scroll\": true,\n      \"showHeader\": true,\n      \"sort\": {\n
+    \       \"col\": 0,\n        \"desc\": true\n      },\n      \"styles\": [\n        {\n
+    \         \"alias\": \"Time\",\n          \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n
+    \         \"link\": false,\n          \"pattern\": \"Time\",\n          \"type\":
+    \"hidden\"\n        },\n        {\n          \"alias\": \"\",\n          \"colorMode\":
+    null,\n          \"colors\": [\n            \"rgba(245, 54, 54, 0.9)\",\n            \"rgba(237,
+    129, 40, 0.89)\",\n            \"rgba(50, 172, 45, 0.97)\"\n          ],\n          \"decimals\":
+    0,\n          \"pattern\": \"/.*/\",\n          \"thresholds\": [],\n          \"type\":
+    \"number\",\n          \"unit\": \"short\"\n        }\n      ],\n      \"targets\":
+    [\n        {\n          \"expr\": \"sort(topk(8, sum by (handler) (http_request_total{job=\\\"grafana\\\"})))\",\n
+    \         \"format\": \"time_series\",\n          \"instant\": true,\n          \"intervalFactor\":
+    10,\n          \"legendFormat\": \"{{handler}}\",\n          \"refId\": \"A\",\n
+    \         \"step\": 100\n        }\n      ],\n      \"title\": \"Most used handlers\",\n
+    \     \"transform\": \"timeseries_to_rows\",\n      \"type\": \"table\"\n    },\n
+    \   {\n      \"aliasColors\": {\n        \"alerting\": \"#890F02\",\n        \"ok\":
+    \"#7EB26D\"\n      },\n      \"bars\": false,\n      \"dashLength\": 10,\n      \"dashes\":
+    false,\n      \"datasource\": \"prometheus\",\n      \"fill\": 1,\n      \"gridPos\":
+    {\n        \"h\": 5,\n        \"w\": 12,\n        \"x\": 0,\n        \"y\": 15\n
+    \     },\n      \"id\": 6,\n      \"legend\": {\n        \"avg\": false,\n        \"current\":
+    false,\n        \"max\": false,\n        \"min\": false,\n        \"show\": true,\n
+    \       \"total\": false,\n        \"values\": false\n      },\n      \"lines\":
+    true,\n      \"linewidth\": 2,\n      \"links\": [],\n      \"nullPointMode\":
+    \"null\",\n      \"options\": {},\n      \"percentage\": false,\n      \"pointradius\":
+    5,\n      \"points\": false,\n      \"renderer\": \"flot\",\n      \"seriesOverrides\":
+    [],\n      \"spaceLength\": 10,\n      \"stack\": true,\n      \"steppedLine\":
+    false,\n      \"targets\": [\n        {\n          \"expr\": \"increase(grafana_alerting_active_alerts[1m])\",\n
+    \         \"format\": \"time_series\",\n          \"intervalFactor\": 3,\n          \"legendFormat\":
+    \"{{state}}\",\n          \"refId\": \"A\",\n          \"step\": 15\n        }\n
+    \     ],\n      \"thresholds\": [],\n      \"timeFrom\": null,\n      \"timeRegions\":
+    [],\n      \"timeShift\": null,\n      \"title\": \"Grafana active alerts\",\n
+    \     \"tooltip\": {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\":
+    \"individual\"\n      },\n      \"type\": \"graph\",\n      \"xaxis\": {\n        \"buckets\":
+    null,\n        \"mode\": \"time\",\n        \"name\": null,\n        \"show\":
+    true,\n        \"values\": []\n      },\n      \"yaxes\": [\n        {\n          \"format\":
+    \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\":
+    null,\n          \"min\": null,\n          \"show\": true\n        },\n        {\n
+    \         \"format\": \"short\",\n          \"label\": null,\n          \"logBase\":
+    1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
+    \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
+    null\n      }\n    },\n    {\n      \"aliasColors\": {\n        \"alerting\":
+    \"#890F02\",\n        \"alertname\": \"#BF1B00\",\n        \"firing alerts\":
+    \"#BF1B00\",\n        \"ok\": \"#7EB26D\"\n      },\n      \"bars\": false,\n
+    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n
+    \     \"fill\": 1,\n      \"gridPos\": {\n        \"h\": 5,\n        \"w\": 12,\n
+    \       \"x\": 12,\n        \"y\": 15\n      },\n      \"id\": 18,\n      \"legend\":
+    {\n        \"avg\": false,\n        \"current\": false,\n        \"max\": false,\n
+    \       \"min\": false,\n        \"show\": true,\n        \"total\": false,\n
+    \       \"values\": false\n      },\n      \"lines\": true,\n      \"linewidth\":
+    2,\n      \"links\": [],\n      \"nullPointMode\": \"null\",\n      \"options\":
+    {},\n      \"percentage\": false,\n      \"pointradius\": 5,\n      \"points\":
+    false,\n      \"renderer\": \"flot\",\n      \"seriesOverrides\": [\n        {\n
+    \         \"alias\": \"Firing alerts\",\n          \"yaxis\": 1\n        }\n      ],\n
+    \     \"spaceLength\": 10,\n      \"stack\": false,\n      \"steppedLine\": false,\n
+    \     \"targets\": [\n        {\n          \"expr\": \" sum (ALERTS)\",\n          \"format\":
+    \"time_series\",\n          \"intervalFactor\": 3,\n          \"legendFormat\":
+    \"firing alerts\",\n          \"refId\": \"A\",\n          \"step\": 15\n        }\n
+    \     ],\n      \"thresholds\": [],\n      \"timeFrom\": null,\n      \"timeRegions\":
+    [],\n      \"timeShift\": null,\n      \"title\": \"Prometheus alerts\",\n      \"tooltip\":
+    {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\": \"individual\"\n
+    \     },\n      \"type\": \"graph\",\n      \"xaxis\": {\n        \"buckets\":
+    null,\n        \"mode\": \"time\",\n        \"name\": null,\n        \"show\":
+    true,\n        \"values\": []\n      },\n      \"yaxes\": [\n        {\n          \"format\":
+    \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\":
+    null,\n          \"min\": null,\n          \"show\": true\n        },\n        {\n
+    \         \"format\": \"short\",\n          \"label\": null,\n          \"logBase\":
+    1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
+    \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
+    null\n      }\n    },\n    {\n      \"aliasColors\": {},\n      \"bars\": false,\n
+    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n
+    \     \"description\": \"Aggregated over all Grafana nodes.\",\n      \"fill\":
+    1,\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 24,\n        \"x\":
+    0,\n        \"y\": 20\n      },\n      \"id\": 7,\n      \"legend\": {\n        \"avg\":
+    false,\n        \"current\": false,\n        \"max\": false,\n        \"min\":
+    false,\n        \"show\": true,\n        \"total\": false,\n        \"values\":
+    false\n      },\n      \"lines\": true,\n      \"linewidth\": 2,\n      \"links\":
+    [],\n      \"nullPointMode\": \"null\",\n      \"options\": {},\n      \"percentage\":
+    false,\n      \"pointradius\": 5,\n      \"points\": false,\n      \"renderer\":
+    \"flot\",\n      \"seriesOverrides\": [\n        {\n          \"alias\": \"avg
+    gc duration\",\n          \"yaxis\": 2\n        },\n        {\n          \"alias\":
+    \"127.0.0.1:3000\",\n          \"yaxis\": 1\n        },\n        {\n          \"alias\":
+    \"allocated memory\",\n          \"yaxis\": 2\n        },\n        {\n          \"alias\":
+    \"used memory\",\n          \"yaxis\": 2\n        },\n        {\n          \"alias\":
+    \"memory usage\",\n          \"yaxis\": 2\n        }\n      ],\n      \"spaceLength\":
+    10,\n      \"stack\": false,\n      \"steppedLine\": false,\n      \"targets\":
+    [\n        {\n          \"expr\": \"sum(go_goroutines{job=\\\"grafana\\\"})\",\n
+    \         \"format\": \"time_series\",\n          \"hide\": false,\n          \"intervalFactor\":
+    4,\n          \"legendFormat\": \"go routines\",\n          \"refId\": \"A\",\n
+    \         \"step\": 8,\n          \"target\": \"select metric\",\n          \"type\":
+    \"timeserie\"\n        },\n        {\n          \"expr\": \"sum(process_resident_memory_bytes{job=\\\"grafana\\\"})\",\n
+    \         \"format\": \"time_series\",\n          \"intervalFactor\": 4,\n          \"legendFormat\":
+    \"memory usage\",\n          \"refId\": \"B\",\n          \"step\": 8\n        }\n
+    \     ],\n      \"thresholds\": [],\n      \"timeFrom\": null,\n      \"timeRegions\":
+    [],\n      \"timeShift\": null,\n      \"title\": \"Grafana performance\",\n      \"tooltip\":
+    {\n        \"shared\": true,\n        \"sort\": 0,\n        \"value_type\": \"individual\"\n
+    \     },\n      \"type\": \"graph\",\n      \"xaxis\": {\n        \"buckets\":
+    null,\n        \"mode\": \"time\",\n        \"name\": null,\n        \"show\":
+    true,\n        \"values\": []\n      },\n      \"yaxes\": [\n        {\n          \"format\":
+    \"short\",\n          \"label\": null,\n          \"logBase\": 1,\n          \"max\":
+    null,\n          \"min\": null,\n          \"show\": true\n        },\n        {\n
+    \         \"format\": \"decbytes\",\n          \"label\": null,\n          \"logBase\":
+    1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
+    \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
+    null\n      }\n    },\n    {\n      \"content\": \"<div>\\n  <div style=\\\"position:
+    absolute; top: 0, left: 0\\\">\\n    <a href=\\\"https://linkerd.io\\\" target=\\\"_blank\\\"><img
+    src=\\\"https://linkerd.io/images/identity/svg/linkerd_primary_color_white.svg\\\"
+    style=\\\"height: 30px;\\\"></a>\\n  </div>\\n  <div id=\\\"version\\\" style=\\\"position:
+    absolute; top: 0; right: 0; font-size: 15px\\\">\\n  </div>\\n</div>\\n<script
+    type=\\\"text/javascript\\\">\\nvar localReqURL =\\n  window.location.href.substring(\\n
+    \   0,\\n    window.location.href.indexOf(\\n    \\\"/grafana/\\\"\\n    )\\n
+    \ )+'/overview';\\n\\nfetch(localReqURL, {\\n  credentials: 'include',\\n  headers:
+    {\\n    \\\"Content-Type\\\": \\\"text/html; charset=utf-8\\\",\\n  },\\n})\\n.then(response
+    => response.text())\\n.then(text => (new window.DOMParser()).parseFromString(text,
+    \\\"text/html\\\"))\\n.then(html => {\\n  var main = html.getElementById('main');\\n
+    \ var localVersion = main.getAttribute(\\\"data-release-version\\\");\\n  var
+    versionElem = document.getElementById('version');\\n\\n  var channel;\\n  var
+    parts = localVersion.split(\\\"-\\\", 2);\\n  if (parts.length === 2) {\\n    channel
+    = parts[0];\\n    versionElem.innerHTML += 'Running Linkerd ' + parts[1] + ' ('
+    + parts[0] + ')' + '.<br>';\\n  } else {\\n    versionElem.innerHTML += 'Running
+    Linkerd ' + localVersion + '.<br>';\\n  }\\n  var uuid = main.getAttribute(\\\"data-uuid\\\");\\n\\n
+    \ fetch('https://versioncheck.linkerd.io/version.json?version='+localVersion+'&uuid='+uuid+'&source=grafana',
+    {\\n    credentials: 'include',\\n    headers: {\\n      \\\"Content-Type\\\":
+    \\\"application/json; charset=utf-8\\\",\\n    },\\n  })\\n  .then(response =>
+    response.json())\\n  .then(json => {\\n    if (!channel || !json[channel]) {\\n
+    \     versionElem.innerHTML += 'Version check failed.'\\n    } else if (json[channel]
+    === localVersion) {\\n      versionElem.innerHTML += 'Linkerd is up to date.';\\n
+    \   } else {\\n      parts = json[channel].split(\\\"-\\\", 2);\\n      if (parts.length
+    === 2) {\\n        versionElem.innerHTML += \\\"A new \\\"+parts[0]+\\\" version
+    (\\\"+parts[1]+\\\") is available.\\\"\\n      } else {\\n        versionElem.innerHTML
+    += \\\"A new version (\\\"+json[channel]+\\\") is available.\\\"\\n      }\\n
+    \     versionElem.innerHTML += \\\" <a href='https://versioncheck.linkerd.io/update'
+    target='_blank'>Update now</a>.\\\";\\n    }\\n  });\\n});\\n</script>\",\n      \"gridPos\":
+    {\n        \"h\": 3,\n        \"w\": 24,\n        \"x\": 0,\n        \"y\": 27\n
+    \     },\n      \"height\": \"1px\",\n      \"id\": 171,\n      \"links\": [],\n
+    \     \"mode\": \"html\",\n      \"options\": {},\n      \"title\": \"\",\n      \"transparent\":
+    true,\n      \"type\": \"text\"\n    }\n  ],\n  \"revision\": \"1.0\",\n  \"schemaVersion\":
+    18,\n  \"style\": \"dark\",\n  \"tags\": [\n    \"grafana\",\n    \"prometheus\"\n
+    \ ],\n  \"templating\": {\n    \"list\": []\n  },\n  \"time\": {\n    \"from\":
+    \"now-6h\",\n    \"to\": \"now\"\n  },\n  \"timepicker\": {\n    \"refresh_intervals\":
+    [\n      \"5s\",\n      \"10s\",\n      \"30s\",\n      \"1m\",\n      \"5m\",\n
+    \     \"15m\",\n      \"30m\",\n      \"1h\",\n      \"2h\",\n      \"1d\"\n    ],\n
+    \   \"time_options\": [\n      \"5m\",\n      \"15m\",\n      \"1h\",\n      \"6h\",\n
+    \     \"12h\",\n      \"24h\",\n      \"2d\",\n      \"7d\",\n      \"30d\"\n
+    \   ]\n  },\n  \"timezone\": \"\",\n  \"title\": \"Grafana metrics\",\n  \"uid\":
+    \"grafana-metrics\",\n  \"version\": 1\n}\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: linkerd-grafana
+{{- end }}
