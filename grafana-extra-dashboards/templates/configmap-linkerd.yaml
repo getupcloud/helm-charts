@@ -1,0 +1,14 @@
+{{ if .Values.linkerd.enabled -}}
+{{ range $path, $_ :=  .Files.Glob  "dashboards/linkerd/*.json" }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "grafana-extra-dashboards.fullname" $ }}-{{ base $path | trimSuffix ".json" }}
+  labels:
+    grafana_dashboard: "1"
+    {{- include "grafana-extra-dashboards.labels" $ | nindent 4 }}
+data:
+  {{ $path | base }}: |-{{ $.Files.Get $path | nindent 4 }}
+{{- end }}
+{{- end }}

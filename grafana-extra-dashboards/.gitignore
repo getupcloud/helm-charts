@@ -1,2 +1,2 @@
-linkerd2
-templates/linkerd-top-line.yaml
+linkerd2/
+dashboards/linkerd/linkerd-top-line.yaml

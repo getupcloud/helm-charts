@@ -35,10 +35,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             {{- toYaml .Values.env | nindent 12 }}
+          {{ if .Values.containerPort != "" }}
           ports:
           - name: http
             containerPort: {{ .Values.containerPort }}
             protocol: TCP
+          {{ end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ include "grafana-extra-dashboards.fullname" . }}
   labels:
+    grafana_dashboard: "1"
     {{- include "grafana-extra-dashboards.labels" . | nindent 4 }}
 data:
   mock: ""
