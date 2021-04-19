@@ -25,11 +25,14 @@ charts=( $(ls -d */ | grep -vwE '^(dev|repo)/$') ) # exclude dirs dev/ and repo/
 
 mkdir -p repo/getupcloud
 
+echo Creating charts: repo/getupcloud
 helm package -d repo/getupcloud "${charts[@]}"
+echo Creating index: repo/getupcloud
 helm repo index repo/getupcloud
 
 $no_mirror && exit
 
+echo Download mirrors
 ./helm-mirror repo/ prometheus-community https://prometheus-community.github.io/helm-charts
 ./helm-mirror repo/ autoscaler https://kubernetes.github.io/autoscaler
 ./helm-mirror repo/ jetstack https://charts.jetstack.io
