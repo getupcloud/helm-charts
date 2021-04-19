@@ -15,7 +15,7 @@ data:
     true,\n      \"type\": \"text\"\n    },\n    {\n      \"cacheTimeout\": null,\n
     \     \"colorBackground\": false,\n      \"colorValue\": false,\n      \"colors\":
     [\n        \"#d44a3a\",\n        \"rgba(237, 129, 40, 0.89)\",\n        \"#299c46\"\n
-    \     ],\n      \"datasource\": \"Prometheus\",\n      \"decimals\": null,\n      \"format\":
+    \     ],\n      \"datasource\": \"prometheus\",\n      \"decimals\": null,\n      \"format\":
     \"percentunit\",\n      \"gauge\": {\n        \"maxValue\": 1,\n        \"minValue\":
     0,\n        \"show\": true,\n        \"thresholdLabels\": false,\n        \"thresholdMarkers\":
     true\n      },\n      \"gridPos\": {\n        \"h\": 4,\n        \"w\": 8,\n        \"x\":
@@ -42,7 +42,7 @@ data:
     \"null\"\n        }\n      ],\n      \"valueName\": \"current\"\n    },\n    {\n
     \     \"cacheTimeout\": null,\n      \"colorBackground\": false,\n      \"colorValue\":
     false,\n      \"colors\": [\n        \"#299c46\",\n        \"rgba(237, 129, 40,
-    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"Prometheus\",\n
+    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"prometheus\",\n
     \     \"decimals\": null,\n      \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\":
     100,\n        \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
     false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
@@ -68,7 +68,7 @@ data:
     \"null\"\n        }\n      ],\n      \"valueName\": \"current\"\n    },\n    {\n
     \     \"cacheTimeout\": null,\n      \"colorBackground\": false,\n      \"colorValue\":
     false,\n      \"colors\": [\n        \"#299c46\",\n        \"rgba(237, 129, 40,
-    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"Prometheus\",\n
+    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"prometheus\",\n
     \     \"decimals\": null,\n      \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\":
     100,\n        \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
     false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
@@ -95,7 +95,7 @@ data:
     \"null\"\n        }\n      ],\n      \"valueName\": \"current\"\n    },\n    {\n
     \     \"cacheTimeout\": null,\n      \"colorBackground\": false,\n      \"colorValue\":
     false,\n      \"colors\": [\n        \"#299c46\",\n        \"rgba(237, 129, 40,
-    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"Prometheus\",\n
+    0.89)\",\n        \"#d44a3a\"\n      ],\n      \"datasource\": \"prometheus\",\n
     \     \"format\": \"none\",\n      \"gauge\": {\n        \"maxValue\": 100,\n
     \       \"minValue\": 0,\n        \"show\": false,\n        \"thresholdLabels\":
     false,\n        \"thresholdMarkers\": true\n      },\n      \"gridPos\": {\n        \"h\":
@@ -125,7 +125,7 @@ data:
     [],\n      \"mode\": \"html\",\n      \"options\": {},\n      \"title\": \"\",\n
     \     \"transparent\": true,\n      \"type\": \"text\"\n    },\n    {\n      \"aliasColors\":
     {},\n      \"bars\": false,\n      \"dashLength\": 10,\n      \"dashes\": false,\n
-    \     \"datasource\": \"Prometheus\",\n      \"fill\": 1,\n      \"gridPos\":
+    \     \"datasource\": \"prometheus\",\n      \"fill\": 1,\n      \"gridPos\":
     {\n        \"h\": 7,\n        \"w\": 8,\n        \"x\": 0,\n        \"y\": 8\n
     \     },\n      \"id\": 67,\n      \"legend\": {\n        \"avg\": false,\n        \"current\":
     false,\n        \"max\": false,\n        \"min\": false,\n        \"show\": false,\n
@@ -152,7 +152,7 @@ data:
     1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
     \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
     null\n      }\n    },\n    {\n      \"aliasColors\": {},\n      \"bars\": false,\n
-    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"Prometheus\",\n
+    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n
     \     \"fill\": 0,\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 8,\n
     \       \"x\": 8,\n        \"y\": 8\n      },\n      \"id\": 2,\n      \"legend\":
     {\n        \"avg\": false,\n        \"current\": false,\n        \"max\": false,\n
@@ -183,7 +183,7 @@ data:
     1,\n          \"max\": null,\n          \"min\": null,\n          \"show\": true\n
     \       }\n      ],\n      \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\":
     null\n      }\n    },\n    {\n      \"aliasColors\": {},\n      \"bars\": false,\n
-    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"Prometheus\",\n
+    \     \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n
     \     \"fill\": 1,\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 8,\n
     \       \"x\": 16,\n        \"y\": 8\n      },\n      \"id\": 68,\n      \"legend\":
     {\n        \"avg\": false,\n        \"current\": false,\n        \"max\": false,\n
@@ -220,7 +220,7 @@ data:
     true,\n      \"gridPos\": {\n        \"h\": 1,\n        \"w\": 24,\n        \"x\":
     0,\n        \"y\": 15\n      },\n      \"id\": 148,\n      \"panels\": [\n        {\n
     \         \"aliasColors\": {},\n          \"bars\": false,\n          \"dashLength\":
-    10,\n          \"dashes\": false,\n          \"datasource\": \"Prometheus\",\n
+    10,\n          \"dashes\": false,\n          \"datasource\": \"prometheus\",\n
     \         \"fill\": 1,\n          \"gridPos\": {\n            \"h\": 7,\n            \"w\":
     8,\n            \"x\": 0,\n            \"y\": 16\n          },\n          \"id\":
     167,\n          \"legend\": {\n            \"avg\": false,\n            \"current\":
@@ -250,7 +250,7 @@ data:
     \         ],\n          \"yaxis\": {\n            \"align\": false,\n            \"alignLevel\":
     null\n          }\n        },\n        {\n          \"aliasColors\": {},\n          \"bars\":
     false,\n          \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 8,\n            \"y\": 16\n          },\n
     \         \"id\": 168,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -282,7 +282,7 @@ data:
     \"#b4ff00\",\n            \"colorScale\": \"sqrt\",\n            \"colorScheme\":
     \"interpolateOranges\",\n            \"exponent\": 0.5,\n            \"mode\":
     \"spectrum\"\n          },\n          \"dataFormat\": \"timeseries\",\n          \"datasource\":
-    \"Prometheus\",\n          \"gridPos\": {\n            \"h\": 7,\n            \"w\":
+    \"prometheus\",\n          \"gridPos\": {\n            \"h\": 7,\n            \"w\":
     8,\n            \"x\": 16,\n            \"y\": 16\n          },\n          \"heatmap\":
     {},\n          \"hideZeroBuckets\": false,\n          \"highlightCards\": true,\n
     \         \"id\": 169,\n          \"legend\": {\n            \"show\": false\n
@@ -319,7 +319,7 @@ data:
     \"html\",\n          \"options\": {},\n          \"title\": \"\",\n          \"transparent\":
     true,\n          \"type\": \"text\"\n        },\n        {\n          \"aliasColors\":
     {},\n          \"bars\": false,\n          \"dashLength\": 10,\n          \"dashes\":
-    false,\n          \"datasource\": \"Prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
+    false,\n          \"datasource\": \"prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
     {\n            \"h\": 7,\n            \"w\": 8,\n            \"x\": 0,\n            \"y\":
     24.2\n          },\n          \"id\": 36,\n          \"legend\": {\n            \"avg\":
     false,\n            \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -352,7 +352,7 @@ data:
     \         ],\n          \"yaxis\": {\n            \"align\": false,\n            \"alignLevel\":
     null\n          }\n        },\n        {\n          \"aliasColors\": {},\n          \"bars\":
     false,\n          \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 8,\n            \"y\": 24.2\n          },\n
     \         \"id\": 22,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -387,7 +387,7 @@ data:
     {\n            \"align\": false,\n            \"alignLevel\": null\n          }\n
     \       },\n        {\n          \"aliasColors\": {},\n          \"bars\": false,\n
     \         \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 1,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 1,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 16,\n            \"y\": 24.2\n          },\n
     \         \"id\": 29,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -436,7 +436,7 @@ data:
     \"html\",\n      \"options\": {},\n      \"title\": \"\",\n      \"transparent\":
     true,\n      \"type\": \"text\"\n    },\n    {\n      \"aliasColors\": {},\n      \"bars\":
     false,\n      \"dashLength\": 10,\n      \"dashes\": false,\n      \"datasource\":
-    \"Prometheus\",\n      \"fill\": 1,\n      \"gridPos\": {\n        \"h\": 7,\n
+    \"prometheus\",\n      \"fill\": 1,\n      \"gridPos\": {\n        \"h\": 7,\n
     \       \"w\": 8,\n        \"x\": 0,\n        \"y\": 23\n      },\n      \"id\":
     77,\n      \"legend\": {\n        \"avg\": false,\n        \"current\": false,\n
     \       \"max\": false,\n        \"min\": false,\n        \"show\": false,\n        \"total\":
@@ -464,7 +464,7 @@ data:
     null,\n          \"show\": true\n        }\n      ],\n      \"yaxis\": {\n        \"align\":
     false,\n        \"alignLevel\": null\n      }\n    },\n    {\n      \"aliasColors\":
     {},\n      \"bars\": false,\n      \"dashLength\": 10,\n      \"dashes\": false,\n
-    \     \"datasource\": \"Prometheus\",\n      \"fill\": 0,\n      \"gridPos\":
+    \     \"datasource\": \"prometheus\",\n      \"fill\": 0,\n      \"gridPos\":
     {\n        \"h\": 7,\n        \"w\": 8,\n        \"x\": 8,\n        \"y\": 23\n
     \     },\n      \"id\": 78,\n      \"legend\": {\n        \"avg\": false,\n        \"current\":
     false,\n        \"max\": false,\n        \"min\": false,\n        \"show\": false,\n
@@ -494,7 +494,7 @@ data:
     null,\n          \"min\": null,\n          \"show\": true\n        }\n      ],\n
     \     \"yaxis\": {\n        \"align\": false,\n        \"alignLevel\": null\n
     \     }\n    },\n    {\n      \"aliasColors\": {},\n      \"bars\": false,\n      \"dashLength\":
-    10,\n      \"dashes\": false,\n      \"datasource\": \"Prometheus\",\n      \"fill\":
+    10,\n      \"dashes\": false,\n      \"datasource\": \"prometheus\",\n      \"fill\":
     1,\n      \"gridPos\": {\n        \"h\": 7,\n        \"w\": 8,\n        \"x\":
     16,\n        \"y\": 23\n      },\n      \"id\": 79,\n      \"legend\": {\n        \"avg\":
     false,\n        \"current\": false,\n        \"max\": false,\n        \"min\":
@@ -523,7 +523,7 @@ data:
     \       \"h\": 1,\n        \"w\": 24,\n        \"x\": 0,\n        \"y\": 30\n
     \     },\n      \"id\": 154,\n      \"panels\": [\n        {\n          \"aliasColors\":
     {},\n          \"bars\": false,\n          \"dashLength\": 10,\n          \"dashes\":
-    false,\n          \"datasource\": \"Prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
+    false,\n          \"datasource\": \"prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
     {\n            \"h\": 7,\n            \"w\": 8,\n            \"x\": 0,\n            \"y\":
     29\n          },\n          \"id\": 157,\n          \"legend\": {\n            \"avg\":
     false,\n            \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -552,7 +552,7 @@ data:
     \         ],\n          \"yaxis\": {\n            \"align\": false,\n            \"alignLevel\":
     null\n          }\n        },\n        {\n          \"aliasColors\": {},\n          \"bars\":
     false,\n          \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 8,\n            \"y\": 29\n          },\n
     \         \"id\": 166,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -584,7 +584,7 @@ data:
     \"#b4ff00\",\n            \"colorScale\": \"sqrt\",\n            \"colorScheme\":
     \"interpolateOranges\",\n            \"exponent\": 0.5,\n            \"mode\":
     \"spectrum\"\n          },\n          \"dataFormat\": \"timeseries\",\n          \"datasource\":
-    \"Prometheus\",\n          \"gridPos\": {\n            \"h\": 7,\n            \"w\":
+    \"prometheus\",\n          \"gridPos\": {\n            \"h\": 7,\n            \"w\":
     8,\n            \"x\": 16,\n            \"y\": 29\n          },\n          \"heatmap\":
     {},\n          \"hideZeroBuckets\": false,\n          \"highlightCards\": true,\n
     \         \"id\": 160,\n          \"legend\": {\n            \"show\": false\n
@@ -621,7 +621,7 @@ data:
     \"html\",\n          \"options\": {},\n          \"title\": \"\",\n          \"transparent\":
     true,\n          \"type\": \"text\"\n        },\n        {\n          \"aliasColors\":
     {},\n          \"bars\": false,\n          \"dashLength\": 10,\n          \"dashes\":
-    false,\n          \"datasource\": \"Prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
+    false,\n          \"datasource\": \"prometheus\",\n          \"fill\": 1,\n          \"gridPos\":
     {\n            \"h\": 7,\n            \"w\": 8,\n            \"x\": 0,\n            \"y\":
     38\n          },\n          \"id\": 28,\n          \"legend\": {\n            \"avg\":
     false,\n            \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -652,7 +652,7 @@ data:
     \         ],\n          \"yaxis\": {\n            \"align\": false,\n            \"alignLevel\":
     null\n          }\n        },\n        {\n          \"aliasColors\": {},\n          \"bars\":
     false,\n          \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 0,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 8,\n            \"y\": 38\n          },\n
     \         \"id\": 35,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -686,7 +686,7 @@ data:
     {\n            \"align\": false,\n            \"alignLevel\": null\n          }\n
     \       },\n        {\n          \"aliasColors\": {},\n          \"bars\": false,\n
     \         \"dashLength\": 10,\n          \"dashes\": false,\n          \"datasource\":
-    \"Prometheus\",\n          \"fill\": 1,\n          \"gridPos\": {\n            \"h\":
+    \"prometheus\",\n          \"fill\": 1,\n          \"gridPos\": {\n            \"h\":
     7,\n            \"w\": 8,\n            \"x\": 16,\n            \"y\": 38\n          },\n
     \         \"id\": 41,\n          \"legend\": {\n            \"avg\": false,\n
     \           \"current\": false,\n            \"max\": false,\n            \"min\":
@@ -760,7 +760,7 @@ data:
     true,\n      \"type\": \"text\"\n    }\n  ],\n  \"refresh\": \"1m\",\n  \"schemaVersion\":
     18,\n  \"style\": \"dark\",\n  \"tags\": [\n    \"linkerd\"\n  ],\n  \"templating\":
     {\n    \"list\": [\n      {\n        \"allValue\": \".*\",\n        \"current\":
-    {},\n        \"datasource\": \"Prometheus\",\n        \"definition\": \"\",\n
+    {},\n        \"datasource\": \"prometheus\",\n        \"definition\": \"\",\n
     \       \"hide\": 0,\n        \"includeAll\": false,\n        \"label\": \"Namespace\",\n
     \       \"multi\": false,\n        \"name\": \"namespace\",\n        \"options\":
     [],\n        \"query\": \"label_values(process_start_time_seconds{deployment!=\\\"\\\"},
@@ -768,7 +768,7 @@ data:
     false,\n        \"sort\": 1,\n        \"tagValuesQuery\": \"\",\n        \"tags\":
     [],\n        \"tagsQuery\": \"\",\n        \"type\": \"query\",\n        \"useTags\":
     false\n      },\n      {\n        \"allValue\": \".*\",\n        \"current\":
-    {},\n        \"datasource\": \"Prometheus\",\n        \"definition\": \"\",\n
+    {},\n        \"datasource\": \"prometheus\",\n        \"definition\": \"\",\n
     \       \"hide\": 0,\n        \"includeAll\": false,\n        \"label\": \"Deployment\",\n
     \       \"multi\": false,\n        \"name\": \"deployment\",\n        \"options\":
     [],\n        \"query\": \"label_values(process_start_time_seconds{namespace=\\\"$namespace\\\"},
@@ -776,7 +776,7 @@ data:
     false,\n        \"sort\": 1,\n        \"tagValuesQuery\": \"\",\n        \"tags\":
     [],\n        \"tagsQuery\": \"\",\n        \"type\": \"query\",\n        \"useTags\":
     false\n      },\n      {\n        \"allValue\": \".*\",\n        \"current\":
-    {},\n        \"datasource\": \"Prometheus\",\n        \"definition\": \"\",\n
+    {},\n        \"datasource\": \"prometheus\",\n        \"definition\": \"\",\n
     \       \"hide\": 2,\n        \"includeAll\": true,\n        \"label\": null,\n
     \       \"multi\": false,\n        \"name\": \"inbound\",\n        \"options\":
     [],\n        \"query\": \"label_values(request_total{dst_namespace=\\\"$namespace\\\",
@@ -785,7 +785,7 @@ data:
     \       \"tagValuesQuery\": \"\",\n        \"tags\": [],\n        \"tagsQuery\":
     \"\",\n        \"type\": \"query\",\n        \"useTags\": false\n      },\n      {\n
     \       \"allValue\": \".*\",\n        \"current\": {},\n        \"datasource\":
-    \"Prometheus\",\n        \"definition\": \"\",\n        \"hide\": 2,\n        \"includeAll\":
+    \"prometheus\",\n        \"definition\": \"\",\n        \"hide\": 2,\n        \"includeAll\":
     true,\n        \"label\": null,\n        \"multi\": false,\n        \"name\":
     \"outbound\",\n        \"options\": [],\n        \"query\": \"label_values(request_total{namespace=\\\"$namespace\\\",
     deployment=\\\"$deployment\\\"}, dst_deployment)\",\n        \"refresh\": 2,\n
