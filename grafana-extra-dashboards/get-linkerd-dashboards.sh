@@ -13,4 +13,4 @@ mkdir -p dashboards/linkerd
 for i in linkerd2/grafana/dashboards/*.json; do
   cp -vf $i dashboards/linkerd/linkerd-${i##*/}
 done
-#rm -rf linkerd2
+rm -rf linkerd2

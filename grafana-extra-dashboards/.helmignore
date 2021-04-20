@@ -21,3 +21,9 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Local files
+.helmignore
+dashboards/
+linkerd2/
+get-linkerd-dashboards.sh
