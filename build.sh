@@ -29,6 +29,7 @@ echo Creating charts: repo/getupcloud
 helm package -d repo/getupcloud "${charts[@]}"
 echo Creating index: repo/getupcloud
 helm repo index repo/getupcloud
+cp index.html repo/
 
 $no_mirror && exit
 
