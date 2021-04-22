@@ -22,3 +22,8 @@ loki:
       effect: NoSchedule
     nodeSelector:
       role: infra
+  ingress:
+    enabled: false
+    auth:
+      basic_username: "monitoring"
+      basic_password: "monitoring"
