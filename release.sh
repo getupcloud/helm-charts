@@ -1,6 +1,9 @@
 #!/bin/bash
 
-if [ $(git diff --stat) != '' ]; then
+if [ "$(git diff --stat)" != '' ]; then
+  git diff --stat
+  echo
+  echo Please, commit first
   exit 1
 fi
 
