@@ -7,7 +7,7 @@ replicas: 1
 ingress:
   hosts:
   - host: rabbitmq.example.com
-    path: /rabbitmq
+    path: /
 
   tls: []
   #- hosts:
@@ -63,5 +63,6 @@ tolerations:
     operator: Exists
 
 # Must be string block, not YAML
-additionalConfig: |
-  management.path_prefix = /rabbitmq
+additionalConfig: ""
+#additionalConfig: |
+#  management.path_prefix = /rabbitmq

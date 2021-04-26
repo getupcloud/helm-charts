@@ -12,8 +12,8 @@ spec:
     {{- toYaml .Values.override | nindent 4}}
   persistence:
     {{- toYaml .Values.persistence | nindent 4 }}
-  rabbitmq:
 {{- if .Values.additionalConfig }}
+  rabbitmq:
     additionalConfig: |{{ .Values.additionalConfig | nindent 6 }}
 {{ end }}
   replicas: {{ .Values.replicas }}
