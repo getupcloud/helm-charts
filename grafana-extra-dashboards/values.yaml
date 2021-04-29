@@ -2,20 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-ingressNginx:
+default:
   enabled: true
-
-loki:
-  enabled: true
-
-usageRatio:
-  enabled: true
-
-kong:
-  enabled: false
 
 linkerd:
-  enabled: false
+  enabled: true
+
+rabbitmq:
+  enabled: true
 
 # Include extra files. Key is filename, value is json data
 extraDashboards: {}
