@@ -51,7 +51,7 @@
    "description": "Dashboard that graphs metrics exported via Prometheus plugin in Kong (http://github.com/kong/kong-plugin-prometheus)",
    "editable": true,
    "gnetId": 7424,
-   "graphTooltip": 0,
+   "graphTooltip": 1,
    "id": null,
    "iteration": 1547510665130,
    "links": [],

@@ -15,7 +15,7 @@
    "description": "Loki and Promtail metrics.",
    "editable": true,
    "gnetId": 10880,
-   "graphTooltip": 0,
+   "graphTooltip": 1,
    "id": 15,
    "links": [],
    "panels": [
