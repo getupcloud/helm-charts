@@ -28,11 +28,16 @@ mkdir -p repo/getupcloud
 echo Downloading git repos
 mkdir -p git
 if [ -d git/postgres-operator ]; then
-    (cd git/postgres-operator && git pull;)
+    pushd git/postgres-operator
+    git pull -A
+    git checkout master
 else
     git clone https://github.com/CrunchyData/postgres-operator.git git/postgres-operator
+    pushd git/postgres-operator
 fi
-
+git branch -D v4.6.2-helm || true
+git checkout -b v4.6.2-helm v4.6.2
+popd
 charts+=( git/postgres-operator/installers/helm/ )
 
 echo Creating charts: repo/getupcloud
