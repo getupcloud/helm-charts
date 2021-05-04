@@ -5,11 +5,20 @@ metadata:
   labels:
     {{- include "ravendb.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  clusterIP: None
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: http-api
+      port: 443
       protocol: TCP
-      name: http
+      targetPort: 443
+    - name: tcp-server
+      port: 38888
+      protocol: TCP
+      targetPort: 38888
+    - name: snmp
+      port: 161
+      protocol: TCP
+      targetPort: 161
   selector:
     {{- include "ravendb.selectorLabels" . | nindent 4 }}

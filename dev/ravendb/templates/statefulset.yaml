@@ -3,36 +3,86 @@ kind: StatefulSet
 metadata:
   name: {{ include "ravendb.fullname" . }}
   labels:
-    {{- include "ravendb.labels" . | indent 4 }}
+    {{- include "ravendb.labels" . | nindent 4 }}
 spec:
   podManagementPolicy: OrderedReady
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 10
   selector:
-  labels:
     matchLabels:
-      {{- include "ravendb.labels" . | indent 6 }}
+      {{- include "ravendb.labels" . | nindent 6 }}
   serviceName: {{ include "ravendb.fullname" . }}
   template:
     metadata:
       labels:
-        {{- include "ravendb.labels" . | indent 8 }}
+        {{- include "ravendb.labels" . | nindent 8 }}
     spec:
-{{- with .Values.affinity }}
-      affinity:
-        {{- toYaml .Values.affinity | indent 8 }}
-{{- end }}
-      containers:
+
+      initContainers:
       - env:
+        - name: CONFIG_DIR
+          value: /config
+        - name: CERTS_DIR
+          value: /certs
+        - name: LICENSE_DIR
+          value: /license
+        - name: SERVICE_NAME
+          value: {{ include "ravendb.fullname" . }}
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
         - name: POD_NAME
           valueFrom:
             fieldRef:
               apiVersion: v1
-              fieldPat : metadata.oame
+              fieldPath: metadata.name
+        name: setup
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command:
+        - /setup/setup.sh
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /certs
+          name: certs
+        - mountPath: /setup
+          name: setup
+        - mountPath: /config
+          name: config
+
+      containers:
+      - env:
+        - name: DATA_DIR
+          value: /data
+        - name: CONFIG_DIR
+          value: /config
+        - name: CERTS_DIR
+          value: /certs
+        - name: SERVICE_NAME
+          value: {{ include "ravendb.fullname" . }}
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
         - name: RAVEN_ARGS
-          value: --log-to-console --config-path /config/settings-$(POD_NAME).json
+          value: --log-to-console --config-path $(CONFIG_DIR)/config.json
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          cp -vf /certs/trusted-ca.crt /usr/local/share/ca-certificates/ravendb-trusted-ca.crt || true
+          update-ca-certificates --verbose || true
+          exec /opt/RavenDB/run-raven.sh
         name: ravendb
         ports:
         - containerPort: 443
@@ -44,21 +94,10 @@ spec:
         - containerPort: 161
           name: snmp
           protocol: TCP
-{{- with .Values.resources }}
+      {{- with .Values.resources }}
         resources:
-          {{- toYaml . | indent 10 }}
-{{- end }}
-        volumeMounts:
-{{- if .Values.persistence }}
-        - mountPath: /data
-          name: data
-{{- end }}
-        - mountPath: /ssl
-          name: ssl
-        - mountPath: /license
-          name: license
-        - mountPath: /config
-          name: config
+          {{- toYaml . | nindent 10 }}
+      {{- end }}
         lifecycle:
           preStop:
             exec:
@@ -66,22 +105,55 @@ spec:
               - /bin/bash
               - -c
               - "kill -INT $(pidof Raven.Server)"
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /certs
+          name: certs
+        - mountPath: /license
+          name: license
+        - mountPath: /config
+          name: config
 
-{{- with .Values.nodeSelector }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
-{{- end }}
+      {{- end }}
+
+      volumes:
+      - name: certs
+        secret:
+          defaultMode: 0400
+          secretName: {{ include "ravendb.fullname" $ }}-certs
+      - name: setup
+        configMap:
+          defaultMode: 0755
+          name: {{ include "ravendb.fullname" $ }}-setup
+      - name: license
+        secret:
+          defaultMode: 0420
+          secretName: {{ include "ravendb.fullname" $ }}-license
+      - name: config
+        emptyDir: {}
+
   volumeClaimTemplates:
   - metadata:
       labels:
-        {{- include "ravendb.labels" . | indent 8 }}
-      name: {{ include "ravendb.fullname" . }}-data
+        {{- include "ravendb.labels" . | nindent 8 }}
+      name: data
     spec:
       accessModes:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 100Gi
-      storageClassName: local-path-raven
+          storage: {{ .Values.storage.size }}
+      storageClassName: {{ .Values.storage.storageClassName }}
       volumeMode: Filesystem
-

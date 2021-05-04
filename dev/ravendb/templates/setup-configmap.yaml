@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ravendb.fullname" . }}-setup
+data:
+  setup.sh: |-
+    {{- .Files.Get "scripts/setup.sh" | nindent 4 }}
+
+  ca.conf: |-
+    {{- .Files.Get "scripts/ca.conf" | nindent 4 }}
+
+  tls.conf: |-
+    {{- .Files.Get "scripts/tls.conf" | nindent 4 }}
