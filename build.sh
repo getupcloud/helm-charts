@@ -29,7 +29,7 @@ echo Downloading git repos
 mkdir -p git
 if [ -d git/postgres-operator ]; then
     pushd git/postgres-operator
-    git pull -A
+    git pull --all
     git checkout master
 else
     git clone https://github.com/CrunchyData/postgres-operator.git git/postgres-operator
