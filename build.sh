@@ -21,7 +21,7 @@ if $full; then
   rm -rf repo
 fi
 
-charts=( $(ls -d */ | grep -vwE '^(dev|repo)/$') ) # exclude dirs dev/ and repo/
+charts=( $(ls -d */ | grep -vwE '^(dev|repo|git)/$') ) # exclude dirs dev/ and repo/
 
 mkdir -p repo/getupcloud
 
@@ -39,6 +39,8 @@ git branch -D v4.6.2-helm || true
 git checkout -b v4.6.2-helm v4.6.2
 popd
 charts+=( git/postgres-operator/installers/helm/ )
+
+echo Charts sources: ${charts[*]}
 
 echo Creating charts: repo/getupcloud
 helm package -d repo/getupcloud "${charts[@]}"
