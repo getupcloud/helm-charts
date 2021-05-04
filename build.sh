@@ -25,6 +25,16 @@ charts=( $(ls -d */ | grep -vwE '^(dev|repo)/$') ) # exclude dirs dev/ and repo/
 
 mkdir -p repo/getupcloud
 
+echo Downloading git repos
+mkdir -p git
+if [ -d git/postgres-operator ]; then
+    (cd git/postgres-operator && git pull;)
+else
+    git clone https://github.com/CrunchyData/postgres-operator.git git/postgres-operator
+fi
+
+charts+=( git/postgres-operator/installers/helm/ )
+
 echo Creating charts: repo/getupcloud
 helm package -d repo/getupcloud "${charts[@]}"
 echo Creating index: repo/getupcloud
@@ -42,3 +52,4 @@ echo Download mirrors
 ./helm-mirror repo/ loki https://grafana.github.io/loki/charts
 ./helm-mirror repo/ elastic https://helm.elastic.co
 ./helm-mirror repo/ harbor https://helm.goharbor.io
+
