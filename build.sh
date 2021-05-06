@@ -59,4 +59,5 @@ echo Download mirrors
 ./helm-mirror repo/ loki https://grafana.github.io/loki/charts
 ./helm-mirror repo/ elastic https://helm.elastic.co
 ./helm-mirror repo/ harbor https://helm.goharbor.io
+./helm-mirror repo/ prometheus-msteams https://prometheus-msteams.github.io/prometheus-msteams/
 
