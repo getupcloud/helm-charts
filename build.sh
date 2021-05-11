@@ -26,19 +26,7 @@ charts=( $(ls -d */ | grep -vwE '^(dev|repo|git)/$') ) # exclude dirs dev/ and r
 mkdir -p repo/getupcloud
 
 echo Downloading git repos
-mkdir -p git
-if [ -d git/postgres-operator ]; then
-    pushd git/postgres-operator
-    git pull --all
-    git checkout master
-else
-    git clone https://github.com/CrunchyData/postgres-operator.git git/postgres-operator
-    pushd git/postgres-operator
-fi
-git branch -D v4.6.2-helm || true
-git checkout -b v4.6.2-helm v4.6.2
-popd
-charts+=( git/postgres-operator/installers/helm/ )
+./git-download.sh https://github.com/CrunchyData/postgres-operator.git && charts+=( git/postgres-operator/installers/helm/ )
 
 echo Charts sources: ${charts[*]}
 
@@ -60,4 +48,5 @@ echo Download mirrors
 ./helm-mirror repo/ elastic https://helm.elastic.co
 ./helm-mirror repo/ harbor https://helm.goharbor.io
 ./helm-mirror repo/ prometheus-msteams https://prometheus-msteams.github.io/prometheus-msteams/
+./helm-mirror repo/ ot-helm https://ot-container-kit.github.io/helm-charts/
 
