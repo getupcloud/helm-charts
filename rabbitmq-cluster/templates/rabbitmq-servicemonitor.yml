@@ -1,20 +1,20 @@
-{{ if .Values.metrics.enabled -}}
+{{- if .Values.metrics.enabled -}}
+{{ if has "official" .Values.metrics.exporter_types }}
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: rabbitmq
-  # If labels are defined in spec.serviceMonitorSelector.matchLabels of your deployed Prometheus object, make sure to include them here.
+  name: {{ include "rabbitmq-cluster.fullname" . }}-official
 spec:
   endpoints:
   - port: prometheus
     scheme: http
-    interval: 15s
-    scrapeTimeout: 14s
+    interval: 30s
+    scrapeTimeout: 15s
   - port: prometheus-tls
     scheme: https
-    interval: 15s
-    scrapeTimeout: 14s
+    interval: 30s
+    scrapeTimeout: 15s
     tlsConfig:
       insecureSkipVerify: true
   selector:
@@ -22,4 +22,25 @@ spec:
       app.kubernetes.io/component: rabbitmq
   namespaceSelector:
     any: true
+{{- end }}
+
+{{ if has "kbudde" .Values.metrics.exporter_types }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "rabbitmq-cluster.fullname" . }}-kbudde
+spec:
+  endpoints:
+  - port: prometheus
+    scheme: http
+    interval: 30s
+    scrapeTimeout: 15s
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: rabbitmq
+  namespaceSelector:
+    any: true
+{{- end }}
+
 {{- end }}

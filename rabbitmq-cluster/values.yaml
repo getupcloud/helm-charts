@@ -43,16 +43,7 @@ affinity: {}
 #          values:
 #          - infra
 
-override:
-  service:
-    spec:
-      ports:
-      ## Required for prometheus monitoring until >v1.6.0 is relased
-      ## https://github.com/rabbitmq/cluster-operator/blob/main/internal/resource/service.go#L275
-      - name: prometheus
-        port: 15692
-        protocol: TCP
-        targetPort: 15692
+override: {}
 
 persistence:
   storage: 10Gi
@@ -73,9 +64,60 @@ tolerations:
 
 # Must be string block, not YAML
 additionalConfig: ""
-#additionalConfig: |
+#additionalConfig: |-
+#   prometheus.return_per_object_metrics = false
 #  management.path_prefix = /rabbitmq
-#
+
+# Must be list(string), not YAML
+additionalConfigs: []
+#additionalConfigs:
+#- "prometheus.return_per_object_metrics = false"
+#- "management.path_prefix = /rabbitmq"
 
 metrics:
   enabled: true
+
+  ## valid values: official, kbudde
+  exporter_types:
+  - official
+  #- kbudde
+
+  overrides:
+    kbudde:
+      statefulSet:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: kbudde-exporter
+                env:
+                - name: RABBIT_URL
+                  value: http://127.0.0.1:15672
+                - name: RABBIT_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: "%RELEASE_NAME%-default-user"
+                      key: username
+                - name: RABBIT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: "%RELEASE_NAME%-default-user"
+                      key: password
+                - name: OUTPUT_FORMAT
+                  value: json
+                - name: SKIP_QUEUES
+                  value: RPC_.*
+                - name: MAX_QUEUES
+                  value: "1000"
+                image: kbudde/rabbitmq-exporter
+                imagePullPolicy: IfNotPresent
+                ports:
+                - containerPort: 9419
+                  protocol: TCP
+                resources:
+                  requests:
+                    memory: 128Mi
+                    cpu: 100m
+                  limits:
+                    memory: 128Mi
+                    cpu: 100m

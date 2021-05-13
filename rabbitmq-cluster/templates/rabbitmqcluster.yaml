@@ -8,14 +8,25 @@ spec:
   affinity:
     {{- toYaml .Values.affinity | nindent 4 }}
   image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+{{- $override := deepCopy .Values.override }}
+{{- if and (has "official" .Values.metrics.exporter_types) .Values.metrics.overrides.official }}
+{{- $override := deepCopy .Values.metrics.overrides.official | merge $override }}
+{{- end }}
+{{- if and (has "kbudde" .Values.metrics.exporter_types) .Values.metrics.overrides.kbudde }}
+{{- $override := deepCopy .Values.metrics.overrides.kbudde | merge $override }}
+{{- end }}
   override:
-    {{- toYaml .Values.override | nindent 4}}
+    {{- toYaml $override | replace "%RELEASE_NAME%" .Release.Name | nindent 4 }}
   persistence:
     {{- toYaml .Values.persistence | nindent 4 }}
-{{- if .Values.additionalConfig }}
+{{- if or .Values.additionalConfig .Values.additionalConfigs }}
   rabbitmq:
-    additionalConfig: |{{ .Values.additionalConfig | nindent 6 }}
-{{ end }}
+    additionalConfig: |
+      {{- .Values.additionalConfig | nindent 6 }}
+{{- range .Values.additionalConfigs }}
+      {{ . }}
+{{- end }}
+{{- end }}
   replicas: {{ .Values.replicas }}
   resources:
     {{- toYaml .Values.resources | nindent 4 }}
