@@ -1,0 +1,24 @@
+Thank You for install Popeye Reports Cronjob
+This is going to be performed every {{ .Values.rotation }} seconds
+And if you enable Ingress, will be check in 
+
+{{- if .Values.ingress.enabled }}
+{{ $host := .Values.ingress.host }} 
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host }}
+{{- end }}
+
+This is a context created using kubernetes resources and popeye from https://github.com/derailed/popeye
+
+{{- if .Values.pushgateway.enabled }}
+You can create dashboard popeye based, download this dashboard on grafana.com/dashboards
+
+  https://grafana.com/api/dashboards/14398/revisions/1/download
+
+{{- end }}
+
+Check resources on namespace {{ .Values.namespace }}
+# kubectl get all,ing -n {{ .Values.namespace }}
+
+Have a Nice Day :-) !!!
+
+
