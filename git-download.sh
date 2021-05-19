@@ -13,15 +13,15 @@ if [ -d $REPO_DIR ]; then
     pushd $REPO_DIR
     git switch -
     git pull --all
-    popd
 else
     git clone $REPO_URL
     pushd $REPO_DIR
 fi
 
 for branch in $BRANCHES; do
-    if git show-ref --verify --quiet refs/$branch; then
-        git checkout $branch
+    ref=$(git show-ref --tags --heads $branch | head -n1 | cut -f2 -d' ')
+    if [ -n "$ref" ]; then
+        git checkout $ref
         break
     fi
 done

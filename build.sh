@@ -26,7 +26,7 @@ charts=( $(ls -d */ | grep -vwE '^(dev|repo|git)/$') ) # exclude dirs dev/ and r
 mkdir -p repo/getupcloud
 
 echo Downloading git repos
-./git-download.sh https://github.com/CrunchyData/postgres-operator.git && charts+=( git/postgres-operator/installers/helm/ )
+./git-download.sh https://github.com/CrunchyData/postgres-operator.git v4.6.2 && charts+=( git/postgres-operator/installers/helm/ )
 
 echo Charts sources: ${charts[*]}
 
