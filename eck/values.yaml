@@ -31,11 +31,11 @@ elasticsearch:
         - name: elasticsearch
           resources:
             limits:
-              memory: 3Gi
-              cpu: 1000m
+              memory: 4Gi
+              cpu: 2
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx2g"
+            value: "-Xms2g -Xmx4g"
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -44,8 +44,8 @@ elasticsearch:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
-        storageClassName: default
+            storage: 10Gi
+        #storageClassName: default
   - name: datanode
     count: 1
     config:
@@ -73,11 +73,11 @@ elasticsearch:
         - name: elasticsearch
           resources:
             limits:
-              memory: 3Gi
-              cpu: 1000m
+              memory: 6Gi
+              cpu: 2
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx2g"
+            value: "-Xms2g -Xmx6g"
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -86,8 +86,8 @@ elasticsearch:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
-        storageClassName: default
+            storage: 100Gi
+        #storageClassName: default
 
   http:
     service:
@@ -95,7 +95,7 @@ elasticsearch:
         annotations: {}
       spec:
         type: ClusterIP
- 
+
   ingress:
     enabled: true
     annotations:
@@ -136,7 +136,6 @@ kibana:
       cert-manager.io/cluster-issuer: selfsigned
     url: kibana.example.com
 
-
 apm:
   enabled: true
   count: 1
@@ -164,4 +163,3 @@ apm:
     annotations:
       cert-manager.io/cluster-issuer: selfsigned
     url: apm.example.com
-
