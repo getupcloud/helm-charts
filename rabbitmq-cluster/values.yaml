@@ -80,11 +80,11 @@ metrics:
   rules:
     queue_has_no_consumers:
       queues: []
-      duration: 5m
-    queue_too_big:
+      duration: 10m
+    queue_has_too_many_messages:
+    - max: 1000
+      duration: 10m
       queues: []
-      total: 250
-      duration: 5m
     queue_stuck_for_too_long:
       queues: []
       duration: 30m

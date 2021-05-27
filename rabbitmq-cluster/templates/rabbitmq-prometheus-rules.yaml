@@ -24,21 +24,6 @@ spec:
       labels:
         severity: critical
 
-    - alert: QueueTooBig
-      annotations:
-        description: |
-          Queue {{ "{{ $labels.queue }}" }} from vhost {{ "{{ $labels.vhost }}" }}, pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }}
-          is too big: {{ "{{ $value }}" }} > {{ .Values.metrics.rules.queue_too_big.total }}
-        summary: |
-          Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is too big: {{ "{{ $value }}" }} > {{ .Values.metrics.rules.queue_too_big.total }}
-      expr: rabbitmq_queue_messages
-{{- if .Values.metrics.rules.queue_too_big.queues -}}
-        {queue=~"^({{ .Values.metrics.rules.queue_too_big.queues | join "|" }})"}
-{{- end }} > {{ .Values.metrics.rules.queue_too_big.total }}
-      for: {{ .Values.metrics.rules.queue_too_big.duration }}
-      labels:
-        severity: critical
-
     - alert: QueueStuckForTooLong
       annotations:
         description: |
@@ -52,5 +37,22 @@ spec:
       for: {{ .Values.metrics.rules.queue_stuck_for_too_long.duration }}
       labels:
         severity: critical
+
+{{ range .Values.metrics.rules.queue_has_too_many_messages }}
+    - alert: QueueHasTooManyMessages
+      annotations:
+        description: |
+          Queue {{ "{{ $labels.queue }}" }} from vhost {{ "{{ $labels.vhost }}" }}, pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }}
+          is too big: {{ "{{ $value }}" }} > {{ .max }}
+        summary: |
+          Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is too big: {{ "{{ $value }}" }} > {{ .max }}
+      expr: rabbitmq_queue_messages
+{{- if .queues -}}
+        {queue=~"^({{ .queues | join "|" }})"}
+{{- end }} > {{ .max }}
+      for: {{ .duration }}
+      labels:
+        severity: critical
+{{ end }}
 {{- end }}
 {{- end }}
