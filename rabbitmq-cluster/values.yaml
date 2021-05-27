@@ -77,6 +77,18 @@ additionalConfigs: []
 metrics:
   enabled: true
 
+  rules:
+    queue_has_no_consumers:
+      queues: []
+      duration: 5m
+    queue_too_big:
+      queues: []
+      total: 250
+      duration: 5m
+    queue_stuck_for_too_long:
+      queues: []
+      duration: 5m
+
   ## valid values: official, kbudde
   exporter_types:
   - official
