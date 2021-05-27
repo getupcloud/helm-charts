@@ -87,7 +87,7 @@ metrics:
       duration: 5m
     queue_stuck_for_too_long:
       queues: []
-      duration: 5m
+      duration: 30m
 
   ## valid values: official, kbudde
   exporter_types:
