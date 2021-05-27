@@ -11,11 +11,32 @@ replicas: 1
 
 image:
   repository: ""
-  name: ""
-  tag: ""
   pullPolicy: IfNotPresent
 
+# command: []
+
+# args: []
+
+env: []
+
+envFrom: {}
+#  configMaps:
+#  - name: myconfig
+#    optional: false
+#  - data:
+#      MYVAR1: myvalue-1
+#      MYVAR2: myvalue-2
+#    optional: false
+#  secrets:
+#  - name: mysecret
+#    optional: false
+#  - data:
+#      USERNAME: plaintext-username
+#      PASSWORD: plaintext-password
+#    optional: false
+
 imagePullSecrets: []
+
 #- name: azure-container-registry-credentials
 
 podAnnotations: {}
@@ -58,6 +79,11 @@ tolerations: []
 
 affinity: {}
 
+livenessProbe: null
+readinessProbe: null
+
+
+
 #############
 ## Service ##
 #############
@@ -93,3 +119,38 @@ storage:
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
+
+  #pv:
+  #  name: mypv
+  #  annotations: {}
+  #  labels: {}
+  #  spec: {}
+
+  ## Example EFS
+  #storageClassName: efs-sc
+  #size: "1Gi" ## ignored by csi
+  #mountPath: /my-data
+  #volumeMode: Filesystem
+  #accessModes:
+  #- ReadWriteMany
+  #volumeNamePrefix: efs
+  #volume:
+  #  persistentVolumeReclaimPolicy: Retain
+  #  csi:
+  #    driver: efs.csi.aws.com
+  #    volumeHandle: fs-xxxxxxxx::fsap-xxxxxxxxxxxxxxxxx
+
+###################
+##    Ingress    ##
+###################
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+  - name: exemplo.com
+    path: /
+  secretName: "exemplo-tls"
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

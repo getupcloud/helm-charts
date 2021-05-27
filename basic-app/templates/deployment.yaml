@@ -27,32 +27,73 @@ spec:
       serviceAccountName: {{ include "basic-deployment.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Release.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           env:
             {{- toYaml .Values.env | nindent 12 }}
-          {{ if .Values.containerPort != "" }}
+
+{{- if .Values.envFrom }}
+          envFrom:
+  {{- range $i, $v := .Values.envFrom.configMaps }}
+    {{- if $v.data }}
+          - configMapRef:
+              name: {{ include "basic-deployment.name" $ }}-config-env-{{ default $i $v.name }}
+              optional: {{ default false $v.optional }}
+    {{ else if $v.name }}
+          - configMapRef:
+              name: {{ $v.name }}
+              optional: {{ default false $v.optional }}
+    {{- end }}
+  {{- end }}
+  {{- range $i, $v := .Values.envFrom.secrets }}
+    {{- if $v.data }}
+          - secretRef:
+              name: {{ include "basic-deployment.name" $ }}-secret-env-{{ default $i $v.name }}
+              optional: {{ default false $v.optional }}
+    {{ else if $v.name }}
+          - secretRef:
+              name: {{ $v.name }}
+              optional: {{ default false $v.optional }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+          {{ if not (eq (.Values.containerPort|int) 0) }}
           ports:
           - name: http
-            containerPort: {{ .Values.containerPort }}
+            containerPort: {{ .Values.containerPort|int }}
             protocol: TCP
-          {{ end }}
+          {{- end }}
+          livenessProbe: {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe: {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-{{ if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
+{{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
             - mountPath: {{ .Values.secret.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
-{{ if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
+{{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
             - mountPath: {{ .Values.configMap.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
-{{ if .Values.storage.enabled }}
+{{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
               name: {{ .Release.Name }}-data
 {{- end }}
@@ -69,18 +110,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-{{ if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
+{{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
         - name: {{ .Release.Name }}-secret
           secret:
             secretName: {{ .Release.Name }}-secret
-{{ end }}
-{{ if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
+{{- end }}
+{{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
         - name: {{ .Release.Name }}-config
           configMap:
             name: {{ .Release.Name }}-config
-{{ end }}
-{{ if .Values.storage.enabled }}
+{{- end }}
+{{- if .Values.storage.enabled }}
         - name: {{ .Release.Name }}-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-data
-{{ end }}
+{{- end }}

@@ -4,7 +4,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ $.Release.Name }}-data
+    app: {{ $.Release.Name }}
   name: {{ $.Release.Name }}-data
 spec:
   accessModes:
@@ -14,5 +14,8 @@ spec:
       storage: {{ .size }}
   storageClassName: {{ .storageClassName }}
   volumeMode: {{ .volumeMode }}
+{{- if .volumeNamePrefix }}
+  volumeName: {{ .volumeNamePrefix }}-{{ $.Release.Namespace }}-{{ $.Release.Name }}
+{{- end }}
 {{- end }}
 {{- end }}
