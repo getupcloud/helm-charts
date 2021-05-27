@@ -12,9 +12,9 @@ spec:
     - alert: QueueHasNoConsumers
       annotations:
         description: |
-          Queue {{ '{{ $labels.queue }}' }} from vhost {{ '{{ $labels.vhost }}' }}, pod {{ '{{ $labels.namespace }}' }}/{{ '{{ $labels.pod }}' }} has no consumers for 5 minutes.
+          Queue {{ "{{ $labels.queue }}" }} from vhost {{ "{{ $labels.vhost }}" }}, pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }} has no consumers for 5 minutes.
         summary: |
-          Queue {{ '{{ $labels.vhost }}' }}{{ '{{ $labels.queue }}' }} is empty for 5 minutes.
+          Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is empty for 5 minutes.
       expr: rabbitmq_queue_consumers == 0
       for: 5m
       labels:
@@ -23,9 +23,9 @@ spec:
     - alert: QueueTooBig
       annotations:
         description: |
-          Queue {{ '{{ $labels.queue }}' }} from vhost {{ '{{ $labels.vhost }}' }}, pod {{ '{{ $labels.namespace }}' }}/{{ '{{ $labels.pod }}' }} is too big: {{ '{{ $value }}' }} > 250
+          Queue {{ "{{ $labels.queue }}" }} from vhost {{ "{{ $labels.vhost }}" }}, pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }} is too big: {{ "{{ $value }}" }} > 250
         summary: |
-          Queue {{ '{{ $labels.vhost }}' }}{{ '{{ $labels.queue }}' }} is too big: {{ '{{ $value }}' }} > 250
+          Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is too big: {{ "{{ $value }}" }} > 250
       expr: rabbitmq_queue_messages{queue=~"^(estoque-darkstore-queue|estoque-queue|ml-queue)"} > 250
       for: 5m
       labels:
@@ -34,9 +34,9 @@ spec:
     - alert: QueueStuckForTooLong
       annotations:
         description: |
-          Queue {{ '{{ $labels.queue }}' }} from vhost {{ '{{ $labels.vhost }}' }}, pod {{ '{{ $labels.namespace }}' }}/{{ '{{ $labels.pod }}' }} is stuck for too long: {{ '{{ $value }}' }} minutes.
+          Queue {{ "{{ $labels.queue }}" }} from vhost {{ "{{ $labels.vhost }}" }}, pod {{ "{{ $labels.namespace }}" }}/{{ "{{ $labels.pod }}" }} is stuck for too long: {{ "{{ $value }}" }} minutes.
         summary: |
-          Queue {{ '{{ $labels.vhost }}' }}{{ '{{ $labels.queue }}' }} is stuck for {{ '{{ $value }}' }} minutes
+          Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is stuck for {{ "{{ $value }}" }} minutes
       expr: rabbitmq_queue_messages > 0 and changes(rabbitmq_queue_messages{queue=~"^(lojas-darkstore-queue|lojas-queue)$"}[5m]) == 0
       for: 30m
       labels:
