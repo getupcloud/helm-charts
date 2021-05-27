@@ -17,7 +17,7 @@ spec:
           Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is empty for {{ .Values.metrics.rules.queue_has_no_consumers.duration }}.
       expr: rabbitmq_queue_consumers
 {{- if .Values.metrics.rules.queue_has_no_consumers.queues -}}
-        {queue=~"^({{ .Values.metrics.rules.queue_has_no_consumers.queues | join "|" }})"}
+        {queue=~"^({{ .Values.metrics.rules.queue_has_no_consumers.queues | join "|" }})$"}
 {{- end }} == 0
       for: {{ .Values.metrics.rules.queue_has_no_consumers.duration }}
       labels:
@@ -31,7 +31,7 @@ spec:
           Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is stuck for {{ "{{ $value }}" }} minutes
       expr: rabbitmq_queue_messages > 0 and changes(rabbitmq_queue_messages
 {{- if .Values.metrics.rules.queue_stuck_for_too_long.queues -}}
-        {queue=~"^({{ .Values.metrics.rules.queue_stuck_for_too_long.queues | join "|" }})"}
+        {queue=~"^({{ .Values.metrics.rules.queue_stuck_for_too_long.queues | join "|" }})$"}
 {{- end }}[5m]) == 0
       for: {{ .Values.metrics.rules.queue_stuck_for_too_long.duration }}
       labels:
@@ -47,7 +47,7 @@ spec:
           Queue {{ "{{ $labels.vhost }}" }}{{ "{{ $labels.queue }}" }} is too big: {{ "{{ $value }}" }} > {{ .max }}
       expr: rabbitmq_queue_messages
 {{- if .queues -}}
-        {queue=~"^({{ .queues | join "|" }})"}
+        {queue=~"^({{ .queues | join "|" }})$"}
 {{- end }} > {{ .max }}
       for: {{ .duration }}
       labels:
