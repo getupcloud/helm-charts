@@ -35,7 +35,7 @@ elasticsearch:
               cpu: 2
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx4g"
+            value: "-Xms4g -Xmx4g"
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
@@ -77,7 +77,7 @@ elasticsearch:
               cpu: 2
           env:
           - name: ES_JAVA_OPTS
-            value: "-Xms2g -Xmx6g"
+            value: "-Xms6g -Xmx6g"
     volumeClaimTemplates:
     - metadata:
         name: elasticsearch-data
