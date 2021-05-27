@@ -3,8 +3,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: lasa-rabbitmq-monitoring
-  namespace: rabbitmq-cluster
+  name: {{ include "rabbitmq-cluster.fullname" . }}-official
 spec:
   groups:
   - name: lasa.rules
