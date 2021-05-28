@@ -154,3 +154,31 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  #
+
+## https://helm.sh/docs/topics/charts_hooks/
+# pre-install	Executes after templates are rendered, but before any resources are created in Kubernetes
+# post-install	Executes after all resources are loaded into Kubernetes
+# pre-delete	Executes on a deletion request before any resources are deleted from Kubernetes
+# post-delete	Executes on a deletion request after all of the release's resources have been deleted
+# pre-upgrade	Executes on an upgrade request after templates are rendered, but before any resources are updated
+# post-upgrade	Executes on an upgrade request after all resources have been upgraded
+# pre-rollback	Executes on a rollback request after templates are rendered, but before any resources are rolled back
+# post-rollback	Executes on a rollback request after all resources have been modified
+# test	Executes when the Helm test subcommand is invoked ( view test docs)
+
+hooks: []
+#- name: migrate-db
+#  hooks:
+#  - pre-install
+#  - pre-upgrade
+#  weight: 1
+#  delete_policy: before-hook-creation
+#  spec:
+#    restartPolicy: Never
+#    containers:
+#    - name: migrate
+#      image: "alpine:3.3"
+#      command:
+#      - /bin/sleep
+#      - 5
