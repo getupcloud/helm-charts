@@ -21,7 +21,7 @@ if $full; then
   rm -rf repo
 fi
 
-charts=( $(ls -d */ | grep -vwE '^(dev|repo|git)/$') ) # exclude dirs dev/ and repo/
+charts=( charts/* )
 
 mkdir -p repo/getupcloud
 
