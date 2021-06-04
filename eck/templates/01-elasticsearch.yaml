@@ -20,7 +20,7 @@ metadata:
   name: es-{{ .Values.elasticsearch.name }}
 #  namespace: {{ .Release.namespace }}
 spec:
-  version: 7.10.2
+  version: {{ .Values.eckVersion }}
   {{- with .Values.elasticsearch.secureSettings }}
   secureSettings:
   - secretName: {{ toYaml . }}

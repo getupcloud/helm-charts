@@ -6,7 +6,7 @@ metadata:
   name: apm-{{ .Values.elasticsearch.name }}
 #  namespace: {{ .Release.namespace }}
 spec:
-  version: 7.10.2
+  version: {{ .Values.eckVersion }}
   count: {{ .Values.apm.count }}
   elasticsearchRef:
     name: es-{{ .Values.elasticsearch.name }}

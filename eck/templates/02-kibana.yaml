@@ -17,7 +17,7 @@ metadata:
   name: kb-{{ .Values.elasticsearch.name }}
 #  namespace: {{ .Release.namespace }}
 spec:
-  version: 7.10.2
+  version: {{ .Values.eckVersion }}
   count: {{ .Values.kibana.count }}
   elasticsearchRef:
     name: es-{{ .Values.elasticsearch.name }}

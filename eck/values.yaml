@@ -1,3 +1,5 @@
+eckVersion: 7.10.2
+
 elasticsearch:
   name: esearch
   secureSettings:
