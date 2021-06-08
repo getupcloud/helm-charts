@@ -1,75 +1,145 @@
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
-spec:
-  isCA: true
-  dnsNames:
-    - es-{{ .Values.elasticsearch.name }}-es-http
-    - es-{{ .Values.elasticsearch.name }}-es-http.{{ .Values.elasticsearch.namespace }}.svc
-    - es-{{ .Values.elasticsearch.name }}-es-http.{{ .Values.elasticsearch.namespace }}.svc.cluster.local
-  issuerRef:
-    kind: ClusterIssuer
-    name: selfsigned
-  secretName: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
-
 ---
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: es-{{ .Values.elasticsearch.name }}
-#  namespace: {{ .Release.namespace }}
+  name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
 spec:
   version: {{ .Values.eckVersion }}
-  {{- with .Values.elasticsearch.secureSettings }}
   secureSettings:
-  - secretName: {{ toYaml . }}
-  {{- end }}
+  - secretName: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-secret
   nodeSets:
-  {{- with .Values.elasticsearch.nodeSets }}
-    {{- toYaml . | nindent 2 }}
-  {{- end }}
-  http:
-    service:
-      metadata:
-        annotations:
-        {{- with .Values.elasticsearch.http.service.metadata.annotations }}
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
+  - name: master
+    count: {{ .Values.elasticsearch.masterNode.count }}
+    config:
+{{- if .Values.eckVersion | semverCompare "~6" }}
+      node.master: true
+{{- else }}
+      node.roles:
+      - master
+{{- end }}
+    podTemplate:
       spec:
-      {{- with .Values.elasticsearch.http.service.spec }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-#    tls:
-#      certificate:
-#        secretName: es-{{ .Values.elasticsearch.name }}-selfsigned-cert
+        nodeSelector: {{- toYaml .Values.elasticsearch.masterNode.nodeSelector | nindent 10 }}
+        tolerations: {{- toYaml .Values.elasticsearch.masterNode.tolerations | nindent 10 }}
+{{- with .Values.elasticsearch.masterNode.sysctl }}
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command:
+          - sysctl
+          - -w
+  {{- range . }}
+          - {{ . }}
+  {{- end }}
+{{- end }}
+        containers:
+        - name: elasticsearch
+          resources:
+            requests:
+              memory: {{ .Values.elasticsearch.masterNode.memoryMinGi }}Gi
+              cpu: {{ .Values.elasticsearch.masterNode.cpuMin }}
+            limits:
+              memory: {{ .Values.elasticsearch.masterNode.memoryMaxGi }}Gi
+              cpu: {{ .Values.elasticsearch.masterNode.cpuMax }}
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms{{ .Values.elasticsearch.masterNode.memoryMaxGi }}g -Xmx{{ .Values.elasticsearch.masterNode.memoryMaxGi }}g"
+    volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-master
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.elasticsearch.masterNode.storage.size }}
+{{- if .Values.elasticsearch.masterNode.storage.className }}
+        storageClassName: {{ .Values.elasticsearch.masterNode.storage.className }}
+{{- end }}
+  - name: data
+    count: {{ .Values.elasticsearch.dataNode.count }}
+    config:
+{{- if .Values.eckVersion | semverCompare "~6" }}
+      node.data: true
+      node.ingest: true
+      node.ml: true
+{{- else }}
+      node.roles:
+      - data
+      - ingest
+      - ml
+      - transform
+{{- end }}
+    podTemplate:
+      spec:
+        nodeSelector: {{- toYaml .Values.elasticsearch.dataNode.nodeSelector | nindent 10 }}
+        tolerations: {{- toYaml .Values.elasticsearch.dataNode.tolerations | nindent 10 }}
+{{- with .Values.elasticsearch.dataNode.sysctl }}
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command:
+          - sysctl
+          - -w
+  {{- range . }}
+          - {{ . }}
+  {{- end }}
+{{- end }}
+        containers:
+        - name: elasticsearch
+          resources:
+            requests:
+              memory: {{ .Values.elasticsearch.dataNode.memoryMinGi }}Gi
+              cpu: {{ .Values.elasticsearch.dataNode.cpuMin }}
+            limits:
+              memory: {{ .Values.elasticsearch.dataNode.memoryMaxGi }}Gi
+              cpu: {{ .Values.elasticsearch.dataNode.cpuMax }}
+          env:
+          - name: ES_JAVA_OPTS
+            value: "-Xms{{ .Values.elasticsearch.dataNode.memoryMaxGi }}g -Xmx{{ .Values.elasticsearch.dataNode.memoryMaxGi }}g"
+    volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-datanode
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.elasticsearch.dataNode.storage.size }}
+{{- if .Values.elasticsearch.dataNode.storage.className }}
+        storageClassName: {{ .Values.elasticsearch.dataNode.storage.className }}
+{{- end }}
 
+{{- $ingress := mergeOverwrite .Values.ingress .Values.elasticsearch.ingress }}
+{{- with $ingress }}
+{{- if .enabled }}
 ---
-{{- if .Values.elasticsearch.ingress.enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
-  {{- with .Values.elasticsearch.ingress.annotations }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  name: elasticsearch-http
-#  namespace: {{ .Release.namespace }}
+    {{- toYaml .annotations | nindent 4 }}
+{{- with .class }}
+    kubernetes.io/ingress.class: {{ . }}
+{{- end }}
+{{- with .clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ . }}
+{{- end }}
+  name: {{ $.Release.Name }}-{{ $.Values.elasticsearch.name }}
 spec:
   rules:
-  - host: {{ .Values.elasticsearch.ingress.url }}
+  - host: {{ .url }}
     http:
       paths:
       - backend:
-          serviceName: es-{{ .Values.elasticsearch.name }}-es-http
+          serviceName: {{ $.Release.Name }}-{{ $.Values.elasticsearch.name }}-es-http
           servicePort: 9200
         path: /
   tls:
   - hosts:
-    - {{ .Values.elasticsearch.ingress.url }}
-    secretName: es-{{ .Values.elasticsearch.name }}-ingress-cert
-  {{- end }}
+    - {{ .url }}
+    secretName: {{ $.Release.Name }}-{{ $.Values.elasticsearch.name }}-ingress-cert
+{{- end }}
+{{- end }}

@@ -1,89 +1,59 @@
-{{- if .Values.apm.enabled }}
 ---
 apiVersion: apm.k8s.elastic.co/v1
 kind: ApmServer
 metadata:
-  name: apm-{{ .Values.elasticsearch.name }}
-#  namespace: {{ .Release.namespace }}
+  name: {{ .Release.Name }}-{{ .Values.apmServer.name }}
 spec:
   version: {{ .Values.eckVersion }}
-  count: {{ .Values.apm.count }}
+  count: {{ .Values.apmServer.count }}
   elasticsearchRef:
-    name: es-{{ .Values.elasticsearch.name }}
-#    namespace: {{ .Release.namespace }}
+    name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
+{{- if .Values.eckVersion | semverCompare "~7" }}
   kibanaRef:
-    name: kb-{{ .Values.elasticsearch.name }}
-#    namespace: {{ .Release.namespace }}
-  http:
-    service:
-      {{- with .Values.apm.service.annotations }}
-      metadata:
-        annotations:
-          {{- toYaml . | nindent 10 }}
-      {{- end }}
-      spec:
-      {{- with .Values.apm.service.type }}
-        type: {{ toYaml . }}
-      {{- end }}
-#    tls:
-#      certificate:
-#        secretName: apm-{{ .Values.elasticsearch.name }}-ingress-cert
+    name: {{ .Release.Name }}-{{ .Values.kibana.name }}
+{{- end }}
   podTemplate:
-    metadata:
-      labels:
-      {{- with .Values.apm.pod.labels }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-        app: apm-server
     spec:
       containers:
       - name: apm-server
-        {{- with .Values.apm.resources }}
         resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-      {{- with .Values.apm.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.apm.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 6 }}
-      {{- end }}
-    {{- end }}
+          requests:
+            memory: {{ .Values.apmServer.memoryMinGi }}Gi
+            cpu: {{ .Values.apmServer.cpuMin }}
+          limits:
+            memory: {{ .Values.apmServer.memoryMaxGi }}Gi
+            cpu: {{ .Values.apmServer.cpuMax }}
+      nodeSelector: {{- toYaml .Values.apmServer.nodeSelector | nindent 8 }}
+      tolerations: {{- toYaml .Values.apmServer.tolerations | nindent 8 }}
 
 ---
-{{- if .Values.apm.ingress.enabled }}
+{{- $ingress := mergeOverwrite .Values.ingress .Values.apmServer.ingress }}
+{{- with $ingress }}
+{{- if .enabled }}
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
-  {{- with .Values.apm.ingress.annotations }}
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-headers: "Accept:,Accept-Encoding,Accept-Language:,Cache-Control,Connection,DNT,Pragma,Host,Referer,Upgrade-Insecure-Requests,User-Agent,elastic-apm-traceparent"
-    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/cors-max-age: "1728000"
-  name: apm-http
-#  namespace: {{ .Release.namespace }}
+    {{- toYaml .annotations | nindent 4 }}
+{{- with .class }}
+    kubernetes.io/ingress.class: {{ . }}
+{{- end }}
+{{- with .clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ . }}
+{{- end }}
+  name: {{ $.Release.Name }}-{{ default $.Values.apmServer.name }}
 spec:
   rules:
-  - host: {{ .Values.apm.ingress.url }}
+  - host: {{ .url }}
     http:
       paths:
       - backend:
-          serviceName: apm-{{ .Values.elasticsearch.name }}-apm-http
+          serviceName: {{ $.Release.Name }}-{{ $.Values.apmServer.name }}-apm-http
           servicePort: 8200
         path: /
   tls:
   - hosts:
-    - {{ .Values.apm.ingress.url }}
-    secretName: apm-{{ .Values.elasticsearch.name }}-ingress-cert
-  {{- end }}
+    - {{ .url }}
+    secretName: {{ $.Release.Name }}-{{ $.Values.apmServer.name }}-ingress-cert
+{{- end }}
+{{- end }}
