@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "ecr-credentials-sync.fullname" . }}
+  labels: {{- include "ecr-credentials-sync.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "ecr-credentials-sync.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "ecr-credentials-sync.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}

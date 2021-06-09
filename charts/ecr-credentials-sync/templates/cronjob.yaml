@@ -1,0 +1,102 @@
+{{- if empty .Values.ecr.region}}
+{{ fail "Missing required value: ecr.region" }}
+{{- end }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "ecr-credentials-sync.fullname" . }}
+  labels:
+    {{- include "ecr-credentials-sync.labels" . | nindent 4 }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -ce
+            - |-
+              SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_SELECTOR" -o name | cut -f2 -d/) )
+              if [ ${#SECRET_NAMESPACES[*]} -eq 0 ]; then
+                echo "No namespaces found with labels $$NAMESPACE_SELECTOR"
+                exit 0
+              fi
+
+              kubectl create secret docker-registry $SECRET_NAME \
+                --docker-server="{{ get .Values.ecr.registries .Values.ecr.region }}" \
+                --docker-username=AWS \
+                --docker-password="$(</token/ecr-token)" \
+                --dry-run=client --output yaml --save-config > /token/secret.yaml
+
+              for namespace in "${SECRET_NAMESPACES[@]}"; do
+                echo Creating secret: $namespace/$SECRET_NAME
+                kubectl apply -f /token/secret.yaml --namespace ${namespace} || true
+              done
+
+              rm -f /token/secret.yaml
+            env:
+            - name: SECRET_NAME
+              value: {{ .Values.secret.name }}
+            - name: NAMESPACE_SELECTOR
+              value: {{ .Values.secret.namespaceSelector }}
+            - name: ECR_REGISTRY
+              value: {{ .Values.ecrRegistry }}
+            image: bitnami/kubectl
+            imagePullPolicy: IfNotPresent
+            name: create-secret
+            resources:
+              limits:
+                cpu: 50m
+                memory: 256Mi
+              requests:
+                cpu: 50m
+                memory: 64Mi
+            volumeMounts:
+            - mountPath: /token
+              name: token
+          initContainers:
+          - command:
+            - /bin/sh
+            - -ce
+            - aws ecr get-login-password --region $AWS_REGION > /token/ecr-token
+            env:
+            - name: AWS_REGION
+              value: {{ .Values.ecr.region }}
+            image: amazon/aws-cli
+            imagePullPolicy: IfNotPresent
+            name: get-token
+            resources:
+              limits:
+                cpu: 50m
+                memory: 64Mi
+              requests:
+                cpu: 50m
+                memory: 64Mi
+            volumeMounts:
+            - mountPath: /token
+              name: token
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          restartPolicy: Never
+          serviceAccountName: {{ include "ecr-credentials-sync.serviceAccountName" . }}
+          terminationGracePeriodSeconds: 30
+          volumes:
+          - emptyDir:
+              medium: Memory
+            name: token
+  schedule: {{ .Values.schedule }}
+  successfulJobsHistoryLimit: 1
+

@@ -1,0 +1,22 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "ecr-credentials-sync.fullname" . }}
+  labels: {{ include "ecr-credentials-sync.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - delete
+  - create
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - list
