@@ -29,12 +29,20 @@ spec:
           command:
           - sysctl
           - -w
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 10m
+            limits:
+              memory: 32Mi
+              cpu: 10m
   {{- range . }}
           - {{ . }}
   {{- end }}
 {{- end }}
         containers:
         - name: elasticsearch
+          env: {{- toYaml .Values.elasticsearch.masterNode.env | nindent 12 }}
           resources:
             requests:
               memory: {{ .Values.elasticsearch.masterNode.memoryMinGi }}Gi
@@ -42,9 +50,6 @@ spec:
             limits:
               memory: {{ .Values.elasticsearch.masterNode.memoryMaxGi }}Gi
               cpu: {{ .Values.elasticsearch.masterNode.cpuMax }}
-          env:
-          - name: ES_JAVA_OPTS
-            value: "-Xms{{ .Values.elasticsearch.masterNode.memoryMaxGi }}g -Xmx{{ .Values.elasticsearch.masterNode.memoryMaxGi }}g"
     volumeClaimTemplates:
     - metadata:
         name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-master
@@ -83,12 +88,20 @@ spec:
           command:
           - sysctl
           - -w
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 10m
+            limits:
+              memory: 32Mi
+              cpu: 10m
   {{- range . }}
           - {{ . }}
   {{- end }}
 {{- end }}
         containers:
         - name: elasticsearch
+          env: {{- toYaml .Values.elasticsearch.dataNode.env | nindent 12 }}
           resources:
             requests:
               memory: {{ .Values.elasticsearch.dataNode.memoryMinGi }}Gi
@@ -96,9 +109,6 @@ spec:
             limits:
               memory: {{ .Values.elasticsearch.dataNode.memoryMaxGi }}Gi
               cpu: {{ .Values.elasticsearch.dataNode.cpuMax }}
-          env:
-          - name: ES_JAVA_OPTS
-            value: "-Xms{{ .Values.elasticsearch.dataNode.memoryMaxGi }}g -Xmx{{ .Values.elasticsearch.dataNode.memoryMaxGi }}g"
     volumeClaimTemplates:
     - metadata:
         name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-datanode

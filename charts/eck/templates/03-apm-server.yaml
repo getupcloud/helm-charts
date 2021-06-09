@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
       - name: apm-server
+        env: {{- toYaml .Values.apmServer.env | nindent 10 }}
         resources:
           requests:
             memory: {{ .Values.apmServer.memoryMinGi }}Gi
