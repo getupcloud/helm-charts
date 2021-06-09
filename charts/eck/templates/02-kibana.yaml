@@ -10,6 +10,10 @@ spec:
     name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
   secureSettings:
   - secretName: {{ .Release.Name }}-{{ .Values.kibana.name }}-secure-settings
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: {{ .Values.kibana.tls.disabled }}
   config: {{- toYaml .Values.kibana.config | nindent 4 }}
   podTemplate:
     spec:

@@ -77,6 +77,8 @@ elasticsearch:
 kibana:
   name: kibana
   count: 1
+  tls:
+    disabled: false
   securSettings:
     xpack.security.encryptionKey: dGhpcy1pcy1teS1zdXBlci11bnNlY3VyZS1rZXktSS1zaG91bGQtaGF2ZS1jcmVhdGVkLWEtbW9yZS1zZWN1cmUta2V5Cg==
     xpack.encryptedSavedObjects.encryptionKey: aGVyZS1pLWFtLXVzaW5nLWEtZGVmYXVsdC1pbnNlY3VyZS1rZXktYWdhaW4tLS1zaWdoCg==
