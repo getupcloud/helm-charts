@@ -14,6 +14,10 @@ spec:
 {{- end }}
   secureSettings:
   - secretName: {{ .Release.Name }}-{{ .Values.apmServer.name }}-secure-settings
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: {{ .Values.apmServer.tls.disabled }}
   config: {{- toYaml .Values.apmServer.config | nindent 4 }}
   podTemplate:
     spec:

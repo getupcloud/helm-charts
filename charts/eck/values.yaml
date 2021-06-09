@@ -105,6 +105,8 @@ kibana:
 apmServer:
   name: apm
   count: 1
+  tls:
+    disabled: false
   secureSettings: {}
   config: {}
   ingress:
