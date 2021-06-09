@@ -44,7 +44,12 @@ spec:
               cpu: 10m
         containers:
         - name: elasticsearch
-          env: {{- toYaml .Values.elasticsearch.masterNode.env | nindent 12 }}
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms{{ default (printf "%dg" (sub .Values.elasticsearch.masterNode.memoryMaxGi 1)) .Values.elasticsearch.masterNode.memoryXms }} -Xmx{{ default (printf "%dg" (sub .Values.elasticsearch.masterNode.memoryMaxGi 1)) .Values.elasticsearch.masterNode.memoryXmx }}
+{{- if .Values.elasticsearch.masterNode.env }}
+          {{- toYaml .Values.elasticsearch.masterNode.env | nindent 10 }}
+{{- end }}
           resources:
             requests:
               memory: {{ .Values.elasticsearch.masterNode.memoryMinGi }}Gi
@@ -107,7 +112,12 @@ spec:
               cpu: 10m
         containers:
         - name: elasticsearch
-          env: {{- toYaml .Values.elasticsearch.dataNode.env | nindent 12 }}
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms{{ default (printf "%dg" (sub .Values.elasticsearch.dataNode.memoryMaxGi 1)) .Values.elasticsearch.dataNode.memoryXms }} -Xmx{{ default (printf "%dg" (sub .Values.elasticsearch.dataNode.memoryMaxGi 1)) .Values.elasticsearch.dataNode.memoryXmx }}
+{{- if .Values.elasticsearch.dataNode.env }}
+          {{- toYaml .Values.elasticsearch.dataNode.env | nindent 10 }}
+{{- end }}
           resources:
             requests:
               memory: {{ .Values.elasticsearch.dataNode.memoryMinGi }}Gi
