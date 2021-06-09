@@ -13,6 +13,8 @@ ingress:
 elasticsearch:
   name: es
   secureSettings: {}
+  tls:
+    disabled: false
   config:
     # enabled/disable tls
     xpack.security.enabled: true

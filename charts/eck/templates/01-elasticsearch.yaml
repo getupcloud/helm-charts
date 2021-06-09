@@ -5,6 +5,10 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
 spec:
   version: {{ .Values.eckVersion }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: {{ .Values.elasticsearch.tls.disabled }}
   nodeSets:
   - name: master
     secureSettings:
