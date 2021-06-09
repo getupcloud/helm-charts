@@ -5,10 +5,10 @@ metadata:
   name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
 spec:
   version: {{ .Values.eckVersion }}
-  secureSettings:
-  - secretName: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-secret
   nodeSets:
   - name: master
+    secureSettings:
+    - secretName: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-secure-settings
     count: {{ .Values.elasticsearch.masterNode.count }}
     config:
 {{- if .Values.eckVersion | semverCompare "~6" }}
@@ -17,6 +17,8 @@ spec:
       node.roles:
       - master
 {{- end }}
+{{- $configs := mergeOverwrite .Values.elasticsearch.config .Values.elasticsearch.masterNode.config }}
+{{- toYaml $configs | nindent 6 }}
     podTemplate:
       spec:
         nodeSelector: {{- toYaml .Values.elasticsearch.masterNode.nodeSelector | nindent 10 }}
@@ -29,6 +31,10 @@ spec:
           command:
           - sysctl
           - -w
+  {{- range . }}
+          - {{ . }}
+  {{- end }}
+{{- end }}
           resources:
             requests:
               memory: 32Mi
@@ -36,10 +42,6 @@ spec:
             limits:
               memory: 32Mi
               cpu: 10m
-  {{- range . }}
-          - {{ . }}
-  {{- end }}
-{{- end }}
         containers:
         - name: elasticsearch
           env: {{- toYaml .Values.elasticsearch.masterNode.env | nindent 12 }}
@@ -64,6 +66,8 @@ spec:
 {{- end }}
   - name: data
     count: {{ .Values.elasticsearch.dataNode.count }}
+    secureSettings:
+    - secretName: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-secure-settings
     config:
 {{- if .Values.eckVersion | semverCompare "~6" }}
       node.data: true
@@ -76,6 +80,8 @@ spec:
       - ml
       - transform
 {{- end }}
+{{- $configs := mergeOverwrite .Values.elasticsearch.config .Values.elasticsearch.dataNode.config }}
+{{- toYaml $configs | nindent 6 }}
     podTemplate:
       spec:
         nodeSelector: {{- toYaml .Values.elasticsearch.dataNode.nodeSelector | nindent 10 }}
@@ -88,6 +94,10 @@ spec:
           command:
           - sysctl
           - -w
+  {{- range . }}
+          - {{ . }}
+  {{- end }}
+{{- end }}
           resources:
             requests:
               memory: 32Mi
@@ -95,10 +105,6 @@ spec:
             limits:
               memory: 32Mi
               cpu: 10m
-  {{- range . }}
-          - {{ . }}
-  {{- end }}
-{{- end }}
         containers:
         - name: elasticsearch
           env: {{- toYaml .Values.elasticsearch.dataNode.env | nindent 12 }}
@@ -120,6 +126,17 @@ spec:
             storage: {{ .Values.elasticsearch.dataNode.storage.size }}
 {{- if .Values.elasticsearch.dataNode.storage.className }}
         storageClassName: {{ .Values.elasticsearch.dataNode.storage.className }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-secure-settings
+type: Opaque
+data:
+{{- range $k, $v := .Values.elasticsearch.secureSettings }}
+  {{ $k }}: {{ $v | toString | b64enc }}
 {{- end }}
 
 {{- $ingress := mergeOverwrite .Values.ingress .Values.elasticsearch.ingress }}

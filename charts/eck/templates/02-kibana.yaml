@@ -9,7 +9,8 @@ spec:
   elasticsearchRef:
     name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}
   secureSettings:
-  - secretName: {{ .Release.Name }}-{{ .Values.kibana.name }}-secret-settings
+  - secretName: {{ .Release.Name }}-{{ .Values.kibana.name }}-secure-settings
+  config: {{- toYaml .Values.kibana.config | nindent 4 }}
   podTemplate:
     spec:
       containers:
@@ -29,12 +30,17 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.kibana.name }}-secret-settings
+  name: {{ .Release.Name }}-{{ .Values.kibana.name }}-secure-settings
 type: Opaque
 data:
-  xpack.security.encryptionKey: {{ .Values.kibana.xpack.security.encryptionKey | b64enc }}
-{{- if .Values.eckVersion | semverCompare "~7" }}
-  xpack.encryptedSavedObjects.encryptionKey: {{ .Values.kibana.xpack.encryptedSavedObjects.encryptionKey | b64enc }}
+{{- range $k, $v := .Values.kibana.secureSettings }}
+  {{- if and ($.Values.eckVersion | semverCompare "<7") }}
+    {{- if not (eq $k "xpack.encryptedSavedObjects.encryptionKey") }}
+  {{ $k }}: {{ $v | toString | b64enc }}
+    {{- end }}
+  {{- else }}
+  {{ $k }}: {{ $v | toString | b64enc }}
+  {{- end }}
 {{- end }}
 
 ---

@@ -12,6 +12,18 @@ ingress:
 
 elasticsearch:
   name: es
+  secureSettings: {}
+  config:
+    # enabled/disable tls
+    xpack.security.enabled: true
+    # enabled/disable anonymous user
+    # Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.10/anonymous-access.html
+    #xpack.security.authc:
+    #  anonymous:
+    #    authz_exception: true
+    #    roles: superuser
+    #    username: elastic
+
   ingress:
     url: elastic.example.com
     #enabled: true
@@ -20,6 +32,7 @@ elasticsearch:
     #annotations: {}
   masterNode:
     count: 1
+    config: {}
     sysctl:
     - vm.max_map_count=262144
     storage:
@@ -36,6 +49,7 @@ elasticsearch:
     tolerations: []
   dataNode:
     count: 1
+    config: {}
     sysctl:
     - vm.max_map_count=262144
     storage:
@@ -53,11 +67,13 @@ elasticsearch:
 kibana:
   name: kibana
   count: 1
-  xpack:
-    security:
-      encryptionKey: dGhpcy1pcy1teS1zdXBlci11bnNlY3VyZS1rZXktSS1zaG91bGQtaGF2ZS1jcmVhdGVkLWEtbW9yZS1zZWN1cmUta2V5Cg==
-    encryptedSavedObjects:
-      encryptionKey: aGVyZS1pLWFtLXVzaW5nLWEtZGVmYXVsdC1pbnNlY3VyZS1rZXktYWdhaW4tLS1zaWdoCg==
+  securSettings:
+    xpack.security.encryptionKey: dGhpcy1pcy1teS1zdXBlci11bnNlY3VyZS1rZXktSS1zaG91bGQtaGF2ZS1jcmVhdGVkLWEtbW9yZS1zZWN1cmUta2V5Cg==
+    xpack.encryptedSavedObjects.encryptionKey: aGVyZS1pLWFtLXVzaW5nLWEtZGVmYXVsdC1pbnNlY3VyZS1rZXktYWdhaW4tLS1zaWdoCg==
+  config:
+    # enabled/disable auth
+    # Ref: https://www.elastic.co/guide/en/kibana/current/security-settings-kb.html
+    xpack.security.enabled: true
   ingress:
     url: kibana.example.com
     #enabled: true
@@ -77,6 +93,8 @@ kibana:
 apmServer:
   name: apm
   count: 1
+  secureSettings: {}
+  config: {}
   ingress:
     url: apm.example.com
     #enabled: true

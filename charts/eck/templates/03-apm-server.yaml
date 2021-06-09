@@ -12,6 +12,9 @@ spec:
   kibanaRef:
     name: {{ .Release.Name }}-{{ .Values.kibana.name }}
 {{- end }}
+  secureSettings:
+  - secretName: {{ .Release.Name }}-{{ .Values.apmServer.name }}-secure-settings
+  config: {{- toYaml .Values.apmServer.config | nindent 4 }}
   podTemplate:
     spec:
       containers:
@@ -27,6 +30,16 @@ spec:
       nodeSelector: {{- toYaml .Values.apmServer.nodeSelector | nindent 8 }}
       tolerations: {{- toYaml .Values.apmServer.tolerations | nindent 8 }}
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.apmServer.name }}-secure-settings
+type: Opaque
+data:
+{{- range $k, $v := .Values.apmServer.secureSettings }}
+  {{ $k }}: {{ $v | toString | b64enc }}
+{{- end }}
 ---
 {{- $ingress := mergeOverwrite .Values.ingress .Values.apmServer.ingress }}
 {{- with $ingress }}
