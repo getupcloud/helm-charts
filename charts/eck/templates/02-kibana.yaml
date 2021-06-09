@@ -27,6 +27,13 @@ spec:
           limits:
             memory: {{ .Values.kibana.memoryMaxGi }}Gi
             cpu: {{ .Values.kibana.cpuMax }}
+{{- if .Values.eckVersion | semverCompare "~6" }}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5601
+            scheme: HTTP
+{{- end }}
       nodeSelector: {{- toYaml .Values.kibana.nodeSelector | nindent 8 }}
       tolerations: {{- toYaml .Values.kibana.tolerations | nindent 8 }}
 
