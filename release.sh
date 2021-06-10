@@ -14,7 +14,6 @@ fi
 
 export AWS_PROFILE
 
-#rm -rf repo
 ./download.sh
 ./build.sh "$@"
 ./upload.sh
