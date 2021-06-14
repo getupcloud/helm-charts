@@ -1,6 +1,9 @@
 {{- if empty .Values.ecr.region}}
 {{ fail "Missing required value: ecr.region" }}
 {{- end }}
+{{- if eq .Values.awsAccountId "000000000000" }}
+{{ fail "Missing required value: awsAccountId" }}
+{{- end }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -26,7 +29,7 @@ spec:
               fi
 
               kubectl create secret docker-registry $SECRET_NAME \
-                --docker-server="{{ get .Values.ecr.registries .Values.ecr.region }}" \
+                --docker-server="{{ .Values.awsAccoundId }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}" \
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
                 --dry-run=client --output yaml --save-config > /token/secret.yaml
