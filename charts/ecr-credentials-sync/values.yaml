@@ -2,7 +2,7 @@ serviceAccount:
   create: true
   ## roleArn is Required if create=true
   roleArn: "" ## Example: arn:aws:iam::000000000000:role/ECRReadRole
-  annotations: []
+  annotations: {}
   name: ""
 
 secret:

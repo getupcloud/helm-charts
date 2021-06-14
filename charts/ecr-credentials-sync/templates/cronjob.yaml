@@ -1,7 +1,7 @@
 {{- if empty .Values.ecr.region}}
 {{ fail "Missing required value: ecr.region" }}
 {{- end }}
-{{- if eq .Values.awsAccountId "000000000000" }}
+{{- if eq (.Values.awsAccountId | toString) "000000000000" }}
 {{ fail "Missing required value: awsAccountId" }}
 {{- end }}
 apiVersion: batch/v1beta1
@@ -29,7 +29,7 @@ spec:
               fi
 
               kubectl create secret docker-registry $SECRET_NAME \
-                --docker-server="{{ .Values.awsAccoundId }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}" \
+                --docker-server="$ECR_REGISTRY" \
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
                 --dry-run=client --output yaml --save-config > /token/secret.yaml
@@ -46,7 +46,7 @@ spec:
             - name: NAMESPACE_SELECTOR
               value: {{ .Values.secret.namespaceSelector }}
             - name: ECR_REGISTRY
-              value: {{ .Values.ecrRegistry }}
+              value: {{ .Values.awsAccountId }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}
             image: bitnami/kubectl
             imagePullPolicy: IfNotPresent
             name: create-secret
