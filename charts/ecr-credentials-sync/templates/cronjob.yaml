@@ -46,7 +46,7 @@ spec:
             - name: NAMESPACE_SELECTOR
               value: {{ .Values.secret.namespaceSelector }}
             - name: ECR_REGISTRY
-              value: {{ .Values.awsAccountId }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}
+              value: {{ .Values.awsAccountId | toString }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}
             image: bitnami/kubectl
             imagePullPolicy: IfNotPresent
             name: create-secret
