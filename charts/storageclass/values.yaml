@@ -1,0 +1,17 @@
+# Default values for storageclass.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+csiSmb: []
+#- name: smb
+#  username: "samba"
+#  password: "samba"
+#  parameters:
+#    source: "//smb-server.default.svc.cluster.local/share"
+#    createSubDir: "false"
+#  mountOptions:
+#  - dir_mode=0777
+#  - file_mode=0777
+#  - uid=1001
+#  - gid=1001
+#  - vers=2.0
