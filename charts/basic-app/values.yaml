@@ -167,6 +167,10 @@ ingress:
 # post-rollback	Executes on a rollback request after all resources have been modified
 # test	Executes when the Helm test subcommand is invoked ( view test docs)
 
+
+##############
+##  HOOKS   ##
+##############
 hooks: []
 #- name: migrate-db
 #  hooks:
@@ -182,3 +186,14 @@ hooks: []
 #      command:
 #      - /bin/sleep
 #      - 5
+
+###############
+##     HPA   ##
+###############
+hpa:
+  enabled: false
+  maxReplicas: 3
+  # average total CPU usage per pod (1-100)
+  cpu:
+  # average memory usage per pod (100Mi-1Gi)
+  memory:
