@@ -194,6 +194,8 @@ hpa:
   enabled: false
   maxReplicas: 3
   # average total CPU usage per pod (1-100)
-  cpu:
+  cpu: 80
   # average memory usage per pod (100Mi-1Gi)
-  memory:
+  memory: 512Mi
+  # statefulset true change from Deployment to StatefulSet
+  statefulset: false

@@ -1,13 +1,17 @@
 {{- if .Values.hpa.enabled -}}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v1 #TODO Add Capabilities
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "basic-deployment.name" $ }}-hpa
+  name: {{ include "basic-deployment.name" . }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
+  {{- if .Values.hpa.statefulset }}
+    kind: StatefulSet
+    {{- else }}
     kind: Deployment
-    name: {{ include "basic-deployment.name" $ }}
+  {{- end }}
+    name: {{ include "basic-deployment.name" . }}
   minReplicas: {{ .Values.replicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:
