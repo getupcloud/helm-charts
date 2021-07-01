@@ -13,7 +13,7 @@ parameters:
   csi.storage.k8s.io/node-stage-secret-name: {{ include "storageclass.fullname" $ }}-{{ .name }}-smbcreds
   csi.storage.k8s.io/node-stage-secret-namespace: {{ $.Release.Namespace }}
 {{- range $k, $v := .parameters }}
-  {{ $k }}: "$v"
+  {{ $k }}: {{ $v }}
 {{- end }}
 volumeBindingMode: Immediate
 mountOptions:
