@@ -57,12 +57,12 @@ spec:
     solvers:
     - selector:
         dnsZones:
-{{ if .Values.cluster_issuer_dns01.aws_zones }}
-{{ $zones := split "," .Values.cluster_issuer_dns01.aws_zones | trim " " }}
-{{ range $zones  }}
+{{- if .Values.cluster_issuer_dns01.aws_zones }}
+  {{- $zones := split "," .Values.cluster_issuer_dns01.aws_zones }}
+    {{- range $zones }}
         - {{ . }}
-{{ end }}
-{{ end }}
+    {{- end }}
+{{- end }}
       dns01:
         route53:
           region: "{{ .Values.cluster_issuer_dns01.aws_region }}"
@@ -85,12 +85,12 @@ spec:
     solvers:
       selector:
         dnsZones:
-{{ if .Values.cluster_issuer_dns01.aws_zones }}
-{{ $zones := split "," .Values.cluster_issuer_dns01.aws_zones | trim " " }}
-{{ range $zones }}
+{{- if .Values.cluster_issuer_dns01.aws_zones }}
+  {{- $zones := split "," .Values.cluster_issuer_dns01.aws_zones }}
+    {{- range $zones }}
         - {{ . }}
-{{ end }}
-{{ end }}
+    {{- end }}
+{{- end }}
       dns01:
         route53:
           region: "{{ .Values.cluster_issuer_dns01.aws_region }}"
