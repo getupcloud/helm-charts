@@ -63,7 +63,7 @@ spec:
         - {{ . }}
     {{- end }}
 {{- end }}
-    - dns01:
+      dns01:
         route53:
           region: "{{ .Values.cluster_issuer_dns01.aws_region }}"
           accessKeyID: "{{ .Values.cluster_issuer_dns01.aws_access_key_id }}"
@@ -83,7 +83,7 @@ spec:
       name: letsencrypt-production
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
-      selector:
+    - selector:
         dnsZones:
 {{- if .Values.cluster_issuer_dns01.aws_zones }}
   {{- $zones := split "," .Values.cluster_issuer_dns01.aws_zones }}
@@ -91,7 +91,7 @@ spec:
         - {{ . }}
     {{- end }}
 {{- end }}
-    - dns01:
+      dns01:
         route53:
           region: "{{ .Values.cluster_issuer_dns01.aws_region }}"
           accessKeyID: "{{ .Values.cluster_issuer_dns01.aws_access_key_id }}"
