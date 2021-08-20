@@ -3,3 +3,4 @@ git/
 .env
 .sw[op]
 .history/
+.DS_Store
