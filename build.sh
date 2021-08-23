@@ -26,7 +26,7 @@ charts=( charts/* )
 mkdir -p repo/getupcloud
 
 echo Downloading git repos
-./git-download.sh https://github.com/CrunchyData/postgres-operator-examples.git tags/v5.0.0-alpha.4-0
+./git-download.sh https://github.com/CrunchyData/postgres-operator-examples.git
 charts+=( git/postgres-operator-examples/helm/install/ )
 
 echo Charts sources: ${charts[*]}
