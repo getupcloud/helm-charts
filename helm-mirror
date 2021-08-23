@@ -23,7 +23,7 @@ def save_url(root, url):
   filename = os.path.basename(path) 
 
   if os.path.exists(path):
-    print(f'exists: {parsed_url.geturl()} -> {path}')
+    #print(f'exists: {parsed_url.geturl()} -> {path}')
     return parsed_url.path
 
   print(f'get: {url} -> ', end='')
