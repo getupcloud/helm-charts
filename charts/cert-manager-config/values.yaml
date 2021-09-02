@@ -11,5 +11,15 @@ cluster_issuer_dns01:
   enabled: false
   aws_region: ""
   aws_zones: ""
+  # THESE VALUES BELOW MUST BE PUT IN BASE64 FORMAT
   aws_access_key_id: ""
   aws_secret_access_key: ""
+
+cluster_issuer_dns01_cloudflare:
+  enabled: false
+  cloudflare_zones: ""
+  cloudflare_email: ""
+  #  Remember, cloudflare token must be permission Zone-DNS-Edit and Zone-Zone-Read
+  #  https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/
+  # THESE VALUES BELOW MUST BE PUT IN BASE64 FORMAT
+  cloudflare_token: ""
