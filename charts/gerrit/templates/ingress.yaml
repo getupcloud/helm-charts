@@ -15,7 +15,6 @@ metadata:
     {{- end }}
 spec:
   {{ if .Values.ingress.tls.enabled -}}
-  ingressClassName: {{ .Values.ingress.class }}
   tls:
   - hosts:
     - {{ .Values.ingress.host }}
@@ -24,7 +23,8 @@ spec:
     {{- else }}
     secretName: {{ .Values.ingress.tls.secret.name }}
     {{- end }}
-  {{- end }}
+  {{- end -}}
+  ingressClassName: {{ .Values.ingress.class }}
   rules:
   - host: {{required "A host URL is required for the Gerrit Ingress. Please set 'ingress.host'" .Values.ingress.host }}
     http:
