@@ -28,8 +28,8 @@ spec:
       annotations:
         chartRevision: "{{ .Release.Revision }}"
     spec:
-      # securityContext:
-      #   fsGroup: 100
+      securityContext:
+        fsGroup: 100
       {{ if .Values.images.registry.ImagePullSecret.name -}}
       imagePullSecrets:
       - name: {{ .Values.images.registry.ImagePullSecret.name }}
@@ -40,9 +40,9 @@ spec:
       initContainers:
       - name: site-cleanup
         image: busybox
-        # securityContext:
-        #   runAsUser: 1000
-        #   runAsGroup: 100
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 100
         command:
         - sh
         - -c
