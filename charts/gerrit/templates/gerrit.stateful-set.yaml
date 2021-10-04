@@ -40,16 +40,14 @@ spec:
       initContainers:
       - name: site-cleanup
         image: busybox
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 100
+        # securityContext:
+        #   runAsUser: 1000
+        #   runAsGroup: 100
         command:
         - sh
         - -c
         args:
         - |
-          # Set permissions
-          chown 1000:100 -R /var/gerrit
           # Remove directories that should be mounted rather than exist with the
           # rest of the site
           for dir in git {{ if eq .Values.gerrit.index.type "elasticsearch" }}index{{ end }}; do
