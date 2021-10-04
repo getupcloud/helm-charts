@@ -48,6 +48,8 @@ spec:
         - -c
         args:
         - |
+          # Set permissions
+          chown 1000:100 -R /var/gerrit
           # Remove directories that should be mounted rather than exist with the
           # rest of the site
           for dir in git {{ if eq .Values.gerrit.index.type "elasticsearch" }}index{{ end }}; do
