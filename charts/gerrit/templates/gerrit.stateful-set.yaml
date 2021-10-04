@@ -40,15 +40,11 @@ spec:
       initContainers:
       - name: site-cleanup
         image: busybox
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 100
         command:
         - sh
         - -c
         args:
         - |
-          chown -R 1000:100 /var/gerrit
           # Remove directories that should be mounted rather than exist with the
           # rest of the site
           for dir in git {{ if eq .Values.gerrit.index.type "elasticsearch" }}index{{ end }}; do
@@ -63,6 +59,7 @@ spec:
               fi
             done
           fi
+          chown -R 1000:100 /var/gerrit
         volumeMounts:
         - name: gerrit-site
           mountPath: "/var/gerrit"
@@ -74,7 +71,6 @@ spec:
         - -ce
         args:
         - |
-          chown -R 1000:100 /var/gerrit
           symlink_config_to_site(){
             for file in /var/mnt/etc/config/* /var/mnt/etc/secret/*; do
               ln -sf $file /var/gerrit/etc/$(basename $file)
@@ -122,6 +118,7 @@ spec:
             -s /var/gerrit \
             reindex \
             $FLAGS
+          chown -R 1000:100 /var/gerrit
 
         volumeMounts:
         - name: gerrit-site
