@@ -59,7 +59,7 @@ spec:
               fi
             done
           fi
-          chown -R 1000:100 /var/gerrit
+          chmod 777 /var/gerrit
         volumeMounts:
         - name: gerrit-site
           mountPath: "/var/gerrit"
@@ -118,7 +118,7 @@ spec:
             -s /var/gerrit \
             reindex \
             $FLAGS
-          chown -R 1000:100 /var/gerrit
+          chmod 777 /var/gerrit
 
         volumeMounts:
         - name: gerrit-site
