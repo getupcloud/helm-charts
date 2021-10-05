@@ -37,7 +37,7 @@ spec:
       {{- end }}
       initContainers:
       - name: site-cleanup
-        image: busybox
+        image: library/busybox
         command:
         - sh
         - -c
