@@ -28,6 +28,9 @@ spec:
       annotations:
         chartRevision: "{{ .Release.Revision }}"
     spec:
+      terminationGracePeriodSeconds: {{ .Values.gerrit.gracefulStopTimeout }}
+      securityContext:
+        fsGroup: 100
       {{ if .Values.images.registry.ImagePullSecret.name -}}
       imagePullSecrets:
       - name: {{ .Values.images.registry.ImagePullSecret.name }}
@@ -37,7 +40,10 @@ spec:
       {{- end }}
       initContainers:
       - name: site-cleanup
-        image: library/busybox
+        image: busybox
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 100
         command:
         - sh
         - -c
@@ -57,7 +63,6 @@ spec:
               fi
             done
           fi
-          chmod 777 /var/gerrit
         volumeMounts:
         - name: gerrit-site
           mountPath: "/var/gerrit"
@@ -116,7 +121,6 @@ spec:
             -s /var/gerrit \
             reindex \
             $FLAGS
-          chmod 777 /var/gerrit
 
         volumeMounts:
         - name: gerrit-site

@@ -21,6 +21,9 @@ spec:
             release: {{ .Release.Name }}
         spec:
           restartPolicy: OnFailure
+          securityContext:
+            runAsUser: 1000
+            fsGroup: 100
           {{ if .Values.images.registry.ImagePullSecret.name -}}
           imagePullSecrets:
           - name: {{ .Values.images.registry.ImagePullSecret.name }}

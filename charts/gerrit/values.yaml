@@ -70,7 +70,6 @@ ingress:
   additionalAnnotations: {}
   #  nginx.ingress.kubernetes.io/server-alias: example.com
   #  nginx.ingress.kubernetes.io/whitelist-source-range: xxx.xxx.xxx.xxx
-  class: nginx
   tls:
     enabled: false
     secret:
@@ -79,6 +78,7 @@ ingress:
       # existing secret. Otherwise the name will be automatically generated to
       # avoid conflicts between multiple chart installations.
       name:
+      class: nginx
     # `cert`and `key` will only be used, if the secret will be created by
     # this chart.
     cert: |-
@@ -142,6 +142,8 @@ gerrit:
   startupProbe:
     initialDelaySeconds: 10
     periodSeconds: 30
+
+  gracefulStopTimeout: 90
 
   # The general NetworkPolicy rules implemented by this chart may be too restrictive
   # for some setups, e.g. when trying to replicate to a Gerrit replica. Here
@@ -222,6 +224,7 @@ gerrit:
           # If using an ingress use proxy-http or proxy-https
           listenUrl = proxy-http://*:8080/
           requestLog = true
+          gracefulStopTimeout = 1m
         [sshd]
           listenAddress = off
         [transfer]
