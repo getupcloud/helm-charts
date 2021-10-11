@@ -14,6 +14,7 @@ metadata:
 {{ toYaml .Values.ingress.additionalAnnotations  | indent 4 }}
     {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.class }}
   {{ if .Values.ingress.tls.enabled -}}
   tls:
   - hosts:
@@ -24,7 +25,6 @@ spec:
     secretName: {{ .Values.ingress.tls.secret.name }}
     {{- end }}
   {{- end }}
-  ingressClassName: {{ .Values.ingress.class }}
   rules:
   - host: {{required "A host URL is required for the Gerrit Ingress. Please set 'ingress.host'" .Values.ingress.host }}
     http:
