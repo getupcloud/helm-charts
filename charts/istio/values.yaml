@@ -1,7 +1,6 @@
 # Default values for istio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 profile: default
 
 components:
@@ -39,7 +38,13 @@ components:
 #  prometheus:
 #    enabled: false
 #  tracing:
-#    enabled: false
+nodeSelector:
+  role: infra
+
+tolerations:
+- key: dedicated
+  value: infra
+  effect: NoSchedule
 
 mtls:
 - enabled: false
@@ -49,10 +54,4 @@ mtls:
   #  matchLabels:
   #    app: finance
 
-nodeSelector:
-  role: infra
 
-tolerations:
-- key: dedicated
-  value: infra
-  effect: NoSchedule

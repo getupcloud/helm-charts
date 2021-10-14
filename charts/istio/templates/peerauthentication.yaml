@@ -4,6 +4,9 @@ apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
   name: {{ .name }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-failed
 spec:
   mtls:
     mode: {{ .mode }}
