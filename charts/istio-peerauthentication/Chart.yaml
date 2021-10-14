@@ -23,7 +23,7 @@ version: 0.1.0
 # It is recommended to use it with quotes.
 appVersion: "0.1.0"
 
-dependencies:
-- name: istio
-  version: "0.1.1"
-  repository: "https://charts.getup.io/getupcloud"
+#dependencies:
+#- name: istio
+#  version: "0.1.1"
+#  repository: "https://charts.getup.io/getupcloud"
