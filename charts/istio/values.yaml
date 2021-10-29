@@ -1,7 +1,6 @@
 # Default values for istio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
 profile: default
 
 components:
@@ -39,16 +38,6 @@ components:
 #  prometheus:
 #    enabled: false
 #  tracing:
-#    enabled: false
-
-mtls:
-- enabled: false
-  name: default
-  mode: PERMISSIVE
-  #selector:
-  #  matchLabels:
-  #    app: finance
-
 nodeSelector:
   role: infra
 
@@ -56,3 +45,14 @@ tolerations:
 - key: dedicated
   value: infra
   effect: NoSchedule
+
+mtls:
+- enabled: false
+  name: default
+  # https://istio.io/latest/docs/reference/config/security/peer_authentication/#PeerAuthentication-MutualTLS-Mode
+  mode: PERMISSIVE
+  #selector:
+  #  matchLabels:
+  #    app: finance
+
+
