@@ -49,6 +49,7 @@ tolerations:
 mtls:
 - enabled: false
   name: default
+  # https://istio.io/latest/docs/reference/config/security/peer_authentication/#PeerAuthentication-MutualTLS-Mode
   mode: PERMISSIVE
   #selector:
   #  matchLabels:
