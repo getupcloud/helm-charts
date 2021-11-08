@@ -17,8 +17,8 @@ spec:
           {{- toYaml $.Values.tolerations | nindent 10 }}
     ingressGateways:
     {{- with .defaultIngressGateway }}
-    - enabled: {{ .enabled }}
-      name: "{{ .name }}"
+    - name: "{{ .name }}"
+      enabled: {{ .enabled }}
       k8s:
         nodeSelector:
           {{- toYaml $.Values.nodeSelector | nindent 10 }}
