@@ -47,7 +47,7 @@ spec:
             name: tls
     {{- end }}
     {{- range .ingressGateways }}
-    - {{ toYaml . | indent 6 }}
+    - {{- toYaml . | indent 6 }}
     {{ end }}
   {{ end }}
 
