@@ -17,7 +17,7 @@ spec:
           {{- toYaml $.Values.tolerations | nindent 10 }}
     ingressGateways:
     {{- with .defaultIngressGateway }}
-    - enabled: {{ .enabled }} 
+    - enabled: {{ .enabled }}
       name: "{{ .name }}"
       k8s:
         nodeSelector:
@@ -46,9 +46,7 @@ spec:
             targetPort: 15443
             name: tls
     {{- end }}
-    {{- range .ingressGateways }}
-    - {{- toYaml . | indent 6 }}
-    {{ end }}
+    {{- toYaml .ingressGateways | nindent 4 }}
   {{ end }}
 
 ---
