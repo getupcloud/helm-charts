@@ -31,7 +31,7 @@ spec:
         service:
           type: {{ .service.type }}
           loadBalancerIP: {{ .service.loadBalancerIP }}
-          ports:
+          ports: {{ .service.ports }}
           - port: 15021
             targetPort: 15021
             name: status-port
