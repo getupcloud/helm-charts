@@ -34,6 +34,7 @@ spec:
           ports: {{ .service.ports }}
           - port: 15021
             targetPort: 15021
+            nodePort: 32152
             name: status-port
           - port: 80
             targetPort: 8080
@@ -68,6 +69,7 @@ spec:
           loadBalancerIP: {{ .service.loadBalancerIP }}
           ports: {{ .service.ports }}
           - port: 15021
+            nodePort: 31180
             targetPort: 15022
             name: status-port
           - port: 80
