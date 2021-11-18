@@ -1,72 +1,93 @@
 # Default values for istio.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
+# For addons see: https://istio.io/latest/docs/ops/integrations/
+
 profile: default
 
 components:
+  # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#BaseComponentSpec
+  base:
+    k8s: {}
+    #  nodeSelector:
+    #    role: infra
+    #
+    #  tolerations:
+    #  - key: dedicated
+    #    value: infra
+    #    effect: NoSchedule
+
+  # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#IstioComponentSetSpec
   pilot:
     enabled: true
+    k8s: {}
 
-  defaultIngressGateway:
+  # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#GatewaySpec
+  ingressGateways:
+  - name: istio-ingressgateway-public
     enabled: true
+    label:
+      istio: istio-ingressgateway-public
     k8s:
-    name: istio-ingressgateway
+      serviceAnnotations: {}
     service:
       type: "LoadBalancer"
-      #loadBalancerIP: null
-      #azureLoadBalancerInternal: "false"
-      #awsLoadBalancerInternal: "false"
-      #gcpLoadBalancerInternal: "false"
+      #loadBalancerIP: "1.1.1.1"
+      ports:
+      - port: 80
+        targetPort: 8080
+        name: http2
+      - port: 443
+        targetPort: 8443
+        name: https
+      - port: 15021
+        targetPort: 15021
+        name: status-port
 
-  # User-defined ingressGateways.
-  # Set values from https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#GatewaySpec
-  #ingressGateways:
-  #- enabled: true
-  #  name: default-ingress-gateway
+  ## Example private IngressGateway for AWS/ALB:
+  #- name: istio-ingressgateway-private
+  #  enabled: true
+  #  label:
+  #    istio: istio-ingressgateway-private
+  #  k8s:
+  #    serviceAnnotations:
+  #      alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+  #      alb.ingress.kubernetes.io/healthcheck-port: "31021" ## MUST match status-port
+  #
+  #  service:
+  #    type: "NodePort"
+  #    #loadBalancerIP: "10.0.1.254"
+  #    ports:
+  #    - port: 80
+  #      targetPort: 8080
+  #      name: http2
+  #    - port: 443
+  #      targetPort: 8443
+  #      name: https
+  #    - port: 15021
+  #      targetPort: 15021
+  #      name: status-port
+  #      nodePort: 31021
+
+  ## Example private IngressGateway for Azure:
+  #- name: istio-ingressgateway-private
+  #  enabled: true
+  #  label:
+  #    istio: istio-ingressgateway-private
+  #  k8s:
+  #    serviceAnnotations:
+  #      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   #  service:
   #    type: "LoadBalancer"
-  #    #loadBalancerIP: null
-  #    #azureLoadBalancerInternal: "false"
-  #    #awsLoadBalancerInternal: "false"
-  #    #gcpLoadBalancerInternal: "false"
-
-  # values for deploying externalIngressGateway for istio ALB AWS
-  # externalIngressGateway:
-  #   enabled: true
-  #   k8s:
-  #     serviceAnnotations:
-  #       alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
-  #       alb.ingress.kubernetes.io/healthcheck-port: "31335" 
-  #   service:
-  #     type: NodePort
-  #   label:
-  #     istio: istio-ingressgateway-external
-  #   name: istio-ingressgateway-external
-
-# TODO: https://istio.io/latest/docs/ops/integrations/
-#addonComponents:
-#  grafana:
-#    enabled: false
-#  kiali:
-#    enabled: false
-#  prometheus:
-#    enabled: false
-#  tracing:
-nodeSelector:
-  role: infra
-
-tolerations:
-- key: dedicated
-  value: infra
-  effect: NoSchedule
-
-mtls:
-- enabled: false
-  name: default
-  # https://istio.io/latest/docs/reference/config/security/peer_authentication/#PeerAuthentication-MutualTLS-Mode
-  mode: PERMISSIVE
-  #selector:
-  #  matchLabels:
-  #    app: finance
-
-
+  #    #loadBalancerIP: "10.0.1.254"
+  #    ports:
+  #    - port: 80
+  #      targetPort: 8080
+  #      name: http2
+  #    - port: 443
+  #      targetPort: 8443
+  #      name: https
+  #    - port: 15021
+  #      targetPort: 15021
+  #      name: status-port
