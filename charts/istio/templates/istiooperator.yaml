@@ -17,17 +17,17 @@ spec:
           {{- toYaml $.Values.tolerations | nindent 10 }}
     ingressGateways:
     {{- with .defaultIngressGateway }}
-    - enabled: {{ .enabled }} 
+    - enabled: {{ .enabled }}
       name: "{{ .name }}"
       k8s:
         nodeSelector:
           {{- toYaml $.Values.nodeSelector | nindent 10 }}
         tolerations:
           {{- toYaml $.Values.tolerations | nindent 10 }}
+        {{- if .k8s.serviceAnnotations }}
         serviceAnnotations:
-          {{- if .service.azureLoadBalancerInternal }}
-          service.beta.kubernetes.io/azure-load-balancer-internal: "{{ .service.azureLoadBalancerInternal }}"
-          {{- end }}
+          {{- toYaml .k8s.serviceAnnotations | nindent 10 }}   
+        {{- end }}
         service:
           type: {{ .service.type }}
           loadBalancerIP: {{ .service.loadBalancerIP }}
@@ -45,10 +45,47 @@ spec:
           - port: 15443
             targetPort: 15443
             name: tls
+      {{- if .label }}      
+      label:
+        istio: {{ .label.istio }}
+      {{- end }}        
     {{- end }}
-    {{- range .ingressGateways }}
-    - {{ toYaml . | indent 6 }}
-    {{ end }}
+    {{- if .externalIngressGateway }}
+    {{- with .externalIngressGateway }}
+    - enabled: {{ .enabled }}
+      name: "{{ .name }}"
+      k8s:
+        nodeSelector:
+          {{- toYaml $.Values.nodeSelector | nindent 10 }}
+        tolerations:
+          {{- toYaml $.Values.tolerations | nindent 10 }}
+        {{- if .k8s.serviceAnnotations }}
+        serviceAnnotations:
+          {{- toYaml .k8s.serviceAnnotations | nindent 10 }}   
+        {{- end }}
+        service:
+          type: {{ .service.type }}
+          loadBalancerIP: {{ .service.loadBalancerIP }}
+          ports: {{ .service.ports }}
+          - port: 15021
+            targetPort: 15022
+            name: status-port
+          - port: 80
+            targetPort: 8081
+            name: http2
+          - port: 443
+            targetPort: 8444
+            name: https
+            # This is the port where sni routing happens
+          - port: 15443
+            targetPort: 15444
+            name: tls
+      {{- if .label }}      
+      label:
+        istio: {{ .label.istio }}
+      {{- end }}         
+    {{- end }}
+    {{- end }}  
   {{ end }}
 
 ---

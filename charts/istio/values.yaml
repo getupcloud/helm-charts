@@ -9,6 +9,7 @@ components:
 
   defaultIngressGateway:
     enabled: true
+    k8s:
     name: istio-ingressgateway
     service:
       type: "LoadBalancer"
@@ -28,6 +29,19 @@ components:
   #    #azureLoadBalancerInternal: "false"
   #    #awsLoadBalancerInternal: "false"
   #    #gcpLoadBalancerInternal: "false"
+
+  # values for deploying externalIngressGateway for istio ALB AWS
+  # externalIngressGateway:
+  #   enabled: true
+  #   k8s:
+  #     serviceAnnotations:
+  #       alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+  #       alb.ingress.kubernetes.io/healthcheck-port: "31335" 
+  #   service:
+  #     type: NodePort
+  #   label:
+  #     istio: istio-ingressgateway-external
+  #   name: istio-ingressgateway-external
 
 # TODO: https://istio.io/latest/docs/ops/integrations/
 #addonComponents:
