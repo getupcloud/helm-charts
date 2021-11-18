@@ -50,8 +50,8 @@ spec:
         istio: {{ .label.istio }}
       {{- end }}        
     {{- end }}
-    {{- if .externalIngressGateway }}
-    {{- with .externalIngressGateway }}
+    {{- if .IngressGateways }}
+    {{- with .IngressGateways }}
     - enabled: {{ .enabled }}
       name: "{{ .name }}"
       k8s:

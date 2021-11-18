@@ -31,7 +31,7 @@ components:
   #    #gcpLoadBalancerInternal: "false"
 
   # values for deploying externalIngressGateway for istio ALB AWS
-  # externalIngressGateway:
+  # IngressGateways:
   #   enabled: true
   #   k8s:
   #     serviceAnnotations:
