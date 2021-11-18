@@ -31,19 +31,19 @@ components:
       istio: istio-ingressgateway-public
     k8s:
       serviceAnnotations: {}
-    service:
-      type: "LoadBalancer"
-      #loadBalancerIP: "1.1.1.1"
-      ports:
-      - port: 80
-        targetPort: 8080
-        name: http2
-      - port: 443
-        targetPort: 8443
-        name: https
-      - port: 15021
-        targetPort: 15021
-        name: status-port
+      service:
+        type: "LoadBalancer"
+        #loadBalancerIP: "1.1.1.1"
+        ports:
+        - port: 80
+          targetPort: 8080
+          name: http2
+        - port: 443
+          targetPort: 8443
+          name: https
+        - port: 15021
+          targetPort: 15021
+          name: status-port
 
   ## Example private IngressGateway for AWS/ALB:
   #- name: istio-ingressgateway-private
@@ -55,20 +55,20 @@ components:
   #      alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
   #      alb.ingress.kubernetes.io/healthcheck-port: "31021" ## MUST match status-port
   #
-  #  service:
-  #    type: "NodePort"
-  #    #loadBalancerIP: "10.0.1.254"
-  #    ports:
-  #    - port: 80
-  #      targetPort: 8080
-  #      name: http2
-  #    - port: 443
-  #      targetPort: 8443
-  #      name: https
-  #    - port: 15021
-  #      targetPort: 15021
-  #      name: status-port
-  #      nodePort: 31021
+  #    service:
+  #      type: "NodePort"
+  #      #loadBalancerIP: "10.0.1.254"
+  #      ports:
+  #      - port: 80
+  #        targetPort: 8080
+  #        name: http2
+  #      - port: 443
+  #        targetPort: 8443
+  #        name: https
+  #      - port: 15021
+  #        targetPort: 15021
+  #        name: status-port
+  #        nodePort: 31021
 
   ## Example private IngressGateway for Azure:
   #- name: istio-ingressgateway-private
@@ -78,16 +78,16 @@ components:
   #  k8s:
   #    serviceAnnotations:
   #      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-  #  service:
-  #    type: "LoadBalancer"
-  #    #loadBalancerIP: "10.0.1.254"
-  #    ports:
-  #    - port: 80
-  #      targetPort: 8080
-  #      name: http2
-  #    - port: 443
-  #      targetPort: 8443
-  #      name: https
-  #    - port: 15021
-  #      targetPort: 15021
-  #      name: status-port
+  #    service:
+  #      type: "LoadBalancer"
+  #      #loadBalancerIP: "10.0.1.254"
+  #      ports:
+  #      - port: 80
+  #        targetPort: 8080
+  #        name: http2
+  #      - port: 443
+  #        targetPort: 8443
+  #        name: https
+  #      - port: 15021
+  #        targetPort: 15021
+  #        name: status-port
