@@ -9,6 +9,12 @@ profile: default
 components:
   # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#BaseComponentSpec
   base:
+    k8s: # Only acceptable field is `overlays`
+      overlays: [] # https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#K8sObjectOverlay
+
+  # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#IstioComponentSetSpec
+  pilot:
+    enabled: true
     k8s: {}
     #  nodeSelector:
     #    role: infra
@@ -18,17 +24,12 @@ components:
     #    value: infra
     #    effect: NoSchedule
 
-  # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#IstioComponentSetSpec
-  pilot:
-    enabled: true
-    k8s: {}
-
   # Ref: https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/#GatewaySpec
   ingressGateways:
-  - name: istio-ingressgateway-public
+  - name: istio-ingressgateway
     enabled: true
     label:
-      istio: istio-ingressgateway-public
+      istio: istio-ingressgateway
     k8s:
       serviceAnnotations: {}
       service:
