@@ -2,7 +2,6 @@ prometheusOperatorCRDsApiVersion: monitoring.coreos.com/v1
 
 cronitor:
   enabled: false
-  id: ""
 
 backup:
   velero:
