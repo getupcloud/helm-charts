@@ -21,12 +21,12 @@ spec:
           serviceName: {{ include "basic-deployment.name" $ }}
           servicePort: http
   {{- end }}
-  {{- if .Values.ingress.secret.enabled }}
+  {{- if .Values.ingress.tls.enabled }}
   tls:
   - hosts:
   {{- range .Values.ingress.hosts }}
     - {{ .name }}
   {{- end }}
-    secretName: {{ .Values.ingress.secretName }}
+    secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
 {{- end }}

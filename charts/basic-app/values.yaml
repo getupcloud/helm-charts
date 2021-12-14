@@ -150,11 +150,9 @@ ingress:
   hosts:
   - name: exemplo.com
     path: /
-  secretName: "exemplo-tls"
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-  #
+  tls:
+    enabled: false
+    secretName: "exemplo-tls"
 
 ## https://helm.sh/docs/topics/charts_hooks/
 # pre-install	Executes after templates are rendered, but before any resources are created in Kubernetes
