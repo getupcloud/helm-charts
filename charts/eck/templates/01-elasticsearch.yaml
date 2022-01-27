@@ -63,7 +63,7 @@ spec:
               cpu: {{ .Values.elasticsearch.masterNode.cpuMax }}
     volumeClaimTemplates:
     - metadata:
-        name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-master
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
@@ -131,7 +131,7 @@ spec:
               cpu: {{ .Values.elasticsearch.dataNode.cpuMax }}
     volumeClaimTemplates:
     - metadata:
-        name: {{ .Release.Name }}-{{ .Values.elasticsearch.name }}-datanode
+        name: elasticsearch-data
       spec:
         accessModes:
         - ReadWriteOnce
