@@ -41,7 +41,12 @@ def save_url(root, url):
 for repo in sys.argv[3:]:
   repo_index = '/'.join([repo.strip('/'), 'index.yaml'])
   print(f'Index: {repo_index}')
-  index = yaml.load(requests.get(repo_index).text, Loader=yaml.FullLoader)
+  r = requests.get(repo_index)
+  if r.encoding != r.apparent_encoding:
+    r.encoding = r.apparent_encoding
+  if not r.encoding:
+    r.encoding = 'utf-8'
+  index = yaml.load(r.text, Loader=yaml.FullLoader)
 
   for name, charts in index['entries'].items():
     for chart in charts:
