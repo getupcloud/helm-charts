@@ -1,0 +1,59 @@
+{{- if .Values.namespacedresourcesbase.enabled }}
+apiVersion: kyverno.io/v1
+kind: Policy
+metadata:
+  name: require-requests-limits
+  namespace: {{ .Values.namespacedresourcesbase.namespace }}
+  annotations:
+    policies.kyverno.io/title: Require Limits and Requests 
+    policies.kyverno.io/category: Multi-Tenancy
+    policies.kyverno.io/description: >-
+      As application workloads share cluster resources, it is important to limit resources 
+      requested and consumed by each pod. It is recommended to require 'resources.requests' 
+      and 'resources.limits.memory' per pod. If a namespace level request or limit is specified, 
+      defaults will automatically be applied to each pod based on the 'LimitRange' configuration.
+spec:
+  validationFailureAction: {{ .Values.namespacedresourcesbase.validationFailureAction }}
+  rules:
+  - name: validate-resources
+    {{- if .Values.namespacedresourcesbase.exclude }}
+    exclude:
+      {{- range .exclude }}
+      {{ . | quote }}
+      {{- end }}
+    {{- end }}
+    match:
+      resources:
+        kinds:
+        - Pod
+    validate:
+      {{- if and (eq (toString .Values.namespacedresourcesbase.requests.checkIfExist) "false") (and (eq (toString .Values.namespacedresourcesbase.limits.checkIfExist) "false")) }}
+      message: "CPU and memory resource requests and limits are required. Can't exceed requests CPU: {{ .Values.namespacedresourcesbase.requests.cpu }} and Memory: {{ .Values.namespacedresourcesbase.requests.memory }} and Limits CPU: {{ .Values.namespacedresourcesbase.limits.cpu }} and Memory: {{ .Values.namespacedresourcesbase.limits.memory }}"
+      {{- else if and (eq (toString .Values.namespacedresourcesbase.requests.checkIfExist) "false") (and (eq (toString .Values.namespacedresourcesbase.limits.checkIfExist) "true")) }}
+      message: "CPU and memory resource requests and limits are required. Can't exceed requests CPU: {{ .Values.namespacedresourcesbase.requests.cpu }} and Memory: {{ .Values.namespacedresourcesbase.requests.memory }}"
+      {{- else if and (eq (toString .Values.namespacedresourcesbase.requests.checkIfExist) "true") (eq (toString .Values.namespacedresourcesbase.limits.checkIfExist) "true") }}
+      message: "CPU and memory requests and limits are required"
+      {{- else if and (eq (toString .Values.namespacedresourcesbase.requests.checkIfExist) "true") (eq (toString .Values.namespacedresourcesbase.limits.checkIfExist) "false") }}
+      message: "CPU and memory requests and limits are required. Can't exceed limits CPU: {{ .Values.namespacedresourcesbase.limits.cpu }} and Memory: {{ .Values.namespacedresourcesbase.limits.memory }}"
+      {{- end }}
+      pattern:
+        spec:
+          containers:
+          - resources:
+              requests:
+                {{- if eq (toString .Values.namespacedresourcesbase.requests.checkIfExist) "true" }}
+                memory: "?*"       # with this parameter, memory request must be informed
+                cpu: "?*"          # with this parameter, cpu resuest must be informed
+                {{- else }}
+                memory: "<={{ .Values.namespacedresourcesbase.requests.memory }}"
+                cpu: "<={{ .Values.namespacedresourcesbase.requests.cpu }}"
+                {{- end }}
+              limits:
+                {{- if eq (toString .Values.namespacedresourcesbase.limits.checkIfExist) "true" }}
+                memory: "?*"       # with this parameter, memory request must be informed
+                cpu: "?*"          # with this parameter, cpu resuest must be informed
+                {{- else }}
+                memory: "<={{ .Values.namespacedresourcesbase.limits.memory }}"
+                cpu: "<={{ .Values.namespacedresourcesbase.limits.cpu }}"
+                {{- end }}
+{{- end }}                

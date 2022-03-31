@@ -1,0 +1,109 @@
+# Policy to validate resources, requests and limits in any pod provided by, deploy, statefulset, daemonset or job
+# - Choose requests and limits parameters
+# - List namespaces to be ignored
+# - Enforce or Audit policy behavior
+clusterresourcesbase:
+  #If enabled, you must provide requests and limits to be apply or just check if exists.
+  enabled: true
+  # enforce or audit validation action
+  validationFailureAction: enforce
+  # Checking if barrier was tresspassing
+  # requests:
+  #   cpu: 50m
+  #   memory: 100Mi
+  #   checkIfExist: false
+  # limits:
+  #   cpu: 100m
+  #   memory: 150Mi
+  #   checkIfExist: false
+  # 
+  # Checking if parameters just exists, if was configured
+  # requests:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  # limits:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  #
+  # Or, you can mix
+  # requests:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  # limits:
+  #   cpu: 1000m
+  #   memory: 1Gi
+  #   checkIfExist: false
+  requests:
+    cpu: 50m
+    memory: 250Mi 
+    checkIfExist: true
+  limits: 
+    cpu: 600m
+    memory: 800Mi
+    checkIfExist: true
+  excludedNamespaces: 
+  - linkerd
+  - kube-system
+  - monitoring
+  - logging
+  - flux-system
+  - "ingress*"
+
+namespaceresourcesbase:
+  #If enabled, you must provide requests and limits to be apply or just check if exists.
+  enabled: true
+  # enforce or audit validation action
+  validationFailureAction: enforce
+  # Checking if barrier was tresspassing
+  # requests:
+  #   cpu: 50m
+  #   memory: 100Mi
+  #   checkIfExist: false
+  # limits:
+  #   cpu: 100m
+  #   memory: 150Mi
+  #   checkIfExist: false
+  # 
+  # Checking if parameters just exists, if was configured
+  # requests:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  # limits:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  #
+  # Or, you can mix
+  # requests:
+  #   cpu:          leave blank
+  #   memory:       leave blank
+  #   checkIfExist: true
+  # limits:
+  #   cpu: 1000m
+  #   memory: 1Gi
+  #   checkIfExist: false
+  exclude: {}
+  #
+  #
+  #
+  #
+
+  namespace: pombo
+  requests:
+    cpu: 50m
+    memory: 250Mi 
+    checkIfExist: true
+  limits: 
+    cpu: 600m
+    memory: 800Mi
+    checkIfExist: true
+
+
+
+### Proxima policy ....
+#
+#
