@@ -11,3 +11,6 @@ ingress:
   auth:
     basic_username: "monitoring"
     basic_password: "monitoring"
+
+rabbitmq:
+  enabled: false
