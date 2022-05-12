@@ -12,7 +12,9 @@ rabbitmq:
 
 loki:
   prometheusRules:
-    enabled: false
+    enabled: true
+    canary:
+      enabled: false
   ingress:
     basicAuth:
       enabled: false

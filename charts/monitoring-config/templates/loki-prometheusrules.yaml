@@ -55,6 +55,7 @@ spec:
         summary: |
             High percentage of failing requests for logging: {{ "{{ $value }}%" }}
 
+    {{ if .Values.loki.prometheusRules.canary.enabled }}
     - alert: LokiCanaryIsDown
       annotations:
         description: Loki Canary is not running
@@ -74,4 +75,5 @@ spec:
       labels:
         service: loki
         severity: critical
+    {{ end }}
 {{ end }}
