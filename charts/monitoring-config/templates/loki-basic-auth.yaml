@@ -1,0 +1,12 @@
+{{ with .Values.loki.ingress.basicAuth }}
+{{ if .enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .secretName }}
+  namespace: {{ .secretNamespace }}
+type: Opaque
+data:
+  auth: {{ htpasswd .username .password | b64enc }}
+{{ end }}
+{{ end }}

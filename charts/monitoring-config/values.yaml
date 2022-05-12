@@ -1,16 +1,35 @@
 prometheusOperatorCRDsApiVersion: monitoring.coreos.com/v1
 
 cronitor:
-  enabled: false
+  prometheusRules:
+    enabled: false
 
-backup:
-  velero:
+velero:
+  prometheusRules:
     enabled: true
 
-ingress:
-  auth:
-    basic_username: "monitoring"
-    basic_password: "monitoring"
-
 rabbitmq:
-  enabled: false
+  prometheusRules:
+    enabled: false
+
+loki:
+  prometheusRules:
+    enabled: false
+  ingress:
+    basicAuth:
+      enabled: false
+      secretName: loki-basic-auth
+      secretNamespace: logging
+      username: "logging"
+      password: "logging"
+
+prometheusStack:
+  prometheusRules:
+    enabled: true
+  ingress:
+    basicAuth:
+      enabled: false
+      secretName: monitoring-basic-auth
+      secretNamespace: monitoring
+      username: "monitoring"
+      password: "monitoring"

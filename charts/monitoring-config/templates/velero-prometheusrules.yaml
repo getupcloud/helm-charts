@@ -1,4 +1,4 @@
-{{ if .Values.enabled }}
+{{ if .Values.velero.prometheusRules.enabled }}
 apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
 kind: PrometheusRule
 metadata:

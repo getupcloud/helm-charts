@@ -1,9 +1,11 @@
-apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+{{ if .Values.loki.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
+  name: {{ include "monitoring-config.fullname" . }}-loki
   labels:
+    {{- include "monitoring-config.labels" . | nindent 4 }}
     release: prometheus-operator
-  name: loki
 spec:
   groups:
   - name: loki.rules
@@ -72,4 +74,4 @@ spec:
       labels:
         service: loki
         severity: critical
-
+{{ end }}

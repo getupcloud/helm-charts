@@ -1,7 +1,8 @@
-apiVersion: {{ .Values.prometheusOperatorCRDsApiVersion }}
+{{ if .Values.prometheusStack.prometheusRules.enabled }}
+apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: {{ include "monitoring-config.fullname" . }}
+  name: {{ include "monitoring-config.fullname" . }}-prometheus-stack
   labels:
     {{- include "monitoring-config.labels" . | nindent 4 }}
     release: prometheus-operator
@@ -264,3 +265,4 @@ spec:
         sum(irate(node_network_receive_bytes_total{job="node-exporter",device!~"veth.+"}[1m])) +
         sum(irate(node_network_transmit_bytes_total{job="node-exporter",device!~"veth.+"}[1m]))
       record: :node_net_utilisation:sum_irate
+{{ end }}

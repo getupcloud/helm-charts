@@ -1,4 +1,4 @@
-{{ if .Values.rabbitmq.enabled }}
+{{ if .Values.rabbitmq.prometheusRules.enabled }}
 {{ range $path, $_ :=  .Files.Glob  "rules/rabbitmq/*.yml" -}}
 ## Include from {{ $path }}
 {{ $.Files.Get $path }}
