@@ -12,4 +12,3 @@ echo Download mirrors
 ./helm-mirror repo/ harbor https://helm.goharbor.io
 ./helm-mirror repo/ prometheus-msteams https://prometheus-msteams.github.io/prometheus-msteams/
 ./helm-mirror repo/ ot-helm https://ot-container-kit.github.io/helm-charts/
-./helm-mirrot repo/kube-opex-analytics https://github.com/rchakode/kube-opex-analytics.git

@@ -28,6 +28,8 @@ mkdir -p repo/getupcloud
 echo Downloading git repos
 ./git-download.sh https://github.com/CrunchyData/postgres-operator-examples.git
 charts+=( git/postgres-operator-examples/helm/install/ )
+./git-download.sh https://github.com/rchakode/kube-opex-analytics.git
+charts+=( git/kube-opex-analytics/manifests/helm/ )
 
 echo Charts sources: ${charts[*]}
 
