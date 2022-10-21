@@ -2,10 +2,6 @@ cronitor:
   prometheusRules:
     enabled: false
 
-velero:
-  prometheusRules:
-    enabled: true
-
 rabbitmq:
   prometheusRules:
     enabled: false
