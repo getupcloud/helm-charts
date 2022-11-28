@@ -3,3 +3,4 @@ all:
 
 release:
 	./release.sh
+	git push
