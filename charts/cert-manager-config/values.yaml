@@ -17,7 +17,7 @@ cluster_issuer_dns01:
 
 cluster_issuer_dns01_cloudflare:
   enabled: false
-  cloudflare_zones: ""
+  cloudflare_zones: []
   cloudflare_email: ""
   #  Remember, cloudflare token must be permission Zone-DNS-Edit and Zone-Zone-Read
   #  https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/

@@ -125,15 +125,12 @@ spec:
     solvers:
     - selector:
         dnsZones:
-{{- if .Values.cluster_issuer_dns01_cloudflare.cloudflare_zones }}
-  {{- $zones := split "," .Values.cluster_issuer_dns01_cloudflare.cloudflare_zones }}
-    {{- range $zones }}
+    {{- range .Values.cluster_issuer_dns01_cloudflare.cloudflare_zones }}
         - {{ . }}
     {{- end }}
-{{- end }}
       dns01:
         cloudflare:
-          email: "{{ .Values.cluster_issuer_dns01_cloudflare.cloudflare_email }}"
+          email: {{ .Values.cluster_issuer_dns01_cloudflare.cloudflare_email }}
           apiTokenSecretRef:
             name: cert-manager-cloudflare-credentials-secret
             key: api-token
