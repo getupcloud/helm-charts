@@ -22,9 +22,10 @@ spec:
             - /bin/bash
             - -ce
             - |-
-              SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_SELECTOR" -o name | cut -f2 -d/) )
+              SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_LABEL_SELECTOR" -o name | cut -f2 -d/) )
+
               if [ ${#SECRET_NAMESPACES[*]} -eq 0 ]; then
-                echo "No namespaces found with labels $$NAMESPACE_SELECTOR"
+                echo "No namespaces found with labels [$NAMESPACE_LABEL_SELECTOR]"
                 exit 0
               fi
 
@@ -43,8 +44,12 @@ spec:
             env:
             - name: SECRET_NAME
               value: {{ .Values.secret.name }}
-            - name: NAMESPACE_SELECTOR
-              value: {{ .Values.secret.namespaceSelector }}
+            - name: NAMESPACE_LABEL_SELECTOR
+              {{- $labels := list }}
+              {{- range $k, $v := .Values.secret.namespaceLabelSelector }}
+                {{- $labels = append $labels (print $k "=" $v) }}
+              {{- end }}
+              value: "{{ join "," $labels }}"
             - name: ECR_REGISTRY
               value: "{{ .Values.awsAccountId | toString }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}"
             image: bitnami/kubectl

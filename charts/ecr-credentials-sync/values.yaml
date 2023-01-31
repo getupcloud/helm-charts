@@ -9,8 +9,8 @@ secret:
   # secret name to create for credentials
   name: ecr-credentials
   # labelselector for namespaces where to create credential secrets
-  # valid for "kubectl -l"'s format
-  namespaceSelector: ecr-credentials
+  namespaceLabelSelector:
+    getup.io/ecr-credentials-sync: "true"
 
 awsAccountId: "000000000000"
 
