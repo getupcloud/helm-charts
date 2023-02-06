@@ -1,3 +1,6 @@
+namespacedresourcesbase:
+  enabled: false
+
 # Policy to validate resources, requests and limits in any pod provided by, deploy, statefulset, daemonset or job
 # - Choose requests and limits parameters
 # - List namespaces to be ignored
