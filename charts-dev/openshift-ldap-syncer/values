@@ -1,0 +1,35 @@
+openshiftAuthenticationNamespace: openshift-authentication
+
+ldap:
+  url: "ldap://ldap.company.example.com:389"
+  bindDN: "DC=company,DC=example,DC=com"
+  insecure: false
+  rfc2307:
+    groupsQuery:
+      baseDN: "DC=company,DC=example,DC=com"
+      scope: sub
+      derefAliases: never
+      filter: (objectclass=group)
+    groupUIDAttribute: dn
+    groupNameAttributes: [ cn ]
+    groupMembershipAttributes: [ member ]
+    usersQuery:
+      baseDN: "DC=company,DC=example,DC=com"
+      scope: sub
+      derefAliases: never
+      pageSize: 0
+    userUIDAttribute: dn
+    userNameAttributes:
+    - sAMAccountName
+    tolerateMemberNotFoundErrors: true
+    tolerateMemberOutOfScopeErrors: true
+
+# Example:
+# whitelist:
+# - CN=OpenshiftAdmin,OU=Groups,DC=company,DC=example,DC=com
+# - CN=OpenshiftDev,OU=Groups,DC=company,DC=example,DC=com
+whitelist: []
+
+
+job:
+  schedule: "*/1 * * * *"

@@ -1,0 +1,13 @@
+## TODO
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: {{ .Values.openshiftAuthenticationNamespace }}
+  name: {{ include "openshift-ldap-syncer.fullname" . }}
+  labels:
+    {{- include "openshift-ldap-syncer.labels" . | nindent 4 }}
+data:
+  whitelist.txt: |
+    {{- with .Values.whitelist }}
+    {{- . | indent 4 }}
+    {{- end }}

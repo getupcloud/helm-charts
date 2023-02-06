@@ -1,0 +1,19 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: {{ .Values.openshiftAuthenticationNamespace }}
+  name: {{ include "openshift-ldap-syncer.fullname" . }}
+  labels:
+    {{- include "openshift-ldap-syncer.labels" . | nindent 4 }}
+data:
+  ldap-group-sync.yaml: |
+    kind: LDAPSyncConfig
+    apiVersion: v1
+    url: {{ .Values.ldap.url }}
+    bindDN: {{ .Values.ldap.bindDN }}
+    bindPassword:
+      file: "/etc/secrets/bindPassword"
+    insecure: {{ .Values.ldap.insecure }}
+    {{- with .Values.ldap.rfc2307 }}
+    rfc2307: {{- . | nindent 6 }}
+{{- end }}

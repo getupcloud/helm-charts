@@ -1,0 +1,53 @@
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  namespace: {{ .Values.openshiftAuthenticationNamespace }}
+  name: {{ include "openshift-ldap-syncer.fullname" . }}
+  labels:
+    {{- include "openshift-ldap-syncer.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.job.schedule }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    metadata:
+      labels:
+      {{- include "openshift-ldap-syncer.labels" . | nindent 8 }}
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "openshift-ldap-syncer.labels" . | nindent 12 }}
+        spec:
+          containers:
+            - name: ldap-group-sync
+              image: "registry.redhat.io/openshift4/ose-cli:v4.7"
+              command:
+                - /bin/bash
+                - -c
+                - |
+                  oc adm groups sync \
+                    --whitelist=/etc/ldap-syncer/whitelist.txt \
+                    --sync-config=/etc/ldap-syncer/ldap-group-sync.yaml \
+                    --confirm \
+                    --v=2
+              volumeMounts:
+                - mountPath: "/etc/ldap-syncer/"
+                  name: "config"
+                - mountPath: "/etc/secrets"
+                  name: "ldap-bind-password"
+          volumes:
+            - name: "config"
+              configMap:
+                name: {{ include "openshift-ldap-syncer.fullname" . }}
+            - name: "bind-password"
+              secret:
+                secretName: {{ include "openshift-ldap-syncer.fullname" .}}-bind-password
+          restartPolicy: "Never"
+          terminationGracePeriodSeconds: 30
+          activeDeadlineSeconds: 500
+          dnsPolicy: "ClusterFirst"
+          serviceAccountName: "ldap-group-syncer"
+          serviceAccount: "ldap-group-syncer"
