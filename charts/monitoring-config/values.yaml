@@ -22,6 +22,13 @@ loki:
 prometheusStack:
   prometheusRules:
     enabled: true
+    rulesDefaults:
+      NodeDiskRunningFull:
+        expr: (node:node_filesystem_usage: > 0.70) and (predict_linear(node:node_filesystem_avail:[6h], 3600 * 24) < 0)
+        for: 1h
+      NodeDiskAlmostFull:
+        expr: node:node_filesystem_avail: * 100 < 15
+        for: 1h
   ingress:
     basicAuth:
       enabled: false

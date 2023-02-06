@@ -40,16 +40,16 @@ spec:
     - alert: NodeDiskRunningFull
       annotations:
         message: Device {{ "{{ $labels.device }}" }} on node {{ "{{ $labels.instance }}" }} will be full within the next 24 hours.
-      expr: '(node:node_filesystem_usage: > 0.70) and (predict_linear(node:node_filesystem_avail:[6h], 3600 * 24) < 0)'
-      for: 1h
+      expr: {{ prometheusStack.prometheusRules.rulesDefaults.NodeDiskRunningFull.expr }}
+      for: {{ prometheusStack.prometheusRules.rulesDefaults.NodeDiskRunningFull.for }}
       labels:
         severity: critical
 
-    - alert: NodeDiskRunningFull
+    - alert: NodeDiskAlmostFull
       annotations:
         message: Device {{ "{{ $labels.device }}" }} on node {{ "{{ $labels.instance }}" }} has reached {{ "{{ $value }}%" }} of free space.
-      expr: 'node:node_filesystem_avail: * 100 < 15'
-      for: 1h
+      expr: {{ prometheusStack.prometheusRules.rulesDefaults.NodeDiskAlmostFull.expr }}
+      for: {{ prometheusStack.prometheusRules.rulesDefaults.NodeDiskAlmostFull.for }}
       labels:
         severity: critical
 
