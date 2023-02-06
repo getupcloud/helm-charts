@@ -1,7 +1,7 @@
 all:
 	@echo Targets: release
 
-release:
+release: test
 	./release.sh
 	git push
 
