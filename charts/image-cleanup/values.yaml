@@ -1,5 +1,5 @@
 config:
-  cronjobs: 0 0 * * * crictl rmi --prune 2>&1
+  cronjobs: 0 3 * * * crictl rmi --prune 2>&1
 imagecleanup:
   imagecleanup:
     image:
@@ -7,5 +7,5 @@ imagecleanup:
       tag: latest
     resources:
       requests:
-        cpu: 100m
+        cpu: 50m
         memory: 50Mi
