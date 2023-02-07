@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "image-cleanup.fullname" . }}-imagecleanup
+  labels:
+  {{- include "image-cleanup.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      component: imagecleanup
+    {{- include "image-cleanup.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        component: imagecleanup
+      {{- include "image-cleanup.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRICTL_VERSION/crictl-$CRICTL_VERSION-linux-amd64.tar.gz
+          && tar zxvf crictl-$CRICTL_VERSION-linux-amd64.tar.gz -C /usr/local/bin && crontab
+          /config/cronjobs && crond -f -d 8
+        env:
+        - name: CRICTL_VERSION
+          value: v1.20.0
+        - name: CONTAINER_RUNTIME_ENDPOINT
+          value: unix:///var/run/containerd/containerd.sock
+        - name: IMAGE_SERVICE_ENDPOINT
+          value: unix:///var/run/containerd/containerd.sock
+        image: {{ .Values.imagecleanup.imagecleanup.image.repository }}:{{ .Values.imagecleanup.imagecleanup.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: Always
+        name: imagecleanup
+        resources: {{- toYaml .Values.imagecleanup.imagecleanup.resources | nindent 10 }}
+        volumeMounts:
+        - mountPath: /var/run/containerd/containerd.sock
+          name: containerd
+        - mountPath: /config
+          name: imagecleanupconfig
+      volumes:
+      - hostPath:
+          path: /var/run/containerd/containerd.sock
+          type: Socket
+        name: containerd
+      - configMap:
+          name: {{ include "image-cleanup.fullname" . }}-config
+        name: imagecleanupconfig

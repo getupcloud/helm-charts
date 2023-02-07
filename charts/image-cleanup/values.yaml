@@ -1,0 +1,11 @@
+config:
+  cronjobs: 0 0 * * * crictl rmi --prune 2>&1
+imagecleanup:
+  imagecleanup:
+    image:
+      repository: alpine
+      tag: latest
+    resources:
+      requests:
+        cpu: 100m
+        memory: 50Mi
