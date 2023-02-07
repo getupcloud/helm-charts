@@ -46,3 +46,7 @@ spec:
       - configMap:
           name: {{ include "image-cleanup.fullname" . }}-config
         name: imagecleanupconfig
+    {{- with .Values.tolerations }}
+      tolerations:
+     {{- toYaml . | nindent 6 }}
+    {{- end }}

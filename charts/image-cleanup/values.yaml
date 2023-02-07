@@ -1,5 +1,6 @@
 config:
   cronjobs: 0 3 * * * crictl rmi --prune 2>&1
+
 imagecleanup:
   imagecleanup:
     image:
@@ -9,3 +10,7 @@ imagecleanup:
       requests:
         cpu: 50m
         memory: 50Mi
+
+tolerations:
+- effect: NoSchedule
+  operator: Exists
