@@ -9,3 +9,5 @@ rules:
   - CertificateSigningRequest
   verbs:
   - '*'
+  resources:
+  - '*'
