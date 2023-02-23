@@ -1,0 +1,12 @@
+templates: []
+# - apiVersion: v1
+#   kind: ConfigMap
+#   metadata:
+#     labels:
+#       app: example
+#     name: config
+#     namespace: default
+#   data:
+#     config:
+#       ENVIRONMENT: {{ .Values.environment | default "DEVELOPMENT" }}
+#       USERNAME: admin

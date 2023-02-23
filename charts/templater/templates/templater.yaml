@@ -1,0 +1,4 @@
+{{- range $t := .Values.templates }}
+---
+{{ tpl $t $ }}
+{{- end }}
