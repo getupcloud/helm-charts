@@ -33,7 +33,7 @@ spec:
           - -c
           - |-
             kubectl get csr -w |
-            awk '/Pending$/{print $1}' |
+            stdbuf -i0 -o0 awk '/Pending/{print $1}' |
             while read csr; do
               echo "Approving CSR $csr"
               kubectl certificate approve "$csr"
