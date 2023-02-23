@@ -6,7 +6,7 @@ metadata:
     {{- include "csr-auto-approver.labels" . | nindent 4 }}
 rules:
 - apiGroups:
-  - CertificateSigningRequest
+  - certificates.k8s.io
   verbs:
   - '*'
   resources:
