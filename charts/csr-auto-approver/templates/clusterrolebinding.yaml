@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "csr-auto-approver.fullname" . }}
+  labels:
+    {{- include "csr-auto-approver.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "csr-auto-approver.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "csr-auto-approver.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}

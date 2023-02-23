@@ -1,16 +1,15 @@
+{{ $imageTag := printf "%s.%s" .Capabilities.KubeVersion.Major .Capabilities.KubeVersion.Minor -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "csr-auto-approve.fullname" . }}
+  name: {{ include "csr-auto-approver.fullname" . }}
   labels:
-    {{- include "csr-auto-approve.labels" . | nindent 4 }}
+    {{- include "csr-auto-approver.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "csr-auto-approve.selectorLabels" . | nindent 6 }}
+      {{- include "csr-auto-approver.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,25 +17,31 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "csr-auto-approve.selectorLabels" . | nindent 8 }}
+        {{- include "csr-auto-approver.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "csr-auto-approve.serviceAccountName" . }}
+      serviceAccountName: {{ include "csr-auto-approver.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
           - /bin/bash
           - -c
-          - {{- .Values.command | indent 12 }}
+          - |-
+            kubectl get csr -w |
+            awk '/Pending$/{print $1}' |
+            while read csr; do
+              echo "Approving CSR $csr"
+              kubectl certificate approve "$csr"
+            done
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default $imageTag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

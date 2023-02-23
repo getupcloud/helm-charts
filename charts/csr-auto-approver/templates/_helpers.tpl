@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "csr-auto-approve.name" -}}
+{{- define "csr-auto-approver.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "csr-auto-approve.fullname" -}}
+{{- define "csr-auto-approver.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "csr-auto-approve.chart" -}}
+{{- define "csr-auto-approver.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "csr-auto-approve.labels" -}}
-helm.sh/chart: {{ include "csr-auto-approve.chart" . }}
-{{ include "csr-auto-approve.selectorLabels" . }}
+{{- define "csr-auto-approver.labels" -}}
+helm.sh/chart: {{ include "csr-auto-approver.chart" . }}
+{{ include "csr-auto-approver.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "csr-auto-approve.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "csr-auto-approve.name" . }}
+{{- define "csr-auto-approver.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "csr-auto-approver.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "csr-auto-approve.serviceAccountName" -}}
+{{- define "csr-auto-approver.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "csr-auto-approve.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "csr-auto-approver.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

@@ -1,6 +1,7 @@
 repo/
 git/
 .env
-.sw[op]
+**/.sw[op]
 .history/
 .DS_Store
+**/.test-values.yaml
