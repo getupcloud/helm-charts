@@ -52,7 +52,7 @@ spec:
               value: "{{ join "," $labels }}"
             - name: ECR_REGISTRY
               value: "{{ .Values.awsAccountId | toString }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}"
-            image: bitnami/kubectl
+            image: bitnami/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}
             imagePullPolicy: IfNotPresent
             name: create-secret
             resources:
@@ -73,7 +73,7 @@ spec:
             env:
             - name: AWS_REGION
               value: {{ .Values.ecr.region }}
-            image: amazon/aws-cli
+            image: {{ .Values.awscli.image.name }}:{{ .Values.awscli.image.tag }}
             imagePullPolicy: IfNotPresent
             name: get-token
             resources:
