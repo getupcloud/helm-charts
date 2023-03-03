@@ -47,6 +47,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "basic-deployment.selectorLabels" -}}
+app: {{ include "basic-deployment.name" . }}
 app.kubernetes.io/name: {{ include "basic-deployment.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

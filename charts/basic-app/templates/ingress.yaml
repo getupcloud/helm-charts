@@ -1,5 +1,16 @@
-{{- if .Values.ingress.enabled }}
+{{- if .Values.ingress.enabled -}}
+{{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
+  {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
+  {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
+  {{- end }}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   {{- with .Values.ingress.annotations }}
@@ -11,22 +22,36 @@ metadata:
     app: "{{ include "basic-deployment.name" . }}"
     release: {{ .Release.Name | quote }}
 spec:
-  rules:
-  {{- range .Values.ingress.hosts }}
-  - host: {{ .name }}
-    http:
-      paths:
-      - path: {{ default "/" .path }}
-        backend:
-          serviceName: {{ include "basic-deployment.name" $ }}
-          servicePort: http
+  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
   {{- if .Values.ingress.tls.enabled }}
   tls:
-  - hosts:
-  {{- range .Values.ingress.hosts }}
-    - {{ .name }}
+    - hosts:
+        {{- range .Values.ingress.hosts }}
+        - {{ .name }}
+        {{- end }}
+      secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
-    secretName: {{ .Values.ingress.tls.secretName }}
-  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .name }}
+      http:
+        paths:
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ include "basic-deployment.name" $ }}
+                port:
+                  name: http
+              {{- else }}
+              serviceName: {{ include "basic-deployment.name" $ }}
+              servicePort: http
+              {{- end }}
+    {{- end }}
 {{- end }}
+

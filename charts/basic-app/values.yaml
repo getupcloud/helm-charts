@@ -146,9 +146,15 @@ storage:
 
 ingress:
   enabled: false
+  # if kubernetes above 1.20 and have ingressClassName, inform here
+  className: nginx
+  # end className
   annotations: {}
   hosts:
   - name: exemplo.com
+    # if kubernetes above 1.20 and have ingressClassName, inform here
+    pathType: Prefix
+    # end pathType
     path: /
   tls:
     enabled: false
