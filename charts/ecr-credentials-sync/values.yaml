@@ -3,6 +3,11 @@ awscli:
     name: amazon/aws-cli
     tag: 2.10.2
 
+kubectl:
+  image:
+    name: bitnami/kubectl
+    tag: "" # discovered on install
+
 serviceAccount:
   create: true
   ## roleArn is Required if create=true

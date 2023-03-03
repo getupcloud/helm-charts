@@ -20,7 +20,7 @@ spec:
           containers:
           - command:
             - /bin/bash
-            - -ce
+            - -xce
             - |-
               SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_LABEL_SELECTOR" -o name | cut -f2 -d/) )
 
@@ -52,7 +52,11 @@ spec:
               value: "{{ join "," $labels }}"
             - name: ECR_REGISTRY
               value: "{{ .Values.awsAccountId | toString }}.{{ get .Values.ecr.registrySuffix .Values.ecr.region }}"
-            image: bitnami/kubectl:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}
+            {{- if .Values.kubectl.image.tag }}
+            image: {{ .Values.kubectl.image.name }}:{{ .Values.kubectl.image.tag }}
+            {{- else }}
+            image: {{ .Values.kubectl.image.name }}:{{ .Capabilities.KubeVersion.Major | regexFind "[0-9]+" }}.{{ .Capabilities.KubeVersion.Minor | regexFind "[0-9]+" }}
+            {{- end }}
             imagePullPolicy: IfNotPresent
             name: create-secret
             resources:
@@ -68,7 +72,7 @@ spec:
           initContainers:
           - command:
             - /bin/sh
-            - -ce
+            - -xce
             - aws ecr get-login-password --region $AWS_REGION > /token/ecr-token
             env:
             - name: AWS_REGION
