@@ -87,11 +87,15 @@ spec:
           volumeMounts:
 {{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
             - mountPath: {{ .Values.secret.mountPath }}
-              name: {{ .Release.Name }}-data
+              name: {{ .Release.Name }}-secret
+{{- end }}
+{{- if and .Values.externalSecret.enabled (not (eq .Values.externalSecret.mountPath "")) }}
+            - mountPath: {{ .Values.externalSecret.mountPath }}
+              name: {{ .Release.Name }}-external-secret
 {{- end }}
 {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
             - mountPath: {{ .Values.configMap.mountPath }}
-              name: {{ .Release.Name }}-data
+              name: {{ .Release.Name }}-config
 {{- end }}
 {{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
@@ -114,6 +118,11 @@ spec:
         - name: {{ .Release.Name }}-secret
           secret:
             secretName: {{ .Release.Name }}-secret
+{{- end }}
+{{- if and .Values.externalSecret.enabled (not (eq .Values.externalSecret.mountPath "")) }}
+        - name: {{ .Release.Name }}-external-secret
+          secret:
+            secretName: {{ .Values.externalSecret.secretName }}
 {{- end }}
 {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
         - name: {{ .Release.Name }}-config

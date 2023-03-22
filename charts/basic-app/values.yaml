@@ -107,6 +107,13 @@ secret:
   mountPath: ""
   data: {}
 
+# this section is to mount an existing secret in the Deployment as a volume.
+externalSecret:
+  enabled: false
+  mountPath: ""
+  secretName: ""
+
+
 #############
 ## Storage ##
 #############
