@@ -87,11 +87,17 @@ spec:
           volumeMounts:
 {{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
             - mountPath: {{ .Values.secret.mountPath }}
-              name: {{ .Release.Name }}-data
+              name: {{ .Release.Name }}-secret
+{{- end }}
+{{- range $i, $v := .Values.existingSecrets }}
+  {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
+            - mountPath: {{ $v.mountPath }}
+              name: {{ $v.secretName }}
+  {{- end }}
 {{- end }}
 {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
             - mountPath: {{ .Values.configMap.mountPath }}
-              name: {{ .Release.Name }}-data
+              name: {{ .Release.Name }}-config
 {{- end }}
 {{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
@@ -114,6 +120,13 @@ spec:
         - name: {{ .Release.Name }}-secret
           secret:
             secretName: {{ .Release.Name }}-secret
+{{- end }}
+{{- range $i, $v := .Values.existingSecrets }}
+  {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
+        - name: {{ $v.secretName }}
+          secret:
+            secretName: {{ $v.secretName }}
+  {{- end }}
 {{- end }}
 {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
         - name: {{ .Release.Name }}-config
