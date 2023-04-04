@@ -108,13 +108,13 @@ secret:
   data: {}
 
 # this section is to mount an existing secret in the Deployment as a volume.
-existingSecrets:
--  mountPath: ""
-   secretName: ""
-   subPath: ""
--  mountPath: ""
-   secretName: ""
-   subPath: ""
+existingSecrets: []
+#-  mountPath: ""
+#   secretName: ""
+#   subPath: ""
+#-  mountPath: ""
+#   secretName: ""
+#   subPath: ""
 
 
 #############
