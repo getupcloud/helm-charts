@@ -111,8 +111,10 @@ secret:
 existingSecrets:
 -  mountPath: ""
    secretName: ""
+   subPath: ""
 -  mountPath: ""
    secretName: ""
+   subPath: ""
 
 
 #############
