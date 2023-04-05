@@ -1,4 +1,5 @@
-{{ with .Values.ingress }}
+{{- if .Values.ingress.enabled }}
+{{- with .Values.ingress }}
 {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else if semverCompare ">=1.14-0" $.Capabilities.KubeVersion.GitVersion -}}
@@ -41,4 +42,5 @@ spec:
   tls:
     {{ toYaml . | nindent 4 }}
   {{- end }}
+{{- end }}
 {{- end }}

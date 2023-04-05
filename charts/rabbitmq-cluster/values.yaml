@@ -5,10 +5,12 @@
 replicas: 1
 
 ingress:
+  enabled: false
   className: ""
   hosts:
   - host: rabbitmq.example.com
     path: /
+    pathType: Prefix
 
   tls: []
   #- hosts:
