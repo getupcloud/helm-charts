@@ -19,8 +19,9 @@ secret:
   # secret name to create for credentials
   name: ecr-credentials
   # labelselector for namespaces where to create credential secrets
-  namespaceLabelSelector:
-    getup.io/ecr-credentials-sync: "true"
+  namespaceLabelSelector: {}
+  #  getup.io/ecr-credentials-sync: "true"
+  #  kubernetes.io/metadata.name: "flux-system"
 
 awsAccountId: "000000000000"
 
