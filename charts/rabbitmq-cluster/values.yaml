@@ -5,6 +5,7 @@
 replicas: 1
 
 ingress:
+  className: ""
   hosts:
   - host: rabbitmq.example.com
     path: /
