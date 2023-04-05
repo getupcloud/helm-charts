@@ -23,9 +23,19 @@ spec:
     http:
       paths:
       - backend:
+          {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+          service:
+            name: {{ include "rabbitmq-cluster.fullname" $ }}
+            port:
+              number: {{ $.Values.service.management.port }}
+          {{- else }}
           serviceName: {{ include "rabbitmq-cluster.fullname" $ }}
           servicePort: {{ $.Values.service.management.port }}
+          {{- end }}
         path: {{ .path }}
+        {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+        pathType: {{ .pathType }}
+        {{- end }}
   {{- end }}
   {{- with .tls }}
   tls:
