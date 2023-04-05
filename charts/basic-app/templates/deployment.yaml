@@ -93,6 +93,7 @@ spec:
   {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
             - mountPath: {{ $v.mountPath }}
               name: {{ $v.secretName }}
+              subPath: {{ $v.subPath }}
   {{- end }}
 {{- end }}
 {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
