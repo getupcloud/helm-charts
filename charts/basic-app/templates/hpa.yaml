@@ -8,19 +8,29 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "basic-deployment.name" . }}
-  minReplicas: {{ .Values.replicas }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- if not (.Capabilities.APIVersions.Has "autoscaling/v2") }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+  {{- else }}
   metrics:
-    {{- if .Values.autoscaling.cpu }}
-    - type: Resource
-      resource:
-        name: cpu
-        targetAverageUtilization: {{ .Values.autoscaling.cpu }}
-    {{- end }}
-    {{- if .Values.autoscaling.memory }}
-    - type: Resource
-      resource:
-        name: memory
-        targetAverageValue: {{ .Values.autoscaling.memory }}
-    {{- end }}
+  {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
+  behavior:
+  {{- end }}
+
 {{- end }}
