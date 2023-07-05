@@ -7,7 +7,7 @@ fullnameOverride: ""
 ## Deployment ##
 ################
 
-replicas: 1
+replicaCount: 1
 
 image:
   repository: ""
@@ -65,6 +65,11 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
+
+
+################
+##    HPA     ##
+################
 
 autoscaling:
   enabled: false
