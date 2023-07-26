@@ -13,9 +13,15 @@ image:
   repository: ""
   pullPolicy: IfNotPresent
 
-# command: []
+strategy: {}
+# type: RollingUpdate
+# rollingUpdate:
+#   maxSurge: 2
+#   maxUnavailable: 1
 
-# args: []
+command: []
+
+args: []
 
 env: []
 

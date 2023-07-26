@@ -11,6 +11,12 @@ spec:
   selector:
     matchLabels:
       {{- include "basic-deployment.selectorLabels" . | nindent 6 }}
+      
+  strategy:
+    {{- with .Values.strategy }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+
   template:
     metadata:
     {{- with .Values.podAnnotations }}
@@ -48,31 +54,31 @@ spec:
           env:
             {{- toYaml .Values.env | nindent 12 }}
 
-{{- if .Values.envFrom }}
+          {{- if .Values.envFrom }}
           envFrom:
-  {{- range $i, $v := .Values.envFrom.configMaps }}
-    {{- if $v.data }}
+          {{- range $i, $v := .Values.envFrom.configMaps }}
+          {{- if $v.data }}
           - configMapRef:
               name: {{ include "basic-deployment.name" $ }}-config-env-{{ default $i $v.name }}
               optional: {{ default false $v.optional }}
-    {{ else if $v.name }}
+          {{ else if $v.name }}
           - configMapRef:
               name: {{ $v.name }}
               optional: {{ default false $v.optional }}
-    {{- end }}
-  {{- end }}
-  {{- range $i, $v := .Values.envFrom.secrets }}
-    {{- if $v.data }}
+          {{- end }}
+          {{- end }}
+          {{- range $i, $v := .Values.envFrom.secrets }}
+          {{- if $v.data }}
           - secretRef:
               name: {{ include "basic-deployment.name" $ }}-secret-env-{{ default $i $v.name }}
               optional: {{ default false $v.optional }}
-    {{ else if $v.name }}
+          {{ else if $v.name }}
           - secretRef:
               name: {{ $v.name }}
               optional: {{ default false $v.optional }}
-    {{- end }}
-  {{- end }}
-{{- end }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
 
           {{ if not (eq (.Values.containerPort|int) 0) }}
           ports:
@@ -85,26 +91,26 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-{{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
+          {{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
             - mountPath: {{ .Values.secret.mountPath }}
               name: {{ .Release.Name }}-secret
-{{- end }}
-{{- range $i, $v := .Values.existingSecrets }}
-  {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
+          {{- end }}
+          {{- range $i, $v := .Values.existingSecrets }}
+          {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
             - mountPath: {{ $v.mountPath }}
               name: {{ $v.secretName }}
               subPath: {{ $v.subPath }}
-  {{- end }}
-{{- end }}
-{{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
+          {{- end }}
+          {{- end }}
+          {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
             - mountPath: {{ .Values.configMap.mountPath }}
               name: {{ .Release.Name }}-config
-{{- end }}
-{{- if .Values.storage.enabled }}
+          {{- end }}
+          {{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
               name: {{ .Release.Name }}-data
-{{- end }}
-      {{- with .Values.nodeSelector }}
+          {{- end }}
+          {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -117,25 +123,25 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-{{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
+      {{- if and .Values.secret.enabled (not (eq .Values.secret.mountPath "")) }}
         - name: {{ .Release.Name }}-secret
           secret:
             secretName: {{ .Release.Name }}-secret
-{{- end }}
-{{- range $i, $v := .Values.existingSecrets }}
-  {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
+      {{- end }}
+      {{- range $i, $v := .Values.existingSecrets }}
+      {{- if and ( default "" $v.mountPath ) ( default "" $v.secretName ) }}
         - name: {{ $v.secretName }}
           secret:
             secretName: {{ $v.secretName }}
-  {{- end }}
-{{- end }}
-{{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
+      {{- end }}
+      {{- end }}
+      {{- if and .Values.configMap.enabled (not (eq .Values.configMap.mountPath "")) }}
         - name: {{ .Release.Name }}-config
           configMap:
             name: {{ .Release.Name }}-config
-{{- end }}
-{{- if .Values.storage.enabled }}
+      {{- end }}
+      {{- if .Values.storage.enabled }}
         - name: {{ .Release.Name }}-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-data
-{{- end }}
+      {{- end }}
