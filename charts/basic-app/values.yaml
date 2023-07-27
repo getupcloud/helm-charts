@@ -13,6 +13,12 @@ image:
   repository: ""
   pullPolicy: IfNotPresent
 
+strategy: {}
+# type: RollingUpdate
+# rollingUpdate:
+#   maxSurge: 3
+#   maxUnavailable: 1
+
 command: []
 
 args: []
