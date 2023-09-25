@@ -92,6 +92,14 @@ metrics:
       queues: []
       duration: 30m
 
+  detailed:
+    enabled: true
+    # params: {}
+    params:
+      family:
+        - queue_coarse_metrics
+        - queue_metrics
+
   ## valid values: official, kbudde
   exporter_types:
   - official
