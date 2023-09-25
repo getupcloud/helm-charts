@@ -31,9 +31,9 @@ spec:
     scheme: https
     path: /metrics/detailed
     params:
-      family:
-        - queue_coarse_metrics
-        - queue_metrics
+      {{- with .Values.metrics.detailed.params }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
     interval: 15s
     scrapeTimeout: 14s
     tlsConfig:

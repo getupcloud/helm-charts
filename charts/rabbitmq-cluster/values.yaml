@@ -93,7 +93,7 @@ metrics:
       duration: 30m
 
   detailed:
-    enabled: true
+    enabled: false
     # params: {}
     params:
       family:
