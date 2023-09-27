@@ -7,7 +7,6 @@ echo Download mirrors
 ./helm-mirror repo/ velero https://vmware-tanzu.github.io/helm-charts
 ./helm-mirror repo/ ingress-nginx https://kubernetes.github.io/ingress-nginx
 ./helm-mirror repo/ grafana https://grafana.github.io/helm-charts
-./helm-mirror repo/ loki https://grafana.github.io/loki/charts
 ./helm-mirror repo/ elastic https://helm.elastic.co
 ./helm-mirror repo/ harbor https://helm.goharbor.io
 ./helm-mirror repo/ prometheus-msteams https://prometheus-msteams.github.io/prometheus-msteams/
