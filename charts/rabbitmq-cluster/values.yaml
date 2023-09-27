@@ -92,6 +92,9 @@ metrics:
       queues: []
       duration: 30m
 
+  #  For more details about the 'detailed-endpoint,
+  #  please refer to the documentation at:
+  #  https://www.rabbitmq.com/prometheus.html#detailed-endpoint
   detailed:
     enabled: false
     # params: {}
