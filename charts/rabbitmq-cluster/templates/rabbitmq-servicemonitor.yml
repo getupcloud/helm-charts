@@ -11,8 +11,6 @@ spec:
     scheme: http
     interval: 30s
     scrapeTimeout: 15s
-    tlsConfig:
-      insecureSkipVerify: true
   {{- if .Values.metrics.detailed.enabled }}
   - port: prometheus
     scheme: http
@@ -23,8 +21,6 @@ spec:
       {{- end }}
     interval: 15s
     scrapeTimeout: 14s
-    tlsConfig:
-      insecureSkipVerify: true
   {{- end }}
   selector:
     matchLabels:
