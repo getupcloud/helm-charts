@@ -11,12 +11,17 @@ spec:
     scheme: http
     interval: 30s
     scrapeTimeout: 15s
-  - port: prometheus-tls
-    scheme: https
-    interval: 30s
-    scrapeTimeout: 15s
-    tlsConfig:
-      insecureSkipVerify: true
+  {{- if .Values.metrics.detailed.enabled }}
+  - port: prometheus
+    scheme: http
+    path: /metrics/detailed
+    params:
+      {{- with .Values.metrics.detailed.params }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    interval: 15s
+    scrapeTimeout: 14s
+  {{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/component: rabbitmq
