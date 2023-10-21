@@ -6,7 +6,7 @@ image:
   repository: getupcloud/tiny-controllers
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v0.1.0
+  # tag: v0.2.0
 
 replicaCount: 1
 
@@ -67,6 +67,53 @@ controllers:
 
   patch:
     enabled: false
+    resources:
+    - kind: Deployment
+      apiVersion: apps/v1
+      patches:
+      - name: demo
+        namespace: demo
+        specs:
+        - jq: |-
+            (.spec.template.spec.containers[] | select(.name=="sidecar")).resources |= {"limits":{"cpu":"100m","memory":"1Gi"}}
+        - json: {}
+        - strategic: {}
+        - merge:
+            spec:
+              replicas:
+                1
+
+    - kind: Ingress
+      apiVersion: networking.k8s.io/v1
+      patches:
+      - matches:
+        - .spec.rules[].host|test("foo.com.br$")
+        specs:
+        - jq: {}
+        - json: {}
+        - strategic: {}
+        - merge:
+            metadata:
+              annotations:
+                foo: bar
+
+    #- kind: PrometheusRule
+    #  apiVersion: monitoring.coreos.com/v1
+    #  patches:
+    #  - name: loki
+    #    namespace: monitoring
+    #    specs:
+    #    - json: {}
+    #    - strategic: {}
+    #    - merge: {}
+    #    - python: |-
+    #        for g in state['object']['spec']['groups']:
+    #          if g['name'] == 'loki.rules':
+    #            for r in g['rules']:
+    #              if r['alert'] == 'alert1':
+    #                r['labels']['severity'] = 'warning'
+    #    - jq: |-
+    #        (.spec.groups[] | select(.name=="loki.rules") | .rules[]| select (.alert=="alert1") | .for) |= "1h"
 
   volume:
     enabled: true

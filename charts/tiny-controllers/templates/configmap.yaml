@@ -34,6 +34,33 @@ data:
           debug: false
     {{- end }}
 
+    {{- if .patch.enabled }}
+      {{- $gvk := list }}
+      {{- range .patch.resources }}
+        {{- $gvk = append $gvk (printf "%s/%s" .apiVersion .kind ) }}
+      {{- end }}
+      {{- $gvk := uniq $gvk }}
+      {{- range $gvk }}
+        {{- $res := regexSplit "/" . 3 }}
+        {{- if eq (len $res) 3 }}
+    - group: {{ index $res 0 }}
+      version: {{ index $res 1 }}
+      kind: {{ index $res 2 }}
+        {{- else }}
+    - group: ""
+      version: {{ index $res 0 }}
+      kind: {{ index $res 1 }}
+        {{- end }}
+      reconciler:
+        exec:
+          command: /app/main.py
+          args:
+          - patch
+          - reconcile
+          debug: false
+      {{- end }}
+    {{- end }}
+
     {{- if .volume.enabled }}
     - kind: PersistentVolume
       group: ""
@@ -62,3 +89,13 @@ data:
         keyFile: /etc/tls/tls.key
     {{- end }}
     {{- end }}
+
+{{- if .Values.controllers.patch.enabled }}
+  patch-reconcile.yaml: |-
+    paths:
+      kubectl: /usr/bin/kubectl
+      jq: /usr/bin/jq
+
+    resources:
+      {{- toYaml .Values.controllers.patch.resources | nindent 6 }}
+{{- end }}
