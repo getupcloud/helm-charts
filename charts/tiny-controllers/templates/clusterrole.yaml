@@ -32,6 +32,19 @@ rules:
   - update
 {{- end }}
 
+{{- if .patch.enabled }}
+## TODO: be strict
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+{{- end }}
+
 {{- if .volume.enabled }}
 - apiGroups:
   - ""
