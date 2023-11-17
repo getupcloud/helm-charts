@@ -32,7 +32,7 @@ spec:
           - /bin/bash
           - -c
           - |-
-            kubectl get csr -w |
+            kubectl get csr --field-selector spec.signerName=kubernetes.io/kubelet-serving -w |
             stdbuf -i0 -o0 awk '/Pending/{print $1}' |
             while read csr; do
               echo "Approving CSR $csr"
