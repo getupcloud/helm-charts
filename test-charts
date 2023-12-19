@@ -4,6 +4,7 @@ set -e
 
 cd charts
 for chart in */; do
+    chart=${chart%/}
     echo Testing $chart
     [ -e "$chart/.test-values.yaml" ] && values="--values $chart/.test-values.yaml" || values=""
     helm template test-$chart $values ./$chart > /dev/null || true

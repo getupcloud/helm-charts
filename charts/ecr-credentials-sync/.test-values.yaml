@@ -1,0 +1,7 @@
+serviceAccount:
+  roleArn: arn:aws:iam::111122223333:policy/my-policy
+
+ecr:
+  region: sa-east-1
+
+awsAccountId: 111122223333

@@ -46,7 +46,7 @@ for repo in sys.argv[3:]:
     r.encoding = r.apparent_encoding
   if not r.encoding:
     r.encoding = 'utf-8'
-  index = yaml.load(r.text, Loader=yaml.FullLoader)
+  index = yaml.load(r.text, Loader=yaml.Loader)
 
   for name, charts in index['entries'].items():
     for chart in charts:
