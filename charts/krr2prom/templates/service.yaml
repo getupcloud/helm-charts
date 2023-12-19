@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-  {{- if not .Values.serviceMonitor }}
+  {{- if not .Values.serviceMonitor.enabled }}
     prometheus.io/path: /metrics
     prometheus.io/scheme: http
     prometheus.io/scrape: "true"
