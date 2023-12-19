@@ -36,9 +36,9 @@ spec:
           - name: MAX_WORKERS
             value: {{ .Values.config.maxWorkers | quote }}
           {{- end }}
-          {{- if .Values.config.prometheusURL }}
+          {{- if .Values.config.prometheusUrl }}
           - name: PROMETHEUS_URL
-            value: {{ .Values.config.prometheusURL | quote }}
+            value: {{ .Values.config.prometheusUrl | quote }}
           {{- end }}
           {{- if .Values.config.scanFrequency }}
           - name: SCAN_FREQUENCY
