@@ -13,7 +13,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 config:
-  port: 80
+  port: 8080
   # Keep this low in order not to overload prometheus
   maxWorkers: 1
   # Override for custom prometheus server address
@@ -37,9 +37,9 @@ securityContext:
   capabilities:
     drop:
     - ALL
-  readOnlyRootFilesystem: true
+  # readOnlyRootFilesystem: true
   runAsNonRoot: true
-  runAsUser: 1000
+  runAsUser: 1001
 
 service:
   type: ClusterIP
