@@ -1,6 +1,6 @@
 apiVersion: v2
 name: krr2prom
-description: Helm Chart for krr2prom application
+description: Exposes KRR results as prometheus metrics
 
 # A chart can be either an 'application' or a 'library' chart.
 #
