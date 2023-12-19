@@ -21,6 +21,8 @@ config:
   # Override for custom prometheus server address
   #prometheusURL: "http://prometheus-server.monitoring.svc.cluster.local:9090"
 
+terminationGracePeriodSeconds: 5
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
