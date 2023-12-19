@@ -1,0 +1,16 @@
+{{- if .Values.rbac.create }}
+apiVersion: v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "krr2prom.fullname" . }}
+  labels:
+    {{- include "krr2prom.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "krr2prom.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "krr2prom.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}

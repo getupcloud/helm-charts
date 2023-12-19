@@ -1,0 +1,28 @@
+{{- if .Values.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "krr2prom.fullname" . }}
+  labels:
+    {{- include "krr2prom.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - port: {{ .Values.config.port }}
+      interval: {{ .Values.serviceMonitor.scrapeInterval }}
+    {{- if .Values.serviceMonitor.honorLabels }}
+      honorLabels: true
+    {{- end }}
+    {{- if .Values.serviceMonitor.relabelings }}
+      relabelings: {{ toYaml .Values.serviceMonitor.relabelings | nindent 8 }}
+    {{- end }}
+    {{- if .Values.serviceMonitor.metricRelabelings }}
+      metricRelabelings: {{ toYaml .Values.serviceMonitor.metricRelabelings | nindent 8 }}
+    {{- end }}
+{{- if .Values.serviceMonitor.jobLabel }}
+  jobLabel: {{ .Values.serviceMonitor.jobLabel | quote }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "krr2prom.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: krr2prom
+{{- end }}
