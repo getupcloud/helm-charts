@@ -39,13 +39,17 @@ spec:
           - name: PROMETHEUS_URL
             value: {{ .Values.config.prometheusURL | quote }}
           {{- end }}
+          {{- if .Values.config.scanFrequency }}
+          - name: SCAN_FREQUENCY
+            value: {{ .Values.config.scanFrequency | quote }}
+          {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: metrics
-              containerPort:  {{ .Values.config.port }}
+              containerPort: {{ .Values.containerPort }}
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

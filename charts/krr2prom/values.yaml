@@ -12,8 +12,10 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+containerPort: 8080
+
 config:
-  port: 8080
+  scanFrequency: 1h
   # Keep this low in order not to overload prometheus
   maxWorkers: 1
   # Override for custom prometheus server address
@@ -43,7 +45,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 serviceMonitor:
   enabled: true ## there is no point disabling this
