@@ -2,6 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "krr2prom.fullname" . }}
+  annotations:
+  {{- if not .Values.serviceMonitor }}
+    prometheus.io/path: /metrics
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
+  {{- end }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
 spec:

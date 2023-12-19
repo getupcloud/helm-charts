@@ -50,7 +50,7 @@ service:
   port: 8080
 
 serviceMonitor:
-  enabled: true ## there is no point disabling this
+  enabled: true ## will set prometheus annotations if false
   scrapeInterval: "1h"
   honorLabels: true
   relabelings: []
