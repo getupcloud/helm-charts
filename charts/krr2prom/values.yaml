@@ -12,14 +12,16 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-containerPort: 8080
+execMode: prometheus-exporter   ## prometheus (one-shot and sleep) | prometheus-exporter (serve prometheus metrics)
 
-config:
-  scanFrequency: 1h
-  # Keep this low in order not to overload prometheus
-  maxWorkers: 1
-  # Override for custom prometheus server address
-  #prometheusURL: "http://prometheus-server.monitoring.svc.cluster.local:9090"
+# config for execMode: "prometheus-exporter"
+prometheusExporter:
+  port: 8080
+  frequency: 1h
+
+krrParameters:
+- --max-workers=1
+# - --prometheus-url=http://prometheus-server.observability.svc.cluster.local.:80
 
 terminationGracePeriodSeconds: 5
 

@@ -31,18 +31,13 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       containers:
         - name: {{ .Chart.Name }}
-          env:
-          {{- if .Values.config.maxWorkers }}
-          - name: MAX_WORKERS
-            value: {{ .Values.config.maxWorkers | quote }}
-          {{- end }}
-          {{- if .Values.config.prometheusUrl }}
-          - name: PROMETHEUS_URL
-            value: {{ .Values.config.prometheusUrl | quote }}
-          {{- end }}
-          {{- if .Values.config.scanFrequency }}
-          - name: SCAN_FREQUENCY
-            value: {{ .Values.config.scanFrequency | quote }}
+          args:
+          - {{ .Values.execMode }}
+          {{- if .Values.execMode "prometheus-exporter" }}
+          - {{ .Values.prometheusExporter.port | quote }}
+          - {{ ..Values.prometheusExporter.frequency | quote }}
+          {{- range .Values.krrParameters }}
+          - {{ . }}
           {{- end }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
