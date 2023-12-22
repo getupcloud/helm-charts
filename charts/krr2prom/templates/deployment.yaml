@@ -44,10 +44,12 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if eq .Values.execMode "prometheus-exporter" }}
           ports:
             - name: metrics
-              containerPort: {{ .Values.containerPort }}
+              containerPort: {{ .Values.prometheusExporter.port }}
               protocol: TCP
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
