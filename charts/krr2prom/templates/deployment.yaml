@@ -33,9 +33,10 @@ spec:
         - name: {{ .Chart.Name }}
           args:
           - {{ .Values.execMode }}
-          {{- if .Values.execMode "prometheus-exporter" }}
+          {{- if eq .Values.execMode "prometheus-exporter" }}
           - {{ .Values.prometheusExporter.port | quote }}
-          - {{ ..Values.prometheusExporter.frequency | quote }}
+          - {{ .Values.prometheusExporter.frequency | quote }}
+          {{- end }}
           {{- range .Values.krrParameters }}
           - {{ . }}
           {{- end }}
