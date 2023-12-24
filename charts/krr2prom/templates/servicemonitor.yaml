@@ -4,10 +4,10 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-    {{- toYaml .Values.serviceMonitor.extraAnnotations | indent 4 }}
+    {{- toYaml .Values.serviceMonitor.annotations | nindent 4 }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
-    {{- toYaml .Values.serviceMonitor.extraLabels | indent 4 }}
+    {{- toYaml .Values.serviceMonitor.labels | nindent 4 }}
 spec:
   endpoints:
     - port: metrics

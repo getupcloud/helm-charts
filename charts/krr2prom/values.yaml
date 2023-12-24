@@ -50,12 +50,14 @@ securityContext: {}
 service:
   type: ClusterIP
   port: 8080
+  annotations: {}
+  labels: {}
 
 serviceMonitor:
   enabled: true ## will set prometheus annotations if false
   scrapeInterval: "1h"
-  extraAnnotations: {}
-  extraLAbels: {}
+  annotations: {}
+  labels: {}
   honorLabels: true
   relabelings: []
   # - regex: (container|endpoint|namespace|pod|service)

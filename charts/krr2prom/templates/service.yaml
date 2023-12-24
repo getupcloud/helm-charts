@@ -3,15 +3,10 @@ kind: Service
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-  {{- if not .Values.serviceMonitor.enabled }}
-    prometheus.io/path: /metrics
-    prometheus.io/scheme: http
-    prometheus.io/scrape: "true"
-  {{- toYaml .Values.serviceMonitor.extraAnnotations | indent 4 }}
-  {{- end }}
+  {{- toYaml .Values.service.annotations | indent 4 }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
-    {{- toYaml .Values.serviceMonitor.extraLabels | indent 4 }}
+    {{- toYaml .Values.service.labels | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
