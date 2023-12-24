@@ -3,17 +3,21 @@ kind: Service
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-  {{- toYaml .Values.service.annotations | nindent 4 }}
+    {{- range $k, $v := .Values.service.annotations }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
-    {{- toYaml .Values.service.labels | nindent 4 }}
+    {{- range $k, $v := .Values.service.labels }}
+    {{ $k }}: {{ $v | quote }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: metrics
-      protocol: TCP
-      name: metrics
+  - port: {{ .Values.service.port }}
+    targetPort: metrics
+    protocol: TCP
+    name: metrics
   selector:
     {{- include "krr2prom.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/name: krr2prom
