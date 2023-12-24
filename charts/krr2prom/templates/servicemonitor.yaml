@@ -3,8 +3,11 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "krr2prom.fullname" . }}
+  annotations:
+    {{- toYaml .Values.serviceMonitor.extraAnnotations | indent 4 }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
+    {{- toYaml .Values.serviceMonitor.extraLabels | indent 4 }}
 spec:
   endpoints:
     - port: metrics

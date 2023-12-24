@@ -54,6 +54,8 @@ service:
 serviceMonitor:
   enabled: true ## will set prometheus annotations if false
   scrapeInterval: "1h"
+  extraAnnotations: {}
+  extraLAbels: {}
   honorLabels: true
   relabelings: []
   # - regex: (container|endpoint|namespace|pod|service)
