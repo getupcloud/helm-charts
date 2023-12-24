@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-  {{- toYaml .Values.service.annotations | indent 4 }}
+  {{- toYaml .Values.service.annotations | nindent 4 }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
     {{- toYaml .Values.service.labels | nindent 4 }}
