@@ -53,6 +53,12 @@ service:
   annotations: {}
   labels: {}
 
+dashboards:
+  enabled: true
+  annotations: {}
+  labels:
+    grafana_dashboard: "1"
+
 serviceMonitor:
   enabled: true ## will set prometheus annotations if false
   scrapeInterval: "1h"
