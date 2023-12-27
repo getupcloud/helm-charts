@@ -90,9 +90,12 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "krr_score",
+          "exemplar": false,
+          "expr": "sum(krr_score)/count(krr_score)",
+          "format": "time_series",
           "instant": false,
-          "legendFormat": "__auto",
+          "interval": "",
+          "legendFormat": "{{strategy_history_duration}}",
           "range": true,
           "refId": "A"
         }
@@ -557,6 +560,6 @@
   "timezone": "",
   "title": "Resource Recomendations",
   "uid": "d8f429ac-a8af-4344-9ca6-1ccf9143d8f5",
-  "version": 12,
+  "version": 13,
   "weekStart": ""
 }
