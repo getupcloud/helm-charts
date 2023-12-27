@@ -15,7 +15,7 @@ metadata:
     {{- range $k, $v := $.Values.dashboards.labels }}
     {{ $k }}: {{ $v | quote }}
     {{- end }}
-spec:
+data:
   {{ base $path }}: |-
     {{- $.Files.Get $path | nindent 4 }}
 {{- end }}
