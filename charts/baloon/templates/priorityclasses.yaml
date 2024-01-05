@@ -1,0 +1,18 @@
+{{- if .Values.priorityClass.baloon.enabled }}
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: {{ .Values.priorityClass.baloon.name }}
+preemptionPolicy: Never
+value: {{ .Values.priorityClass.baloon.value }}
+{{- end }}
+{{- if .Values.priorityClass.default.enabled }}
+---
+apiVersion: scheduling.k8s.io/v1
+globalDefault: true
+kind: PriorityClass
+metadata:
+  name: {{ .Values.priorityClass.default.name }}
+preemptionPolicy: PreemptLowerPriority
+value: {{ .Values.priorityClass.default.value }}
+{{- end }}

@@ -1,0 +1,53 @@
+# Default values for baloon.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicas: 0
+
+resources:
+  cpu: 1
+  memory: 8Mi
+
+image:
+  repository: public.ecr.aws/eks-distro/kubernetes/pause
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "3.9"
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: "capacity-spread"
+  whenUnsatisfiable: "DoNotSchedule"
+
+priorityClass:
+  baloon:
+    enabled: true
+    name: baloon
+    value: 1
+  default:
+    enabled: true
+    name: default
+    value: 1000
