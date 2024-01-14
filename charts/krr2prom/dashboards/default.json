@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 118,
+  "id": 3382,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -57,8 +57,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 24,
+        "h": 9,
+        "w": 4,
         "x": 0,
         "y": 0
       },
@@ -81,7 +81,7 @@
           "valueSize": 40
         }
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "10.1.5",
       "targets": [
         {
           "datasource": {
@@ -104,6 +104,289 @@
     },
     {
       "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #req_mem_recom"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Requests"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #lim_mem_recom"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Limits"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 4,
+        "y": 0
+      },
+      "id": 10,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": [],
+          "reducer": [
+            "lastNotNull"
+          ],
+          "show": true
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Limits"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max(last_over_time(krr_recommended_requests_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{kind}}/{{name}}",
+          "range": false,
+          "refId": "req_mem_recom"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max(last_over_time(krr_recommended_limits_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{kind}}/{{name}}",
+          "range": false,
+          "refId": "lim_mem_recom"
+        }
+      ],
+      "title": "Recommended Memory ",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "greater",
+                  "options": {
+                    "value": 0
+                  }
+                },
+                "fieldName": "Value #req_mem_recom"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": false,
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Requests"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "milicores"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 10,
+        "x": 14,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "cellHeight": "md",
+        "footer": {
+          "countRows": false,
+          "fields": [],
+          "reducer": [
+            "lastNotNull"
+          ],
+          "show": true
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Requests"
+          }
+        ]
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "max(last_over_time(krr_recommended_requests_cpu{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace) * 1000",
+          "format": "table",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{kind}}/{{name}}",
+          "range": false,
+          "refId": "req_mem_recom"
+        }
+      ],
+      "title": "Recommended CPU",
+      "transformations": [],
+      "type": "table"
+    },
+    {
+      "datasource": {
         "type": "prometheus"
       },
       "description": "",
@@ -114,7 +397,6 @@
             "mode": "shades"
           },
           "custom": {
-            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -184,10 +466,10 @@
         ]
       },
       "gridPos": {
-        "h": 12,
+        "h": 11,
         "w": 8,
         "x": 0,
-        "y": 6
+        "y": 9
       },
       "id": 7,
       "options": {
@@ -246,7 +528,6 @@
             "mode": "continuous-reds"
           },
           "custom": {
-            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -316,10 +597,10 @@
         ]
       },
       "gridPos": {
-        "h": 12,
+        "h": 11,
         "w": 8,
         "x": 8,
-        "y": 6
+        "y": 9
       },
       "id": 4,
       "options": {
@@ -380,7 +661,6 @@
             "mode": "continuous-reds"
           },
           "custom": {
-            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -450,10 +730,10 @@
         ]
       },
       "gridPos": {
-        "h": 12,
+        "h": 11,
         "w": 8,
         "x": 16,
-        "y": 6
+        "y": 9
       },
       "id": 3,
       "options": {
@@ -504,6 +784,7 @@
   ],
   "refresh": "",
   "schemaVersion": 38,
+  "style": "dark",
   "tags": [],
   "templating": {
     "list": [
@@ -511,14 +792,15 @@
         "current": {
           "selected": true,
           "text": [
-            "default"
+            "All"
           ],
           "value": [
-            "default"
+            "$__all"
           ]
         },
         "datasource": {
-          "type": "prometheus"
+          "type": "prometheus",
+          "uid": "prometheus"
         },
         "definition": "label_values(kube_namespace_created,namespace)",
         "hide": 0,
@@ -528,8 +810,7 @@
         "name": "namespace",
         "options": [],
         "query": {
-          "qryType": 1,
-          "query": "label_values(kube_namespace_labels,namespace)",
+          "query": "label_values(kube_namespace_created,namespace)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -541,13 +822,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Resource Recomendations",
   "uid": "d8f429ac-a8af-4344-9ca6-1ccf9143d8f5",
-  "version": 13,
+  "version": 7,
   "weekStart": ""
 }
