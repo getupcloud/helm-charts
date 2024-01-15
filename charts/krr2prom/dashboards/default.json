@@ -118,7 +118,7 @@
             "cellOptions": {
               "type": "auto"
             },
-            "filterable": false,
+            "filterable": true,
             "inspect": false
           },
           "mappings": [],
@@ -279,7 +279,7 @@
             "cellOptions": {
               "type": "auto"
             },
-            "filterable": false,
+            "filterable": true,
             "inspect": false
           },
           "mappings": [],
@@ -790,7 +790,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -829,6 +829,6 @@
   "timezone": "",
   "title": "Resource Recomendations",
   "uid": "d8f429ac-a8af-4344-9ca6-1ccf9143d8f5",
-  "version": 7,
+  "version": 8,
   "weekStart": ""
 }
