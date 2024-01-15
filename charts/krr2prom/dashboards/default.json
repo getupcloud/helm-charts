@@ -1,4 +1,14 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS_ID",
+      "label": "Prometheus Data Source",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -24,7 +34,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "prometheus"
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS_ID}"
       },
       "description": "",
       "fieldConfig": {
@@ -85,7 +96,8 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus"
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS_ID}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -104,8 +116,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS_ID}",
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -206,6 +218,7 @@
       "targets": [
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -213,7 +226,7 @@
           "expr": "max(last_over_time(krr_recommended_requests_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
           "format": "table",
           "hide": false,
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{kind}}/{{name}}",
           "range": false,
@@ -221,22 +234,22 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${DS_PROMETHEUS_ID}",
+            "type": "prometheus"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "max(last_over_time(krr_recommended_limits_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
           "format": "table",
           "hide": false,
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{kind}}/{{name}}",
           "range": false,
           "refId": "lim_mem_recom"
         }
       ],
-      "title": "Recommended Memory ",
+      "title": "Recommended Memory",
       "transformations": [
         {
           "id": "merge",
@@ -265,8 +278,8 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${DS_PROMETHEUS_ID}",
+        "type": "prometheus"
       },
       "description": "",
       "fieldConfig": {
@@ -367,6 +380,7 @@
       "targets": [
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -374,7 +388,7 @@
           "expr": "max(last_over_time(krr_recommended_requests_cpu{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace) * 1000",
           "format": "table",
           "hide": false,
-          "instant": true,
+          "instant": false,
           "interval": "",
           "legendFormat": "{{kind}}/{{name}}",
           "range": false,
@@ -387,6 +401,7 @@
     },
     {
       "datasource": {
+        "uid": "${DS_PROMETHEUS_ID}",
         "type": "prometheus"
       },
       "description": "",
@@ -493,6 +508,7 @@
       "targets": [
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -504,6 +520,7 @@
         },
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -519,6 +536,7 @@
     },
     {
       "datasource": {
+        "uid": "${DS_PROMETHEUS_ID}",
         "type": "prometheus"
       },
       "description": "",
@@ -624,6 +642,7 @@
       "targets": [
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -637,6 +656,7 @@
         },
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -652,6 +672,7 @@
     },
     {
       "datasource": {
+        "uid": "${DS_PROMETHEUS_ID}",
         "type": "prometheus"
       },
       "description": "",
@@ -757,6 +778,7 @@
       "targets": [
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -768,6 +790,7 @@
         },
         {
           "datasource": {
+            "uid": "${DS_PROMETHEUS_ID}",
             "type": "prometheus"
           },
           "editorMode": "code",
@@ -799,8 +822,8 @@
           ]
         },
         "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${DS_PROMETHEUS_ID}",
+          "type": "prometheus"
         },
         "definition": "label_values(kube_namespace_created,namespace)",
         "hide": 0,
