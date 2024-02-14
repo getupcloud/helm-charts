@@ -2,8 +2,8 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/prometheusmsteams/prometheus-msteams
-  tag: v1.5.2
+  repository: ghcr.io/getupcloud/prometheus-msteams
+  tag: v2
   pullPolicy: Always
 
 imagePullSecrets: []
