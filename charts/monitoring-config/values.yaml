@@ -9,6 +9,7 @@ rabbitmq:
 loki:
   prometheusRules:
     enabled: true
+    lokiJobName: loki-headless
     canary:
       enabled: false
   ingress:
