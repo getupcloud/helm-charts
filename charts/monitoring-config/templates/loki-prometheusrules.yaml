@@ -11,14 +11,14 @@ spec:
   - name: loki.rules
     rules:
     - alert: LokiIsDown
-      expr: absent(up{job="loki-headless"}) == 1 or up{job="loki-headless"} == 0
+      expr: absent(up{job={{ .Values.loki.prometheusRules.lokiJobName | quote }}}) == 1 or up{job={{ .Values.loki.prometheusRules.lokiJobName | quote }}} == 0
       for: 10m
       labels:
         service: loki
         severity: critical
       annotations:
         description: Loki is not running
-        summary: Loki Down
+        summary: There is no loki job named {{ .Values.loki.prometheusRules.lokiJobName | quote }}
 
     # https://github.com/kyma-project/kyma/pull/4521/files#diff-507bfc7114ff579b32730b9f4d51dfc2
     - alert: LoggingKBPSHigh
