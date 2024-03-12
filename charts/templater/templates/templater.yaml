@@ -1,4 +1,7 @@
 {{- range $t := .Values.templates }}
 ---
+{{- if ne (kindOf $t) "string" }}
+{{ $t = toYaml $t }}
+{{- end }}
 {{ tpl $t $ }}
 {{- end }}
