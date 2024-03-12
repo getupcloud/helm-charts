@@ -1,13 +1,18 @@
+## Variables can be declared an used inside templates like {{ .Values.varname }}
 #environment: PROD
 #what: world
 #size: 1024
+#
+### List of templates.
+### Can be a list of strings or yaml object
 
-templates: []
-## Multline-string template
+#templates:
+### Multline-string template
 #- |-
 #  hello: {{ .Values.what }}
-
-## Object template
+#  chart-version: {{ .Chart.Version }}
+#
+### Object template
 #- apiVersion: v1
 #  kind: ConfigMap
 #  metadata:
@@ -20,3 +25,31 @@ templates: []
 #      ENVIRONMENT: '{{ .Values.environment | default "DEVELOPMENT" }}'
 #      USERNAME: admin
 #      SIZE: "{{ .Values.size }}"
+#
+### Single-object templates declared as `template-<SUFFIX>`, where `<SUFFIX>` is an arbitrary unique value.
+### Can be a string or yaml object.
+
+#template-nginx:
+#  apiVersion: v1
+#  kind: Pod
+#  metadata:
+#    name: nginx
+#    namespace: default
+#  spec:
+#    containers:
+#    - image: nginx
+#      name: nginx
+#
+#template-alpine:
+#  apiVersion: v1
+#  kind: Pod
+#  metadata:
+#    name: alpine
+#    namespace: default
+#  spec:
+#    containers:
+#    - image: alpine
+#      name: alpine
+#      resources:
+#        limits:
+#          memory: 1Gi

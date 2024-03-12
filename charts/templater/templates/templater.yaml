@@ -1,7 +1,19 @@
-{{- range $t := .Values.templates }}
+{{- range $k, $t := (.Values.templates | default list) }}
+{{-   if ne (kindOf $t) "string" }}
+{{-     $t = toYaml $t }}
+{{-   end }}
 ---
-{{- if ne (kindOf $t) "string" }}
-{{ $t = toYaml $t }}
+# .Values.templates[{{$k}}]
+{{    tpl $t $ }}
 {{- end }}
-{{ tpl $t $ }}
+
+{{- range $k, $t := .Values }}
+{{-   if hasPrefix "template-" $k }}
+{{-     if ne (kindOf $t) "string" }}
+{{        $t = toYaml $t }}
+{{-     end }}
+---
+# .Values.{{$k}}
+{{      tpl $t $ }}
+{{-   end }}
 {{- end }}
