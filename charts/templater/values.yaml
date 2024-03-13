@@ -5,12 +5,13 @@
 #
 ### List of templates.
 ### Can be a list of strings or yaml object
-
+#
 #templates:
 ### Multline-string template
 #- |-
-#  hello: {{ .Values.what }}
-#  chart-version: {{ .Chart.Version }}
+#  data:
+#    hello: {{ .Values.what }}
+#    chart-version: {{ .Chart.Version }}
 #
 ### Object template
 #- apiVersion: v1
@@ -28,13 +29,15 @@
 #
 ### Single-object templates declared as `template-<SUFFIX>`, where `<SUFFIX>` is an arbitrary unique value.
 ### Can be a string or yaml object.
-
-#template-nginx:
+#
+#template-nginx: |-
 #  apiVersion: v1
 #  kind: Pod
 #  metadata:
 #    name: nginx
 #    namespace: default
+#    labels:
+#      environment: '{{ .Values.environment | default "dev" }}'
 #  spec:
 #    containers:
 #    - image: nginx
@@ -52,4 +55,4 @@
 #      name: alpine
 #      resources:
 #        limits:
-#          memory: 1Gi
+#          memory: "{{ .Values.size }}Mi"
