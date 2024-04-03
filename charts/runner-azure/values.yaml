@@ -1,0 +1,40 @@
+runnerAzure:
+  replicas: 1
+  args:
+    - /home/build/config.sh --unattended --url "$AZURE_DEVOPS_URL" --token "$PAT_TOKEN"
+      --pool "$AGENT_POOL" --agent k8s --replace --work  work --acceptTeeEula && /home/build/run.sh
+  image:
+    repository: angelapoliana/devops-runner
+    tag: 1.0.2
+  imagePullPolicy: Always
+  resources:
+    limits:
+      cpu: "2"
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+volumeClaims:
+  runnerAzureData:
+    storageClassName: ""
+    requests:
+      storage: 10Gi
+
+#If you want to use an existing secret, provide the name here.
+Secret: ""
+
+# If you choose not to use an existing secret, provide the credentials directly here.
+# Remove or comment out this section if using an existing secret.
+credentials:
+  agentPool: ""
+  azureDevopsUrl: ""
+  patToken: ""
+
+useSecret: true
