@@ -19,26 +19,27 @@ spec:
     spec:
       containers:
       - name: runner-azure
-        command: ["/bin/sh", "-c"]
-        args: 
-          {{- toYaml .Values.runnerAzure.args | nindent 12 }}
+        command: 
+        - /bin/sh 
+        - -c 
+        - /home/build/config.sh --unattended --url "$AZURE_DEVOPS_URL" --token "$PAT_TOKEN" --pool "$AGENT_POOL" --agent k8s --replace --work  work --acceptTeeEula && /home/build/run.sh
         env:
-          {{- if .Values.useSecret }}
+          {{- if .Values.usesecret }}
           - name: AZURE_DEVOPS_URL
             valueFrom:
               secretKeyRef:
                 key: azureDevopsUrl
-                name: {{ .Values.Secret }}
+                name: {{ .Values.secret }}
           - name: AGENT_POOL
             valueFrom:
               secretKeyRef:
                 key: agentPool
-                name: {{ .Values.Secret }}
+                name: {{ .Values.secret }}
           - name: PAT_TOKEN
             valueFrom:
               secretKeyRef:
                 key: patToken
-                name: {{ .Values.Secret }}
+                name: {{ .Values.secret }}
           {{- else }}
           - name: AZURE_DEVOPS_URL
             value: {{ .Values.credentials.azureDevopsUrl }}
@@ -75,7 +76,11 @@ spec:
       spec:
         accessModes:
         - ReadWriteOnce
+        {{- if .Values.volumeClaims.runnerAzureData.storageClassName }}
         storageClassName: {{ .Values.volumeClaims.runnerAzureData.storageClassName }}
+        {{- else }}
+        storageClassName: 
+        {{- end }}
         resources: 
           requests:
             storage: {{ .Values.volumeClaims.runnerAzureData.requests.storage }}
