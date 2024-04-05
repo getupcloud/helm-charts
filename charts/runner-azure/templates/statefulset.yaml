@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "runner-azure.fullname" . }}
+  namespace: {{ include "runner-azure.fullname" . }}
+  labels: 
+    {{- include "runner-azure.labels" . | nindent 4 }}
+spec:
+  minReadySeconds: 10
+  replicas: {{ .Values.runnerAzure.replicas }}
+  selector:
+    matchLabels:
+      app: runner-azure
+  serviceName: ""
+  template:
+    metadata:
+      labels:
+        app: runner-azure
+    spec:
+      containers:
+      - name: runner-azure
+        command: 
+        - /bin/sh 
+        - -c 
+        - /home/build/config.sh --unattended --url "$AZURE_DEVOPS_URL" --token "$PAT_TOKEN" --pool "$AGENT_POOL" --agent k8s --replace --work  work --acceptTeeEula && /home/build/run.sh
+        env:
+          {{- if .Values.secret }}
+          - name: AZURE_DEVOPS_URL
+            valueFrom:
+              secretKeyRef:
+                key: azureDevopsUrl
+                name: {{ .Values.secret }}
+          - name: AGENT_POOL
+            valueFrom:
+              secretKeyRef:
+                key: agentPool
+                name: {{ .Values.secret }}
+          - name: PAT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: patToken
+                name: {{ .Values.secret }}
+          {{- else }}
+          - name: AZURE_DEVOPS_URL
+            value: {{ .Values.envs.azureDevopsUrl }}
+          - name: AGENT_POOL
+            value: {{ .Values.envs.agentPool }}
+          - name: PAT_TOKEN
+            value: {{ .Values.envs.patToken }}
+          {{- end }}
+        image: {{ .Values.runnerAzure.image.repository }}:{{ .Values.runnerAzure.image.tag | default .Chart.AppVersion }}
+        imagePullPolicy: {{ .Values.runnerAzure.imagePullPolicy }}
+        resources: 
+          {{- toYaml .Values.runnerAzure.resources | nindent 10}}        
+        volumeMounts:
+        - mountPath: /home/build/.local/share/containers
+          name: runner-azure-data
+      terminationGracePeriodSeconds: 10
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  updateStrategy: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: runner-azure-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName }}
+        {{- else }}
+        storageClassName: 
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+
