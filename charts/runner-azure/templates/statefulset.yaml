@@ -24,7 +24,7 @@ spec:
         - -c 
         - /home/build/config.sh --unattended --url "$AZURE_DEVOPS_URL" --token "$PAT_TOKEN" --pool "$AGENT_POOL" --agent k8s --replace --work  work --acceptTeeEula && /home/build/run.sh
         env:
-          {{- if .Values.usesecret }}
+          {{- if .Values.secret }}
           - name: AZURE_DEVOPS_URL
             valueFrom:
               secretKeyRef:
@@ -42,11 +42,11 @@ spec:
                 name: {{ .Values.secret }}
           {{- else }}
           - name: AZURE_DEVOPS_URL
-            value: {{ .Values.credentials.azureDevopsUrl }}
+            value: {{ .Values.envs.azureDevopsUrl }}
           - name: AGENT_POOL
-            value: {{ .Values.credentials.agentPool }}
+            value: {{ .Values.envs.agentPool }}
           - name: PAT_TOKEN
-            value: {{ .Values.credentials.patToken }}
+            value: {{ .Values.envs.patToken }}
           {{- end }}
         image: {{ .Values.runnerAzure.image.repository }}:{{ .Values.runnerAzure.image.tag | default .Chart.AppVersion }}
         imagePullPolicy: {{ .Values.runnerAzure.imagePullPolicy }}
@@ -72,16 +72,15 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: runner-azure-data
-        creationTimestamp: null
       spec:
         accessModes:
         - ReadWriteOnce
-        {{- if .Values.volumeClaims.runnerAzureData.storageClassName }}
-        storageClassName: {{ .Values.volumeClaims.runnerAzureData.storageClassName }}
+        {{- if .Values.persistence.storageClassName }}
+        storageClassName: {{ .Values.persistence.storageClassName }}
         {{- else }}
         storageClassName: 
         {{- end }}
-        resources: 
+        resources:
           requests:
-            storage: {{ .Values.volumeClaims.runnerAzureData.requests.storage }}
+            storage: {{ .Values.persistence.size }}
 

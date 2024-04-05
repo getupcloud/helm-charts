@@ -1,3 +1,5 @@
+# Default values for runner-azure
+
 runnerAzure:
   replicas: 1
   image:
@@ -18,21 +20,17 @@ tolerations: []
 
 affinity: {}
 
-volumeClaims:
-  runnerAzureData:
-#If the storageClassName is left blank, the cluster's default storageClass will be utilized
-    storageClassName: ""
-    requests:
-      storage: 10Gi
+persistence:
+# If the storageClassName is left blank, the cluster's default storageClass will be utilized
+  storageClassName: ""
+  size: 10Gi
 
-#If you want to use an existing secret, provide the name here.
+# If you want to use an existing secret, provide the name here.
 secret: ""
 
-#If you choose not to use an existing secret, provide the credentials directly here.
-#Remove or comment out this section if using an existing secret.
-credentials:
+# If you choose not to use an existing secret, provide the credentials directly here.
+# Remove or comment out this section if using an existing secret.
+envs:
   agentPool: ""
   azureDevopsUrl: ""
   patToken: ""
-
-usesecret: false
