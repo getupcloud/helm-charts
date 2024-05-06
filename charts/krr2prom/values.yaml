@@ -5,7 +5,7 @@
 image:
   repository: getupcloud/krr2prom
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
+  # Overrides the image tag whose default is the chart app_version.
   tag: ""
 
 imagePullSecrets: []
@@ -22,6 +22,7 @@ prometheusExporter:
 krrParameters:
 - --max-workers=1
 # - --prometheus-url=http://prometheus-server.observability.svc.cluster.local.:80
+# - --openshift ## this is a hidden flag. will not appear in --help https://github.com/robusta-dev/krr/issues/273
 
 terminationGracePeriodSeconds: 5
 
