@@ -5,6 +5,9 @@ metadata:
   name: {{ include "monitoring-config.fullname" . }}-prometheus-stack
   labels:
     {{- include "monitoring-config.labels" . | nindent 4 }}
+    {{- with  .Values.extraLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
     release: prometheus-operator
 spec:
   groups:

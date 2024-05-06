@@ -1,0 +1,36 @@
+# Default values for runner-azure
+
+runnerAzure:
+  replicas: 1
+  image:
+    repository: angelapoliana/devops-runner
+    tag: 1.0.2
+  imagePullPolicy: Always
+  resources:
+    limits:
+      cpu: 2
+      memory: 2Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+persistence:
+# If the storageClassName is left blank, the cluster's default storageClass will be utilized
+  storageClassName: ""
+  size: 10Gi
+
+# If you want to use an existing secret, provide the name here.
+secret: ""
+
+# If you choose not to use an existing secret, provide the credentials directly here.
+# Remove or comment out this section if using an existing secret.
+envs:
+  agentPool: ""
+  azureDevopsUrl: ""
+  patToken: ""

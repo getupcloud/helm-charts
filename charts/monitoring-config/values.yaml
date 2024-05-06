@@ -1,3 +1,7 @@
+extraLabels: {}
+# app: monitoring-config
+# x: y
+
 cronitor:
   prometheusRules:
     enabled: false
