@@ -3,8 +3,8 @@
 runnerAzure:
   replicas: 1
   image:
-    repository: angelapoliana/devops-runner
-    tag: 1.0.2
+    repository: getupcloud/runner-azure
+    tag: 0.0.1
   imagePullPolicy: Always
   resources:
     limits:
