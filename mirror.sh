@@ -13,7 +13,7 @@ echo Download mirrors
 ./helm-mirror repo/ ot-helm https://ot-container-kit.github.io/helm-charts/
 
 mkdir -p repo/karpenter
-for version in 0.35.{0..5} 0.36.{0..2} 0.37.0; do
+for version in 0.35.{0,1,2,4,5} 0.36.{0..2} 0.37.0; do
   helm fetch oci://public.ecr.aws/karpenter/karpenter  --version $version --destination repo/karpenter
 done
 helm repo index repo/karpenter
