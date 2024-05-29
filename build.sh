@@ -41,4 +41,8 @@ echo Creating index: repo/getupcloud
 helm repo index repo/getupcloud
 cp index.html repo/
 
+echo Creating index: repo/karpenter
+helm repo index repo/karpenter
+cp index.html repo/
+
 $no_mirror || ./mirror.sh
