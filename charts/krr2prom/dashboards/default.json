@@ -92,7 +92,7 @@
           "valueSize": 40
         }
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -214,7 +214,7 @@
           }
         ]
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -376,7 +376,7 @@
           }
         ]
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "11.1.0",
       "targets": [
         {
           "datasource": {
@@ -396,7 +396,6 @@
         }
       ],
       "title": "Recommended CPU",
-      "transformations": [],
       "type": "table"
     },
     {
@@ -412,6 +411,7 @@
             "mode": "shades"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -546,6 +546,7 @@
             "mode": "continuous-reds"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -682,6 +683,7 @@
             "mode": "continuous-reds"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -806,8 +808,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
-  "style": "dark",
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
@@ -833,6 +834,7 @@
         "name": "namespace",
         "options": [],
         "query": {
+          "qryType": 1,
           "query": "label_values(kube_namespace_created,namespace)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
