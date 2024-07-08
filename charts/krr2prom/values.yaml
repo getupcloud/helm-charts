@@ -22,6 +22,7 @@ prometheusExporter:
 krrParameters:
 - --max-workers=1
 # - --prometheus-url=http://prometheus-server.observability.svc.cluster.local.:80
+# - --prometheus-auth-header="Bearer XXXXXX"
 # - --openshift ## this is a hidden flag. will not appear in --help https://github.com/robusta-dev/krr/issues/273
 
 terminationGracePeriodSeconds: 5
