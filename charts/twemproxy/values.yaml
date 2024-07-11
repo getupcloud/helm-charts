@@ -20,7 +20,6 @@ twemproxyParameters:
 redisInstances:
   redis-0:
     listen: 0.0.0.0:6379
-    stats_port: 22222
     hash: fnv1a_64
     hash_tag: "{}"
     distribution: ketama
@@ -39,7 +38,6 @@ redisInstances:
       - redis-0.redis.default.svc.cluster.local:6379:1
   redis-1:
     listen: 0.0.0.0:6380
-    stats_port: 22223
     hash: fnv1a_64
     hash_tag: "{}"
     distribution: ketama
@@ -58,7 +56,6 @@ redisInstances:
       - redis-1.redis.default.svc.cluster.local:6379:1
   redis-2:
     listen: 0.0.0.0:6381
-    stats_port: 22224
     hash: fnv1a_64
     hash_tag: "{}"
     distribution: ketama

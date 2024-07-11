@@ -31,37 +31,36 @@ spec:
       securityContext:
         {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
-      {{- range $name, $config := $.Values.redisInstances }}
-      - name: {{ $name }}
+      - name: nutcracker
         securityContext:
           {{- toYaml $.Values.securityContext | nindent 12 }}
         image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
-        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
         - --conf-file=/conf/nutcracker.yml
-        - --stats-port={{ $config.stats_port }}
-        {{- range $.Values.twemproxyParameters }}
+        - --stats-addr=127.0.0.1
+        - --stats-port=22222
+        {{- range .Values.twemproxyParameters }}
         - {{ . }}
         {{- end }}
         ports:
+        {{- range $name, $config := .Values.redisInstances }}
         - name: {{ $name }}
           containerPort: {{ last (regexSplit ":" $config.listen -1) }}
           protocol: TCP
+        {{- end }}
         resources:
-          {{- toYaml $.Values.resources | nindent 12 }}
+          {{- toYaml .Values.resources | nindent 12 }}
         volumeMounts:
-        - name: {{ $name }}
+        - name: config
           mountPath: /conf
-      {{- end }}
       {{- if $.Values.metrics.enabled }}
       {{- with $.Values.metrics }}
       - name:  metrics
         image: "{{ .image.repository }}:{{ .image.tag }}"
         imagePullPolicy: {{ .image.pullPolicy }}
         args:
-        {{- range $name, $config := $.Values.redisInstances }}
-        - --endpoint={{ (print "127.0.0.1:" $config.stats_port) }}
-        {{- end }}
+        - --endpoint=127.0.0.1:22222
         {{- if .env }}
         env:
           {{- toYaml .env | nindent 8 }}
@@ -73,14 +72,9 @@ spec:
       {{- end }}
       {{- end }}
       volumes:
-      {{- range $name, $config := $.Values.redisInstances }}
-      - name: {{ $name }}
+      - name: config
         configMap:
-          name: {{ include "twemproxy.fullname" $ }}
-          items:
-            - key: {{ $name }}
-              path: nutcracker.yml
-      {{- end }}
+          name: {{ include "twemproxy.fullname" . }}
       {{- with $.Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

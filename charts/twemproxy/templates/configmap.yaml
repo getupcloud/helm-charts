@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "twemproxy.labels" . | nindent 4 }}
 data:
-  {{- range $name, $config := $.Values.redisInstances }}
-  {{ $name }}: |-
+  nutcracker.yml: |-
+    {{- range $name, $config := $.Values.redisInstances }}
     {{ $name }}:
       {{- omit $config "stats_port" | toYaml | nindent 6 }}
-  {{- end }}
+    {{- end }}

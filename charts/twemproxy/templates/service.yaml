@@ -8,7 +8,7 @@ spec:
   type: {{ $.Values.service.type }}
   ports:
     {{- range $name, $config := $.Values.redisInstances }}
-    {{ $port := last (regexSplit ":" $config.listen -1) }}
+    {{- $port := last (regexSplit ":" $config.listen -1) }}
     - port: {{ $port }}
       targetPort: {{ $port }}
       protocol: TCP
