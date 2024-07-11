@@ -223,7 +223,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max(last_over_time(krr_recommended_requests_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
+          "expr": "max(last_over_time(krr_recommended_requests_memory{exported_namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -239,7 +239,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max(last_over_time(krr_recommended_limits_memory{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
+          "expr": "max(last_over_time(krr_recommended_limits_memory{exported_namespace=~\"$namespace\"}[12h])) by (kind, name, namespace)",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -385,7 +385,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "max(last_over_time(krr_recommended_requests_cpu{namespace=~\"$namespace\"}[12h])) by (kind, name, namespace) * 1000",
+          "expr": "max(last_over_time(krr_recommended_requests_cpu{exported_namespace=~\"$namespace\"}[12h])) by (kind, name, namespace) * 1000",
           "format": "table",
           "hide": false,
           "instant": false,
@@ -512,9 +512,9 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(krr_recommended_limits_memory{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_limits_memory{namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_limits_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "lim_mem_high"
         },
@@ -524,9 +524,9 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_limits_memory{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_limits_memory{namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_limits_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "lim_mem_low"
         }
@@ -648,10 +648,10 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "(krr_recommended_requests_memory{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_requests_memory{namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_requests_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
           "instant": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "req_mem_high"
         },
@@ -661,9 +661,9 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_requests_memory{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_requests_memory{namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_requests_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "req_mem_low"
         }
@@ -784,9 +784,9 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(krr_recommended_requests_cpu{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_requests_cpu{namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_requests_cpu{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "req_cpu_high"
         },
@@ -796,9 +796,9 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_requests_cpu{namespace=~\"$namespace\"} / on(kind, namespace, name, container) krr_allocations_requests_cpu{namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_requests_cpu{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
-          "legendFormat": "{{kind}} - {{name}}:{{container}}",
+          "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
           "refId": "req_cpu_low"
         }
@@ -826,7 +826,7 @@
           "uid": "${DS_PROMETHEUS_ID}",
           "type": "prometheus"
         },
-        "definition": "label_values(kube_namespace_created,namespace)",
+        "definition": "label_values(kube_namespace_status_phase{phase=\"Active\"},namespace)",
         "hide": 0,
         "includeAll": true,
         "label": "Namespace",
@@ -835,7 +835,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(kube_namespace_created,namespace)",
+          "query": "label_values(kube_namespace_status_phase{phase=\"Active\"},namespace)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
