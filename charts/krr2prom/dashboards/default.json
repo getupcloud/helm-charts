@@ -512,7 +512,7 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(krr_recommended_limits_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_limits_memory{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
@@ -524,7 +524,7 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_limits_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_limits_memory{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_limits_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
@@ -648,7 +648,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "(krr_recommended_requests_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_requests_memory{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
           "instant": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
@@ -661,7 +661,7 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_requests_memory{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_requests_memory{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_memory{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
@@ -784,7 +784,7 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(krr_recommended_requests_cpu{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) > 0",
+          "expr": "(krr_recommended_requests_cpu{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) > 0",
           "hide": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
@@ -796,7 +796,7 @@
             "type": "prometheus"
           },
           "editorMode": "code",
-          "expr": "((krr_recommended_requests_cpu{exported_namespace=~\"$namespace\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) - 1) < 0",
+          "expr": "((krr_recommended_requests_cpu{exported_namespace=~\"$namespace\", severity=~\"WARNING|CRITICAL\"} / on(kind, exported_namespace, name, exported_container) krr_allocations_requests_cpu{exported_namespace=~\"$namespace\"}) - 1) < 0",
           "hide": false,
           "legendFormat": "{{kind}} - {{name}}:{{exported_container}}",
           "range": true,
