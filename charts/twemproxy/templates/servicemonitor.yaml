@@ -1,0 +1,15 @@
+{{- if and .Values.metrics.enabled .Values.metrics.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "twemproxy.fullname" . }}
+  labels:
+    {{- include "twemproxy.labels" . | nindent 4 }}
+spec:
+  endpoints:
+  - interval: 15s
+    port: metrics
+  selector:
+    matchLabels:
+      {{- include "twemproxy.labels" . | nindent 6 }}
+{{- end }}

@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "twemproxy.fullname" . }}
+  labels:
+    {{- include "twemproxy.labels" . | nindent 4 }}
+spec:
+  {{- if not $.Values.autoscaling.enabled }}
+  replicas: {{ $.Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "twemproxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "twemproxy.labels" . | nindent 8 }}
+        {{- with $.Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "twemproxy.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
+      containers:
+      {{- range $name, $config := $.Values.redisInstances }}
+      - name: {{ $name }}
+        securityContext:
+          {{- toYaml $.Values.securityContext | nindent 12 }}
+        image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+        imagePullPolicy: {{ $.Values.image.pullPolicy }}
+        args:
+        - --conf-file=/conf/nutcracker.yml
+        - --stats-port={{ $config.stats_port }}
+        {{- range $.Values.twemproxyParameters }}
+        - {{ . }}
+        {{- end }}
+        ports:
+        - name: {{ $name }}
+          containerPort: {{ last (regexSplit ":" $config.listen -1) }}
+          protocol: TCP
+        resources:
+          {{- toYaml $.Values.resources | nindent 12 }}
+        volumeMounts:
+        - name: {{ $name }}
+          mountPath: /conf
+      {{- end }}
+      {{- if $.Values.metrics.enabled }}
+      {{- with $.Values.metrics }}
+      - name:  metrics
+        image: "{{ .image.repository }}:{{ .image.tag }}"
+        imagePullPolicy: {{ .image.pullPolicy }}
+        args:
+        {{- range $name, $config := $.Values.redisInstances }}
+        - --endpoint={{ (print "127.0.0.1:" $config.stats_port) }}
+        {{- end }}
+        {{- if .env }}
+        env:
+          {{- toYaml .env | nindent 8 }}
+        {{- end }}
+        ports:
+        - name: metrics
+          containerPort: {{ .port }}
+          protocol: TCP
+      {{- end }}
+      {{- end }}
+      volumes:
+      {{- range $name, $config := $.Values.redisInstances }}
+      - name: {{ $name }}
+        configMap:
+          name: {{ include "twemproxy.fullname" $ }}
+          items:
+            - key: {{ $name }}
+              path: nutcracker.yml
+      {{- end }}
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

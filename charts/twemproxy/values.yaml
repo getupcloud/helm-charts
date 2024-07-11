@@ -1,0 +1,141 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/getupcloud/twemproxy
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# References:
+# https://github.com/twitter/twemproxy/tree/master?tab=readme-ov-file#help
+# https://github.com/twitter/twemproxy/blob/master/notes/recommendation.md#read-writev-and-mbuf
+twemproxyParameters:
+- --stats-interval=10000 # set stats aggregation interval in msec (default: 30000 msec)
+#- --mbuf-size=131072    # set size of mbuf chunk in bytes (default: 16384 bytes)
+#- --verbose=6           # set logging level (default: 5, min: 0, max: 11)
+
+# References:
+# https://github.com/twitter/twemproxy/tree/master?tab=readme-ov-file#configuration
+# Each entry will create a dedicated container
+redisInstances:
+  redis-0:
+    listen: 0.0.0.0:6379
+    stats_port: 22222
+    hash: fnv1a_64
+    hash_tag: "{}"
+    distribution: ketama
+    timeout: 2000
+    preconnect: true
+    redis: true
+    #client_connections: 4096
+    backlog: 4096
+    server_connections: 256
+    auto_eject_hosts: true
+    server_retry_timeout: 5000
+    server_failure_limit: 3
+    #redis_auth: ""
+    #redis_db: 0
+    servers:
+      - redis-0.redis.default.svc.cluster.local:6379:1
+  redis-1:
+    listen: 0.0.0.0:6380
+    stats_port: 22223
+    hash: fnv1a_64
+    hash_tag: "{}"
+    distribution: ketama
+    timeout: 2000
+    preconnect: true
+    redis: true
+    #client_connections: 4096
+    backlog: 4096
+    server_connections: 256
+    auto_eject_hosts: true
+    server_retry_timeout: 10000
+    server_failure_limit: 3
+    #redis_auth: ""
+    #redis_db: 0
+    servers:
+      - redis-1.redis.default.svc.cluster.local:6379:1
+  redis-2:
+    listen: 0.0.0.0:6381
+    stats_port: 22224
+    hash: fnv1a_64
+    hash_tag: "{}"
+    distribution: ketama
+    timeout: 2000
+    preconnect: true
+    redis: true
+    #client_connections: 4096
+    backlog: 4096
+    server_connections: 256
+    auto_eject_hosts: true
+    server_retry_timeout: 10000
+    server_failure_limit: 3
+    #redis_auth: ""
+    #redis_db: 0
+    servers:
+      - redis-2.redis.default.svc.cluster.local:6379:1
+
+service:
+  type: ClusterIP
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 256m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 85
+  targetMemoryUtilizationPercentage: 85
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+  image:
+    repository: ghcr.io/getupcloud/twemproxy-prometheus-exporter
+    pullPolicy: IfNotPresent
+    tag: "0.2.2"
+  port: 9090
+  end: []
