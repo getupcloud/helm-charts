@@ -686,7 +686,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
+            "axisLabel": "Multiply your workload by",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -731,7 +731,7 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "none"
         },
         "overrides": [
           {
@@ -847,13 +847,13 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Resource Recommendations",
   "uid": "d8f429ac-a8af-4344-9ca6-1ccf9143d8f5",
-  "version": 8,
+  "version": 9,
   "weekStart": ""
 }
