@@ -34,7 +34,7 @@ podLabels: {}
 securityContext:
   privileged: true
   allowPrivilegeEscalation: true
-  readOnlyRootFilesystem: true
+  readOnlyRootFilesystem: false
   runAsGroup: 0
   runAsUser: 0
   capabilities:
