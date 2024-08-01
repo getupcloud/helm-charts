@@ -60,7 +60,7 @@ volumes:
 - name: data
   emptyDir: {}
 
-volumeMounts: {}
+volumeMounts:
 - name: data
   mountPath: "/data"
   readOnly: false
