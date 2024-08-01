@@ -1,0 +1,33 @@
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "x509-exporter-discovery.fullname" . }}
+  labels:
+    {{- include "x509-exporter-discovery.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "x509-exporter-discovery.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "x509-exporter-discovery.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- if .Values.okd }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "x509-exporter-discovery.fullname" . }}:privileged
+  labels:
+    {{- include "x509-exporter-discovery.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:privileged
+subjects:
+- kind: ServiceAccount
+  name: {{ include "x509-exporter-discovery.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+{{- end }}
+{{- end }}

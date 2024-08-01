@@ -1,0 +1,73 @@
+# Default values for x509-exporter-discovery.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Set this to true if installing on Openshift
+okd: false
+
+configMap:
+  # Namespace to create configMaps. Defaults to where this chart is installed.
+  namespace: ""
+  # Printf format for configMap name. Only one %s is allowed, which is replaced by x509-exporter daemonset role name (either controlplane or node)
+  nameFmt: "host-paths-exporter-%s-values"
+
+image:
+  repository: ghcr.io/getupcloud/x509-exporter-discovery
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+securityContext:
+  privileged: true
+  allowPrivilegeEscalation: true
+  readOnlyRootFilesystem: true
+  runAsGroup: 0
+  runAsUser: 0
+  capabilities:
+    drop:
+    - ALL
+  seLinuxOptions:
+    level: s0
+    user: system_u
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+volumes:
+#- name: data
+#  emptyDir: {}
+
+volumeMounts: {}
+#- name: data
+#  mountPath: "/data"
+#  readOnly: false
+
+tolerations:
+- effect: NoSchedule
+  operator: Exists
+
+rbac:
+  create: true
