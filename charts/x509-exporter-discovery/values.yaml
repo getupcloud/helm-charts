@@ -57,13 +57,13 @@ resources: {}
   #   memory: 128Mi
 
 volumes:
-#- name: data
-#  emptyDir: {}
+- name: data
+  emptyDir: {}
 
 volumeMounts: {}
-#- name: data
-#  mountPath: "/data"
-#  readOnly: false
+- name: data
+  mountPath: "/data"
+  readOnly: false
 
 tolerations:
 - effect: NoSchedule
