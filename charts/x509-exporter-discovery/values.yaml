@@ -5,6 +5,9 @@
 # Set this to true if installing on Openshift
 okd: false
 
+excludes:
+- .*/trusted-ca-bundle/ca-bundle.crt
+
 configMap:
   # Namespace to create configMaps. Defaults to where this chart is installed.
   namespace: ""

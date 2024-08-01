@@ -52,6 +52,9 @@ spec:
         - mountPath: /host
           name: host
           readOnly: true
+        - mountPath: /excludes
+          name: excludes
+          readOnly: true
         {{- with .Values.volumeMounts }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -63,6 +66,10 @@ spec:
       - name: host
         hostPath:
           path: /
+      - name: excludes
+        configMap:
+          name: {{ include "x509-exporter-discovery.fullname" . }}
+          optional: true
       {{- with .Values.volumes }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
