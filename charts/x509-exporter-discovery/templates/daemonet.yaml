@@ -46,13 +46,15 @@ spec:
           value: "{{ .Values.configMap.namespace }}"
         - name: CONFIGMAP_NAME_FMT
           value: "{{ .Values.configMap.nameFmt }}"
+        - name: EXCLUDES
+          value: /config/excludes
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
         volumeMounts:
         - mountPath: /host
           name: host
           readOnly: true
-        - mountPath: /excludes
+        - mountPath: /config
           name: excludes
           readOnly: true
         {{- with .Values.volumeMounts }}
