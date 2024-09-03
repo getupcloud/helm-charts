@@ -6,7 +6,8 @@ image:
   repository: getupcloud/krr2prom
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart app_version.
-  tag: ""
+  # The tag below comes from a developing branch which aims to fix object type discovery
+  tag: "prometheus-workload-loader" # https://github.com/robusta-dev/krr/tree/prometheus-workload-loader
 
 imagePullSecrets: []
 nameOverride: ""
