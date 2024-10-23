@@ -1,6 +1,6 @@
 apiVersion: v2
-appVersion: 0.0.9
+appVersion: 0.0.10
 description: A Helm chart for simple Kubernetes applications
 name: basic-app
 type: application
-version: 0.0.9
+version: 0.0.10
