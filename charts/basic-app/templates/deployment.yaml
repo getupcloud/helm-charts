@@ -87,6 +87,7 @@ spec:
           {{- end }}
           livenessProbe: {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe: {{- toYaml .Values.readinessProbe | nindent 12 }}
+          startupProbe: {{- toYaml .Values.startupProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
@@ -108,6 +109,7 @@ spec:
           {{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
               name: {{ .Release.Name }}-data
+              mountPropagation: {{ .Values.storage.mountPropagation | default None }}
           {{- end }}
           {{- with .Values.nodeSelector }}
       nodeSelector:

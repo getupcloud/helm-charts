@@ -92,7 +92,7 @@ affinity: {}
 
 livenessProbe: null
 readinessProbe: null
-
+startupProbe: null
 
 
 #############
@@ -137,6 +137,7 @@ storage:
   storageClassName: default
   size: 10Gi
   mountPath: /data
+# mountPropagation: None
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
