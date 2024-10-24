@@ -109,7 +109,7 @@ spec:
           {{- if .Values.storage.enabled }}
             - mountPath: {{ .Values.storage.mountPath }}
               name: {{ .Release.Name }}-data
-              mountPropagation: {{ .Values.storage.mountPropagation | default None }}
+              mountPropagation: {{ .Values.storage.mountPropagation | default "None" }}
           {{- end }}
           {{- with .Values.nodeSelector }}
       nodeSelector:
