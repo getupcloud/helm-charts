@@ -54,6 +54,9 @@ service:
   type: ClusterIP
   port: 8080
   annotations: {}
+    # prometheus.io/scrape: "true"
+    # prometheus.io/port: "8080"
+
   labels: {}
 
 dashboards:
