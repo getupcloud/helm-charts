@@ -14,7 +14,9 @@ spec:
   - name: cronitor.rules
     rules:
     - alert: CronitorWatchdog
-      expr: vector(time()) % 120 < 60
+      # must have a cycle >4m because this is the default endsAt fiel sent from prometheus to alertmanager
+      # otherwise the alert is always updated and never recriated.
+      expr: vector(time()) % 270 < 20
       labels:
         severity: none
       annotations:
