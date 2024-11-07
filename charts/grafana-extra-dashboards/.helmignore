@@ -21,8 +21,12 @@
 .idea/
 *.tmproj
 .vscode/
-
-# Local files
-.helmignore
-linkerd2/
-get-linkerd-dashboards.sh
+# Vim swap files
+.*.sw[a-z0-9]
+# Private keys
+id_rsa
+id_dsa
+id_ecdsa
+*.pem
+*.crt
+*.key

@@ -1,7 +1,13 @@
 repo/
 git/
 .env
-**/.sw[op]
+.*.sw[a-z0-9]
 .history/
 .DS_Store
 **/.test-values.yaml
+id_rsa
+id_dsa
+id_ecdsa
+*.pem
+*.crt
+*.key

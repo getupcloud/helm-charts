@@ -14,10 +14,19 @@
 *.swp
 *.bak
 *.tmp
+*.orig
 *~
 # Various IDEs
 .project
 .idea/
 *.tmproj
-# Helm files
-OWNERS
+.vscode/
+# Vim swap files
+.*.sw[a-z0-9]
+# Private keys
+id_rsa
+id_dsa
+id_ecdsa
+*.pem
+*.crt
+*.key
