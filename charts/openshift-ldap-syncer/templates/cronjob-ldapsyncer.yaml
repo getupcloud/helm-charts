@@ -1,0 +1,59 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: {{ include "openshift-ldap-syncer.fullname" . }}
+  namespace: {{ .Values.openshiftAuthenticationNamespace }}
+  labels:
+    {{- include "openshift-ldap-syncer.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "openshift-ldap-syncer.labels" . | nindent 8 }}
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            {{- include "openshift-ldap-syncer.labels" . | nindent 12 }}
+        spec:
+          containers:
+          - name: sync
+            image: "registry.redhat.io/openshift4/ose-cli:{{ .Values.openshitVersion }}"
+            command:
+            - /bin/bash
+            - -c
+            - |-
+              oc adm groups sync \
+                --sync-config=/etc/config/ldap-group-sync.yaml \
+                --whitelist=/etc/groups/whitelist.txt \
+                --blacklist=/etc/groups/blacklist.txt \
+                --confirm \
+                --v=2
+            volumeMounts:
+            - mountPath: "/etc/config"
+              name: config
+            - mountPath: "/etc/secrets"
+              name: bind-password
+            - mountPath: "/etc/groups"
+              name: groups
+          volumes:
+          - name: config
+            configMap:
+              name: {{ include "openshift-ldap-syncer.fullname" . }}
+          - name: bind-password
+            secret:
+              secretName: {{ .Values.bindPasswordSecretName }}
+          - name: groups
+            configMap:
+              name: {{ include "openshift-ldap-syncer.fullname" . }}-groups
+          restartPolicy: "Never"
+          terminationGracePeriodSeconds: 30
+          activeDeadlineSeconds: 500
+          dnsPolicy: "ClusterFirst"
+          serviceAccountName: {{ include "openshift-ldap-syncer.fullname" . }}
+          serviceAccount: {{ include "openshift-ldap-syncer.fullname" . }}
