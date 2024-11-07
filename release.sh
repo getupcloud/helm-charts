@@ -7,6 +7,14 @@ if [ "$(git diff --stat)" != '' ]; then
   exit 1
 fi
 
+if git status charts | grep /templates/; then
+  echo
+  echo Remove stale files from templates dir
+  exit 1
+fi
+
+exit 
+
 [ -e .env ] && . .env
 if [ -z "$AWS_PROFILE" ]; then
     read -p "AWS profile name: " AWS_PROFILE
