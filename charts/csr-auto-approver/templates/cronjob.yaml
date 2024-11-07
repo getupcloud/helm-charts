@@ -1,17 +1,14 @@
-{{- if eq .Values.deployType "Deployment" }}
+{{- if eq .Values.deployType "Cronjob" }}
 {{ $imageTag := printf "%s.%s" .Capabilities.KubeVersion.Major .Capabilities.KubeVersion.Minor -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: CronJob
 metadata:
   name: {{ include "csr-auto-approver.fullname" . }}
   labels:
     {{- include "csr-auto-approver.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicaCount }}
-  selector:
-    matchLabels:
-      {{- include "csr-auto-approver.selectorLabels" . | nindent 6 }}
-  template:
+  schedule: {{ .Values.cronjob.schedule | quote }}
+  jobTemplate:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
@@ -20,6 +17,10 @@ spec:
       labels:
         {{- include "csr-auto-approver.selectorLabels" . | nindent 8 }}
     spec:
+      ttlSecondsAfterFinished: 300
+      podReplacementPolicy: TerminatingOrFailed
+      parallelism: 2
+      backoffLimit: 2
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -33,7 +34,7 @@ spec:
           - /bin/bash
           - -c
           - |-
-            kubectl get csr --field-selector spec.signerName=kubernetes.io/kubelet-serving -w |
+            kubectl get csr --field-selector spec.signerName=kubernetes.io/kubelet-serving |
             stdbuf -i0 -o0 awk '/Pending/{print $1}' |
             while read csr; do
               echo "Approving CSR $csr"
@@ -57,4 +58,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      successfulJobsHistoryLimit: 3
+      concurrencyPolicy: Forbid
 {{- end }}
