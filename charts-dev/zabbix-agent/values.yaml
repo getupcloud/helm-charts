@@ -1,0 +1,60 @@
+# Default values for zabbix-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+zabbix:
+  agentPort: 10050
+  # Set static hostname (default hostname is container's hostname).
+  #hostnamePrefix: 'prod-k8s-' ## hostname prefix. Ignored if ZBX_HOSTNAME_COMMAND is defined
+  #hostnameCommand: 'echo $HOSTNAME | tr [a-z] [A-Z]' ## executes shell command to print hostname.
+
+  # Allowed envs from https://hub.docker.com/r/zabbix/zabbix-agent/
+  env:
+    ZBX_SERVER_HOST: "127.0.0.1"
+    ZBX_PASSIVE_ALLOW: true
+    #ZBX_PASSIVESERVERS: 192.168.0.100
+    ZBX_ACTIVE_ALLOW: true
+    #ZBX_ACTIVESERVERS: 192.168.0.100
+    ZBX_TIMEOUT: 3
+    ZBX_STARTAGENTS: 3
+
+image:
+  repository: zabbix/zabbix-agent
+  tag: "alpine-5.4-latest"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  runAsUser: 0
+  privileged: true
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 54Mi
+  requests:
+    cpu: 100m
+    memory: 54Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

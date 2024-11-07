@@ -1,0 +1,100 @@
+{{-  if eq .Values.zabbix.env.ZBX_SERVER_HOST "" }}
+{{- fail "Invalid zabbix server. Please use `--set zabbix.serverHost=[address]` and try again." }}
+{{- end -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "zabbix-agent.fullname" . }}
+  labels:
+    {{- include "zabbix-agent.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "zabbix-agent.selectorLabels" . | nindent 6 }}
+  updateStrategy:
+   type: RollingUpdate
+   rollingUpdate:
+    maxUnavailable: 1
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "zabbix-agent.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "zabbix-agent.serviceAccountName" . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 12 }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      hostNetwork: true
+
+      initContainers:
+      - name: config
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        env:
+        - name: HOSTNAME_PREFIX
+          value: "{{ .Values.zabbix.hostnamePrefix }}"
+        - name: HOSTNAME_COMMAND
+          value: "{{ .Values.zabbix.hostnameCommand }}"
+        command:
+        - /bin/sh
+        - -xc
+        - |-
+          if [ -n "${HOSTNAME_COMMAND}" ]; then
+            echo Hostname=$(eval $HOSTNAME_COMMAND)
+          elif [ -n "${HOSTNAME_PREFIX}" ]; then
+            echo Hostname=${HOSTNAME_PREFIX}${HOSTNAME}
+          fi > /etc/zabbix/zabbix_agentd.d/default.conf
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 10m
+            memory: 32Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/zabbix/zabbix_agentd.d
+
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: Always
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - hostPort: {{ .Values.zabbix.agentPort }}
+          containerPort: {{ .Values.zabbix.agentPort }}
+          name: zabbix-agent
+        env:
+        {{- range $name, $value := .Values.zabbix.env }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+        {{- end }}
+        volumeMounts:
+        - name: config
+          mountPath: /etc/zabbix/zabbix_agentd.d
+      volumes:
+      - name: config
+        emptyDir: {}
