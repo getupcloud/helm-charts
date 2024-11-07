@@ -1,0 +1,55 @@
+# Default values for openshift-ldap-syncer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+# https://docs.okd.io/latest/authentication/ldap-syncing.html
+
+schedule: "*/30 * * * *"
+openshiftAuthenticationNamespace: openshift-authentication
+bindPasswordSecretName: v4-0-config-user-idp-0-bind-password
+
+image:
+  repo: registry.redhat.io/openshift4/ose-cli
+  version: v4.12
+
+ldap:
+  url: ""
+  bindDN: ""
+  insecure: true
+  rfc2307: |-
+    groupsQuery:
+      baseDN: "DC=ad,DC=example,DC=com"
+      scope: sub
+      derefAliases: never
+      filter: (objectclass=group)
+    groupUIDAttribute: dn
+    groupNameAttributes: [ cn ]
+    groupMembershipAttributes: [ member ]
+    usersQuery:
+        baseDN: "DC=ad,DC=example,DC=com"
+        scope: sub
+        derefAliases: never
+        pageSize: 0
+    userUIDAttribute: dn
+    userNameAttributes: [ sAMAccountName ]
+    tolerateMemberNotFoundErrors: true
+    tolerateMemberOutOfScopeErrors: true
+
+  # REQUIRED: list of whitelisted groups
+  whitelist: []
+  #- CN=Cluster-Admins,CN=users,DC=ad,DC=example,DC=com
+  #- CN=Developers,CN=users,DC=ad,DC=example,DC=com
+
+  # list of blacklisted groups
+  blacklist: []
+  #- CN=Sales,CN=users,DC=ad,DC=example,DC=com
+  #- CN=Marketing,CN=users,DC=ad,DC=example,DC=com
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
