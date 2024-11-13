@@ -4,12 +4,12 @@ kind: ServiceMonitor
 metadata:
   name: {{ include "krr2prom.fullname" . }}
   annotations:
-    {{- range $k, $v := .Values.service.annotations }}
+    {{- range $k, $v := .Values.serviceMonitor.annotations }}
     {{ $k }}: {{ $v | quote }}
     {{- end }}
   labels:
     {{- include "krr2prom.labels" . | nindent 4 }}
-    {{- range $k, $v := .Values.service.labels }}
+    {{- range $k, $v := .Values.serviceMonitor.labels }}
     {{ $k }}: {{ $v | quote }}
     {{- end }}
 spec:
