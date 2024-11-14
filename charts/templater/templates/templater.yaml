@@ -16,11 +16,15 @@
 ### Literal objects
 {{- range $k, $t := .Values }}
 {{-   if hasPrefix "literal-" $k }}
+{{-     if ne (kindOf $t) "string" }}
+{{        $t = toYaml $t }}
+{{-     end }}
 ---
 # --> .Values.{{$k}}
 {{      $t }}
 {{-   end }}
 {{- end }}
+
 
 #################
 ### Templates ###
