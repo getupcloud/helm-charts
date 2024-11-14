@@ -1,19 +1,51 @@
+################
+### Literals ###
+################
+
+### Literals list
+{{- range $k, $t := (.Values.literals | default list) }}
+---
+# --> .Values.literals[{{$k}}]
+{{-   if ne (kindOf $t) "string" }}
+{{-     $t = toYaml $t }}
+{{-   end }}
+{{    $t }}
+{{- end }}
+
+
+### Literal objects
+{{- range $k, $t := .Values }}
+{{-   if hasPrefix "literal-" $k }}
+---
+# --> .Values.{{$k}}
+{{      $t }}
+{{-   end }}
+{{- end }}
+
+#################
+### Templates ###
+#################
+
+### Templates list
 {{- range $k, $t := (.Values.templates | default list) }}
 {{-   if ne (kindOf $t) "string" }}
 {{-     $t = toYaml $t }}
 {{-   end }}
 ---
-# .Values.templates[{{$k}}]
+# --> .Values.templates[{{$k}}]
 {{    tpl $t $ }}
 {{- end }}
 
+
+### Template objects
 {{- range $k, $t := .Values }}
 {{-   if hasPrefix "template-" $k }}
 {{-     if ne (kindOf $t) "string" }}
 {{        $t = toYaml $t }}
 {{-     end }}
 ---
-# .Values.{{$k}}
+# --> .Values.{{$k}}
 {{      tpl $t $ }}
 {{-   end }}
 {{- end }}
+

@@ -2,11 +2,62 @@
 #environment: PROD
 #what: world
 #size: 1024
+
+########################################################
+### List of literal objects (no template processing) ###
+### Can be a list of strings or yaml object          ###
+########################################################
+
+literals: []
+### Multline-string object
+#- |-
+#  data:
+#    hello: world
+#    bash_params: $1, $2
+#    go_tpl: {{.Count}} items are made of {{.Material}}
 #
-### List of templates.
-### Can be a list of strings or yaml object
-#
-#templates:
+### Literal object
+#- apiVersion: v1
+#  kind: ConfigMap
+#  metadata:
+#    labels:
+#      app: example
+#    name: config
+#    namespace: default
+#  data:
+#    config:
+#      GO_TPL: '{{.Count}} items are made of {{.Material}}'
+#      HELM_TPL: "{{ .Values.size }}"
+
+########################################################
+### Single-object named literal                      ###
+### Any attribute prefixed with `literal-<SUFFIX>`. ###
+### `<SUFFIX>` is an arbitrary unique value.         ###
+########################################################
+
+### Multline-string literal
+#literal-nginx: |-
+#  apiVersion: v1
+#  kind: Pod
+#  metadata:
+#    name: nginx
+#    namespace: default
+#    labels:
+#      environment: dev
+#  spec:
+#    containers:
+#    - image: nginx
+#      name: nginx
+
+## Templates are strings taht can be used as helm templates during install.
+## Its value accepts helm tempalte subtituion as variables and function calls
+
+###############################################
+### List of templates                       ###
+### Can be a list of strings or yaml object ###
+###############################################
+
+templates: []
 ### Multline-string template
 #- |-
 #  data:
@@ -26,10 +77,14 @@
 #      ENVIRONMENT: '{{ .Values.environment | default "DEVELOPMENT" }}'
 #      USERNAME: admin
 #      SIZE: "{{ .Values.size }}"
-#
-### Single-object templates declared as `template-<SUFFIX>`, where `<SUFFIX>` is an arbitrary unique value.
-### Can be a string or yaml object.
-#
+
+########################################################
+### Single-object named template                     ###
+### Any attribute prefixed with `template-<SUFFIX>`. ###
+### `<SUFFIX>` is an arbitrary unique value.         ###
+########################################################
+
+### Multline-string template
 #template-nginx: |-
 #  apiVersion: v1
 #  kind: Pod
@@ -42,7 +97,7 @@
 #    containers:
 #    - image: nginx
 #      name: nginx
-#
+
 #template-alpine:
 #  apiVersion: v1
 #  kind: Pod
