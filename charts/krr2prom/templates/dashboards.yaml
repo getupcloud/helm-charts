@@ -14,7 +14,7 @@ metadata:
     {{ $k }}: {{ $v | quote }}
     {{- end }}
 data:
-  {{- range $path, $_ :=  .Files.Glob  "dashboards/*.json" -}}
+  {{- range $path, $_ := .Files.Glob "dashboards/*.json" }}
   ## Included from {{ $path }}
   {{ base $path }}: |-
     {{- $.Files.Get $path | nindent 4 }}
