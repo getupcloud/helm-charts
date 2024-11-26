@@ -102,7 +102,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum(krr_score)/count(krr_score)",
+          "expr": "krr_score",
           "format": "time_series",
           "instant": false,
           "interval": "",

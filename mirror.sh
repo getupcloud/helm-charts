@@ -16,7 +16,7 @@ wait
 
 echo Download karpenter from OCI...
 mkdir -p repo/karpenter
-for version in 0.35.{0,1,2,4,5} 0.36.{0..2} 0.37.0; do
+for version in 0.35.{0,1,2,4,5} 0.36.{0..8} 0.37.{0..6}; do
   if ! [ -s repo/karpenter/karpenter-${version}.tgz ]; then
     helm fetch oci://public.ecr.aws/karpenter/karpenter  --version $version --destination repo/karpenter
   fi
