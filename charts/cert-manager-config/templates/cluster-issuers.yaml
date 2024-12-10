@@ -3,7 +3,7 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfsigned
+  name: {{ .Values.cluster_issuer_selfsigned.name }}
 spec:
   selfSigned: {}
 {{ end }}
@@ -13,29 +13,28 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-production-http01
-spec:
-  acme:
-    email: {{ .Values.acme_email }}
-    privateKeySecretRef:
-      name: letsencrypt-production
-    server: https://acme-v02.api.letsencrypt.org/directory
-    solvers:
-    - http01:
-        ingress:
-          class: {{ .Values.ingress_class }}
-
----
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt-staging-http01
+  name: {{ .Values.cluster_issuer_letsencrypt.name.staging }}
 spec:
   acme:
     email: {{ .Values.acme_email }}
     privateKeySecretRef:
       name: letsencrypt-staging
     server: https://acme-staging-v02.api.letsencrypt.org/directory
+    solvers:
+    - http01:
+        ingress:
+          class: {{ .Values.ingress_class }}
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.cluster_issuer_letsencrypt.name.production }}
+spec:
+  acme:
+    email: {{ .Values.acme_email }}
+    privateKeySecretRef:
+      name: letsencrypt-production
+    server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
     - http01:
         ingress:
@@ -47,7 +46,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging-dns01
+  name: {{ .Values.cluster_issuer_dns01.name.staging }}
 spec:
   acme:
     email: {{ .Values.acme_email }}
@@ -75,7 +74,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-production-dns01
+  name: {{ .Values.cluster_issuer_dns01.name.production }}
 spec:
   acme:
     email: {{ .Values.acme_email }}
@@ -109,13 +108,12 @@ data:
   secret-access-key: "{{ .Values.cluster_issuer_dns01.aws_secret_access_key }}"
 {{ end }}
 
-
 {{ if .Values.cluster_issuer_dns01_cloudflare.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-staging-cloudflare-dns01
+  name: {{ .Values.cluster_issuer_dns01_cloudflare.name.staging }}
 spec:
   acme:
     email: {{ .Values.acme_email }}
@@ -139,7 +137,7 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt-production-cloudflare-dns01
+  name: {{ .Values.cluster_issuer_dns01_cloudflare.name.production }}
 spec:
   acme:
     email: {{ .Values.acme_email }}
@@ -171,4 +169,3 @@ type: Opaque
 data:
   api-token: "{{ .Values.cluster_issuer_dns01_cloudflare.cloudflare_token }}"
 {{ end }}
-

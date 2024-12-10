@@ -3,12 +3,19 @@ ingress_class: "nginx"
 
 cluster_issuer_selfsigned:
   enabled: true
+  name: selfsigned
 
 cluster_issuer_letsencrypt:
   enabled: true
+  name:
+    production: letsencrypt-production-http01
+    staging: letsencrypt-staging-http01
 
 cluster_issuer_dns01:
   enabled: false
+  name:
+    production: letsencrypt-production-dns01
+    staging: letsencrypt-staging-dns01
   aws_region: ""
   aws_zones: ""
   # THESE VALUES BELOW MUST BE PUT IN BASE64 FORMAT
@@ -17,6 +24,9 @@ cluster_issuer_dns01:
 
 cluster_issuer_dns01_cloudflare:
   enabled: false
+  name:
+    production: letsencrypt-production-cloudflare-dns01
+    staging: letsencrypt-staging-cloudflare-dns01
   cloudflare_zones: []
   cloudflare_email: ""
   #  Remember, cloudflare token must be permission Zone-DNS-Edit and Zone-Zone-Read
