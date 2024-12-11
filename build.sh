@@ -30,7 +30,7 @@ echo Downloading git repos
 #charts+=( git/postgres-operator-examples/helm/install/ )
 ./git-download.sh https://github.com/rchakode/kube-opex-analytics.git
 charts+=( git/kube-opex-analytics/manifests/helm/ )
-./git-download.sh https://github.com/k8s-restdev/scheduled-scaler.git
+./git-download.sh https://github.com/West-Coast-Devops/scheduled-scaler.git
 charts+=( git/scheduled-scaler/artifacts/kubes/scaling/chart )
 
 echo Charts sources: ${charts[*]}
