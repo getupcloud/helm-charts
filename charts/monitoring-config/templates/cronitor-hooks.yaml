@@ -1,0 +1,22 @@
+{{ if .Values.cronitor.url }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "monitoring-config.fullname" . }}-cronitor
+  annotations:
+    helm.sh/hook: post-install
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "monitoring-config.fullname" . }}-cronitor
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: job
+        image: "alpine/curl:8.9.1"
+        command:
+        - curl
+        - -vkL
+        - {{ .Values.cronitor.url }}
+{{ endif }}

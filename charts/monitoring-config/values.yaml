@@ -3,6 +3,7 @@ extraLabels: {}
 # x: y
 
 cronitor:
+  # url: "https://cronitor.link/XXXXXX/run" ## creates a hook pod to hit the first time in the monitor endpoint
   prometheusRules:
     enabled: false
 
