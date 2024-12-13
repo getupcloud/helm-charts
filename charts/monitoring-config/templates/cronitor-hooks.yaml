@@ -19,4 +19,4 @@ spec:
         - curl
         - -vkL
         - {{ .Values.cronitor.url }}
-{{ endif }}
+{{ end }}
