@@ -16,7 +16,7 @@ spec:
     - alert: CronitorWatchdog
       # must have a cycle >4m because this is the default endsAt field sent from prometheus to alertmanager
       # otherwise the alert is always updated and never recreated.
-      expr: vector(time()) % 270 < 20
+      expr: vector(time()) % 270 < 120
       for: 1m
       labels:
         severity: none
