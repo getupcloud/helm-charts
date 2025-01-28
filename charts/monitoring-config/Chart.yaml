@@ -3,4 +3,4 @@ appVersion: 1.0.0
 description: A Helm chart for monitoring configurations
 name: monitoring-config
 type: application
-version: 2.2.1
+version: 2.2.2
