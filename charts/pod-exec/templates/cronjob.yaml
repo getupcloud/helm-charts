@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "pod-exec.fullname" . }}
+  labels:
+    {{- include "pod-exec.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  schedule: "{{ .Values.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "pod-exec.serviceAccountName" . }}
+          containers:
+          - name: loki-pod-exec
+            image: "{{ .Values.image.repository }}:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}"
+            env:
+            - name: TARGET_NAMESPACE
+              value: {{ .Values.targetNamespace }}
+            - name: LABEL_SELECTOR
+              value: {{ .Values.labelSelector }}
+            - name: CONTAINER_NAME
+              value: {{ .Values.containerName }}
+            command: {{ toYaml .Values.command | nindent 12 }}
+          restartPolicy: "{{ .Values.restartPolicy }}"
