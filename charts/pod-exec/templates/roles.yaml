@@ -1,0 +1,42 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "pod-exec.fullname" . }}
+  namespace: {{ .Values.targetNamespace }}
+  labels:
+    {{- include "pod-exec.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules: 
+- apiGroups: [""]
+  resources: ["pods","pods/exec"]
+  verbs: ["get","list","exec"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "pod-exec.fullname" . }}
+  namespace: {{ .Values.targetNamespace }}
+  labels:
+    {{- include "pod-exec.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+subjects: 
+- kind: ServiceAccount
+  name: {{ include "pod-exec.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+roleRef: 
+  kind: Role
+  name: {{ include "pod-exec.fullname" . }}
+  apiGroup: rbac.authorization.k8s.io
