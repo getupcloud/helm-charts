@@ -86,12 +86,12 @@ labels: {}
 
 schedule: "10 6 * * *"
 
-command: 
-- /bin/sh 
-- -c  
+command:
+- /bin/sh
+- -c
 - |-
-  kubectl get pods -l "$LABEL_SELECTOR" -n "$TARGET_NAMESPACE" -o name | cut -d/ -f2 |
-  xargs -I{} -n1 kubectl -n "$TARGET_NAMESPACE" exec -c "$CONTAINER_NAME" {} -- find /data/loki/chunks -type f -mtime +30 -print -delete
+  kubectl get pods -l "$LABEL_SELECTOR" -n "$TARGET_NAMESPACE" -o name \
+  | xargs -I{} -n1 kubectl -n "$TARGET_NAMESPACE" exec -c "$CONTAINER_NAME" {} -- find /data/loki/chunks /var/loki/chunks -type f -mtime +30 -print -delete
 
 targetNamespace: logging
 
