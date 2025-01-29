@@ -20,7 +20,7 @@ spec:
           serviceAccountName: {{ include "pod-exec.serviceAccountName" . }}
           containers:
           - name: loki-pod-exec
-            image: "{{ .Values.image.repository }}:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor }}"
+            image: "{{ .Values.image.repository }}:{{ .Capabilities.KubeVersion.Major }}.{{ .Capabilities.KubeVersion.Minor | trimSuffix "+" }}"
             env:
             - name: TARGET_NAMESPACE
               value: {{ .Values.targetNamespace }}
