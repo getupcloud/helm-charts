@@ -255,6 +255,16 @@ spec:
       labels:
         severity: critical
 
+    # This alert is used to inhibit node alerts when clusterautoscaler takes too long to remove de node
+    - alert: ToBeDeletedByClusterAutoscaler
+      annotations:
+        description: Node "{{ $labels.instance }}" is selected to be delete by ClusterAutoscaler
+        summary: Node will be deleted soon
+      expr: kube_node_spec_taint{key="ToBeDeletedByClusterAutoscaler"}
+      for: 5m
+      labels:
+        severity: info
+
     ## Removed by https://github.com/prometheus-community/helm-charts/commit/000410dc1ecaaf29f28705f328241172d12b5d3c#diff-34450e94baaebe1e5f9172814267ae07b78f44d2839f21c28047f5778778b121
     ## We need for disk usage alerts
     - expr: |-
