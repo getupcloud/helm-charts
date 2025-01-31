@@ -1,0 +1,215 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: vapconfigs.getup.io
+spec:
+  group: getup.io
+  scope: Cluster
+  names:
+    kind: VAPConfig
+    plural: vapconfigs
+    singular: vapconfig
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            settings:
+              type: object
+              properties:
+                allowedCapabilities:
+                  type: array
+                  items: string
+                  default:
+                  - AUDIT_WRITE
+                  - CHOWN
+                  - DAC_OVERRIDE
+                  - FOWNER
+                  - FSETID
+                  - KILL
+                  - MKNOD
+                  - NET_BIND_SERVICE
+                  - SETFCAP
+                  - SETGID
+                  - SETPCAP
+                  - SETUID
+                  - SYS_CHROOT
+                  
+                allowedHostPorts:
+                  type: array
+                  items:
+                    type: integer
+                  default: []
+
+                allowedAppArmorProfiles:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - runtime/default
+                  - localhost/
+
+                allowedSELinuxTypes:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - container_t
+                  - container_init_t
+                  - container_kvm_t
+
+                allowedSeccompProfile:
+                  type: string
+                  default: Unconfined
+
+                allowedSysctls:
+                  type: array
+                  items:
+                    type: string
+                  default: 
+                  - kernel.shm_rmid_forced
+                  - net.ipv4.ip_local_port_range
+                  - net.ipv4.ip_unprivileged_port_start
+                  - net.ipv4.tcp_syncookies
+                  - net.ipv4.ping_group_range
+                  - net.ipv4.ip_local_reserved_ports
+                  - net.ipv4.tcp_keepalive_time
+                  - net.ipv4.tcp_fin_timeout
+                  - net.ipv4.tcp_keepalive_intvl
+                  - net.ipv4.tcp_keepalive_probes
+
+                allowedVolumeTypes:
+                  type: array
+                  items:
+                    type: string
+                  default: 
+                  # Restricted
+                  - configMap
+                  - csi
+                  - downwardAPI
+                  - emptyDir
+                  - ephemeral
+                  - persistentVolumeClaim
+                  - projected
+                  - secret
+
+                allowedCapabilities:
+                  type: array
+                  items:
+                    type: string
+                  default: 
+                  # Baseline
+                  - AUDIT_WRITE
+                  - CHOWN
+                  - DAC_OVERRIDE
+                  - FOWNER
+                  - FSETID
+                  - KILL
+                  - MKNOD
+                  - NET_BIND_SERVICE
+                  - SETFCAP
+                  - SETGID
+                  - SETPCAP
+                  - SETUID
+                  - SYS_CHROOT
+                  # Restricted
+                  #- NET_BIND_SERVICE
+
+                allowedRegistries:
+                  type: array
+                  items:
+                    type: string
+                  default: []
+                  #- ghcr.io
+                  #- gcr.io
+
+                defaultRegistries:
+                  type: array
+                  items:
+                    type: string
+                  default: 
+                  - docker.io
+                  - gcr.io
+                  - quay.io
+    
+                deprecatedImageRegistries:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - k8s.gcr.io
+
+                sensitiveKeys:
+                  type: array
+                  items:
+                    type: string
+                  default:     
+                  - aws_access_key_id
+                  - aws_secret_access_key
+                  - azure_batchai_storage_account
+                  - azure_batchai_storage_key
+                  - azure_batch_account
+                  - azure_batch_key
+                  - secret
+                  - key
+                  - password
+                  - pwd
+                  - token
+                  - jwt
+                  - bearer
+                  - credential
+  
+                sensitiveValues:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - BEGIN \w+ PRIVATE KEY
+                  - PRIVATE KEY
+                  - eyJhbGciO
+                  - JWT
+                  - Bearer
+                  - key
+                  - secret
+                  - password
+                  - pass
+  
+                sshPorts:
+                  type: array
+                  items:
+                    type: integer
+                  default:
+                  - 22
+                  - 2222
+                  
+                forbiddenImageTags:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - ""
+                  - latest
+
+                allowedAnonymousClusterRoleBindings:
+                  type: array
+                  items:
+                    type: string
+                  default:
+                  - system:public-info-viewer
+                  - cattle-unauthenticated
+
+                allowedAnonymousRoleBindings:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                  default:
+                  - name: bootstrap-signer-clusterinfo                    
+                    namespace: kube-public

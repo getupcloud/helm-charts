@@ -1,0 +1,17 @@
+{{- range $policyName, $policy := .Values.policy }}
+{{- with default (dict "_" "_") (get $.Values.policy $policyName) }}
+{{- if default true .enabled }}
+{{- if .nameOverride }}
+{{- $policyName = .nameOverride }}
+{{- end }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: {{ $policyName }}
+spec:
+  {{- $spec := toYaml (default .bindingSpec $.Values.bindingSpec) }}
+  {{- tpl $spec (dict "policyName" $policyName) | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,271 @@
+# TODO
+# marvin-m-106-apparmor: kind has no apparmor
+# marvin-m-200-allowed-registries: fix expression. do not apply to all cases
+# marvin-m-409-deprecated-image-registry: parametrize
+
+defaultFailurePolicy: Ignore ## Fail|Ignore
+
+params:
+  settings:
+    allowedCapabilities: ## TODO: find out safe CAPs
+    - AUDIT_WRITE
+    - CHOWN
+    - DAC_OVERRIDE
+    - FOWNER
+    - FSETID
+    - KILL
+    - MKNOD
+    - NET_BIND_SERVICE
+    - SETFCAP
+    - SETGID
+    - SETPCAP
+    - SETUID
+    - SYS_CHROOT
+
+    allowedHostPorts: []
+
+    allowedAppArmorProfiles:
+    - runtime/default
+    - localhost/
+
+    allowedSELinuxTypes:
+    - container_t
+    - container_init_t
+    - container_kvm_t
+
+    allowedSeccompProfile: Unconfined
+
+    allowedSysctls:
+    - kernel.shm_rmid_forced
+    - net.ipv4.ip_local_port_range
+    - net.ipv4.ip_unprivileged_port_start
+    - net.ipv4.tcp_syncookies
+    - net.ipv4.ping_group_range
+    - net.ipv4.ip_local_reserved_ports
+    - net.ipv4.tcp_keepalive_time
+    - net.ipv4.tcp_fin_timeout
+    - net.ipv4.tcp_keepalive_intvl
+    - net.ipv4.tcp_keepalive_probes
+
+    allowedVolumeTypes:
+    # Restricted
+    - configMap
+    - csi
+    - downwardAPI
+    - emptyDir
+    - ephemeral
+    - persistentVolumeClaim
+    - projected
+    - secret
+
+    allowedCapabilities:
+    # Baseline
+    - AUDIT_WRITE
+    - CHOWN
+    - DAC_OVERRIDE
+    - FOWNER
+    - FSETID
+    - KILL
+    - MKNOD
+    - NET_BIND_SERVICE
+    - SETFCAP
+    - SETGID
+    - SETPCAP
+    - SETUID
+    - SYS_CHROOT
+    # Restricted
+    #- NET_BIND_SERVICE
+
+    allowedRegistries: []
+    #- ghcr.io
+    #- gcr.io
+
+    defaultRegistries:
+    - docker.io
+    - ghcr.io
+
+    deprecatedImageRegistries:
+    - k8s.gcr.io
+
+    sensitiveKeys:
+    - aws_access_key_id
+    - aws_secret_access_key
+    - azure_batchai_storage_account
+    - azure_batchai_storage_key
+    - azure_batch_account
+    - azure_batch_key
+    - secret
+    - key
+    - password
+    - pwd
+    - token
+    - jwt
+    - bearer
+    - credential
+
+    sensitiveValues:
+      - BEGIN \w+ PRIVATE KEY
+      - PRIVATE KEY
+      - eyJhbGciO
+      - JWT
+      - Bearer
+      - key
+      - secret
+
+    sshPorts:
+    - 22
+    - 2222
+
+    forbiddenImageTags:
+    - ""
+    - latest
+
+    allowedAnonymousClusterRoleBindings:
+    - system:public-info-viewer
+    - cattle-unauthenticated
+
+    allowedAnonymousRoleBindings:
+    - name: bootstrap-signer-clusterinfo
+      namespace: kube-public
+
+bindingSpec:
+  matchResources:
+    # matchPolicy: Equivalent
+    namespaceSelector:
+      matchLabels:
+        vap.getup.io/enabled: "true"
+    objectSelector: {}
+  policyName: '{{ .policyName }}'
+  validationActions:
+  - Warn
+  #- Audit
+  #- Deny
+
+policy:
+
+  # To install a policy add it here. Each entry supports the following custom config:
+  #
+  # enabled:             bool. default=.Values.(marvin|kubescape).enabled
+  # failurePolicy:       string(Fail|Ignore). default=.Values.defaultFailurePolicy
+  # nameOverride:        string
+  # bindingSpec:         ValidatingAdmissionPolicyBinding.spec. default=.Values.bindingSpec
+  # validationsOverride: ValidatingAdmissionPolicy.spec.validations
+  #
+
+  marvin-m-100-host-process:
+  marvin-m-101-host-namespaces:
+  marvin-m-102-privileged-containers:
+  marvin-m-103-capabilities-baseline:
+  marvin-m-104-host-path-volumes:
+  marvin-m-105-host-ports:
+    validationsOverride:
+    - expression: |-
+        variables.allContainers.all(c, c.?ports.orValue([]).all(p, p.?hostPort.orValue(0) != 0 && p.hostPort in params.settings.allowedHostPorts))
+  marvin-m-106-apparmor:
+    validationsOverride:
+    - expression: |-
+        !has(variables.podMeta.annotations) ||
+        !variables.podMeta.annotations.exists(key, key.startsWith('container.apparmor.security.beta.kubernetes.io')) ||
+        variables.podMeta.annotations.filter(
+          key,
+          key.startsWith('container.apparmor.security.beta.kubernetes.io')
+        ).all(
+          key,
+          params.settings.allowedAppArmorProfiles.all(
+            p,
+            variables.podMeta.annotations[key] == p || variables.podMeta.annotations[key].startsWith(p))
+          )
+        )
+      message: 'Container running with forbidden AppArmor profile'
+      messageExpression: ''
+      reason: Invalid
+  marvin-m-107-selinux:
+  marvin-m-108-proc-mount:
+  marvin-m-109-seccomp-baseline:
+    validationsOverride:
+    - expression: |-
+        variables.podSpec.?securityContext.?seccompProfile.?type.orValue("") == "" ||
+        params.settings.allowedSeccompProfiles.exists(
+          p,
+          p == variables.podSpec.securityContext.seccompProfile.type
+        )
+      message: 'Pod using forbidden seccomp profile'
+      messageExpression: ''
+      reason: Invalid
+    - expression: |-
+        variables.allContainers.all(
+          c,
+          c.?securityContext.?seccompProfile.?type.orValue("") in params.settings.?allowedSeccompProfiles.orValue([])
+        )
+      message: 'Container using forbidden seccomp profile'
+      messageExpression: ''
+      reason: Invalid
+
+  marvin-m-110-sysctls:
+  marvin-m-111-volume-types:
+  marvin-m-112-privilege-escalation:
+  marvin-m-113-run-as-non-root:
+  marvin-m-114-run-as-user:
+  marvin-m-115-seccomp-restricted:
+  marvin-m-116-capabilities-restricted:
+  marvin-m-200-allowed-registries:
+    validationsOverride:
+    - expression: |-
+        size(params.settings.allowedRegistries) == 0 ||
+        variables.allContainers.all(
+          container,
+          !container.image.contains('/') ||
+          container.image.split('/')[0] in params.settings.allowedRegistries
+        )
+  marvin-m-201-app-credentials:
+  marvin-m-202-auto-mount-service-account-token:
+  marvin-m-203-ssh-server:
+  marvin-m-300-read-only-root-filesystem:
+  marvin-m-400-image-tagged-latest:
+    validationsOverride:
+    - expression: |-
+        variables.allContainers.all(
+          container,
+          container.image.contains(":") && // image digest contains ":"
+          [ container.image.substring(container.image.lastIndexOf(":") + 1) ].all(
+            image,
+            !image.contains("/") &&
+            !(image in params.settings.forbiddenImageTags)
+          )
+        )
+  marvin-m-401-unmanaged-pod:
+  marvin-m-402-readiness-probe:
+  marvin-m-403-liveness-probe:
+  marvin-m-404-memory-requests:
+  marvin-m-405-cpu-requests:
+  marvin-m-406-memory-limit:
+  marvin-m-407-cpu-limit:
+  marvin-m-408-sudo-container-entrypoint:
+  marvin-m-409-deprecated-image-registry:
+    validationsOverride:
+    - expression: |-
+        variables.allContainers.all(c, !c.image in params.settings.deprecatedImageRegistries))
+  marvin-m-410-resource-using-invalid-restartpolicy:
+  marvin-m-411-role-binding-referencing-anonymous-or-unauthenticated:
+    validationsOverride:
+    - expression: |-
+        (
+          object.kind == "ClusterRoleBinding" &&
+          params.settings.allowedAnonymousClusterRoleBindings.exists(
+            crb,
+            object.metadata.name == crb
+          )
+        ) ||
+        (
+          object.kind == "RoleBinding" &&
+          params.settings.allowedAnonymousRoleBindings.exists(
+            rb,
+            object.metadata.name == rb.name &&
+            object.metadata.namespace == rb.namespace
+          )
+        ) ||
+        !has(object.subjects) || object.subjects.all(subject,
+          !(subject.kind == "User" && subject.name == "system:anonymous") &&
+          !(subject.kind == "Group" && subject.name == "system:unauthenticated")
+        )
+  marvin-m-500-workload-in-default-namespace:

@@ -1,0 +1,76 @@
+{{- with or (get .Values.policy "marvin-m-402-readiness-probe") (dict "_" "_") }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: {{ default "marvin-m-402-readiness-probe" .nameOverride }}
+  labels:
+    {{- include "vap.labels" $ | nindent 4 }}
+spec:
+  failurePolicy: {{ default $.Values.defaultFailurePolicy .failurePolicy }}
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      resources:
+      - pods
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+      - replicasets
+      operations:
+      - CREATE
+      - UPDATE
+  paramKind:
+   apiVersion: v1
+   kind: VAPConfig
+  variables:
+  - name: podMeta
+    expression: |-
+      has(object.spec.containers) ? object.metadata :
+        has(object.spec.template) ? object.spec.template.metadata :
+        has(object.spec.jobTemplate.spec.template.metadata) ?  object.spec.jobTemplate.spec.template.metadata :
+        {}
+  - name: podSpec
+    expression: |-
+      has(object.spec.containers) ? object.spec :
+        has(object.spec.template) ? object.spec.template.spec :
+        has(object.spec.jobTemplate.spec.template.spec) ?  object.spec.jobTemplate.spec.template.spec :
+        {}
+  - name: podContainers
+    expression: |-
+      object.spec.?containers.orValue([]) + object.spec.?initContainers.orValue([]) + object.spec.?ephemeralContainers.orValue([])
+  - name: workloadContainers
+    expression: |-
+      object.spec.?template.spec.containers.orValue([]) + object.spec.?template.spec.initContainers.orValue([])
+  - name: cronjobContainers
+    expression: |-
+      object.spec.?jobTemplate.spec.template.spec.containers.orValue([]) + object.spec.?jobTemplate.spec.template.spec.containers.orValue([])
+  - name: allContainers
+    expression: |-
+      variables.podContainers + variables.workloadContainers + variables.cronjobContainers
+  - name: owners
+    expression: |-
+      object.metadata.?ownerReferences.orValue([])
+
+  validations:
+  - expression: |-
+      (
+        object.kind == "Pod" && 
+        variables.owners != null && 
+        variables.owners.exists(o, o.?kind.orValue("") == "Job" && o.?apiVersion.orValue("") == "batch/v1")
+      ) ||  variables.podSpec.containers.all(c, has(c.readinessProbe) || has(c.startupProbe))
+    message: 'Readiness and startup probe not configured'
+    messageExpression: ''
+    reason: Invalid
+
+{{- end }}

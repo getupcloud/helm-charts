@@ -1,0 +1,106 @@
+{%- if slug | default(false) %}
+{%-  set name = ("marvin-" + id + "-" + (slug | replace(" ", "-"))) | lower %}
+{%- else %}
+{%-  set name = ("marvin-" + id) | lower %}
+{%- endif %}
+{{- '{{- with or (get .Values.policy "%s") (dict "_" "_") }}' % name }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: {{ '{{ default "%s" .nameOverride }}' % name }}
+  labels:
+    {{ '{{- include "vap.labels" $ | nindent 4 }}' }}
+spec:
+  failurePolicy: {{ '{{ default $.Values.defaultFailurePolicy .failurePolicy }}' }}
+
+  {%- set resourcesByGroup = match.resources|groupby("group") %}
+  matchConstraints:
+    resourceRules:
+    {%- for group, rules in resourcesByGroup %}
+    - apiGroups:
+      - {{ group | quote }}
+      apiVersions:
+      {%- set resourcesByVersion = rules|groupby("version") %}
+      {%- for version, _ in resourcesByVersion %}
+      - {{ version | quote }}
+      {%- endfor %}
+      resources:
+      {%- for resource in rules | map(attribute='resource') | unique %}
+      - {{ resource | quote }}
+      {%- endfor %}
+      operations:
+      - CREATE
+      - UPDATE
+    {%- endfor %}
+
+  {%- if needParams %}
+  paramKind:
+   apiVersion: v1
+   kind: VAPConfig
+  {%- endif %}
+
+  {%- if needVariables %}
+  variables:
+  - name: podMeta
+    expression: |-
+      has(object.spec.containers) ? object.metadata :
+        has(object.spec.template) ? object.spec.template.metadata :
+        has(object.spec.jobTemplate.spec.template.metadata) ?  object.spec.jobTemplate.spec.template.metadata :
+        {}
+  - name: podSpec
+    expression: |-
+      has(object.spec.containers) ? object.spec :
+        has(object.spec.template) ? object.spec.template.spec :
+        has(object.spec.jobTemplate.spec.template.spec) ?  object.spec.jobTemplate.spec.template.spec :
+        {}
+  - name: podContainers
+    expression: |-
+      object.spec.?containers.orValue([]) + object.spec.?initContainers.orValue([]) + object.spec.?ephemeralContainers.orValue([])
+  - name: workloadContainers
+    expression: |-
+      object.spec.?template.spec.containers.orValue([]) + object.spec.?template.spec.initContainers.orValue([])
+  - name: cronjobContainers
+    expression: |-
+      object.spec.?jobTemplate.spec.template.spec.containers.orValue([]) + object.spec.?jobTemplate.spec.template.spec.containers.orValue([])
+  - name: allContainers
+    expression: |-
+      variables.podContainers + variables.workloadContainers + variables.cronjobContainers
+  {%- for v in (variables | default([])) %}
+  - name: {{ v["name"] | quote }}
+    expression: |-
+      {{ v["expression"] |
+        replace("params.", "params.settings.") |
+        replace("podMeta.", "variables.podMeta.") |
+        replace("podSpec.", "variables.podSpec.") |
+        replace("allContainers.", "variables.allContainers.") |
+        trim |
+        indent(6, blank=True) }}
+  {%- endfor %}
+  {%- endif %}
+
+  validations:
+  {%- for v in validations %}
+  - expression: |-
+      {{ v.expression |
+          replace("params.", "params.settings.") |
+          replace("podMeta", "variables.podMeta") |
+          replace("podSpec", "variables.podSpec") |
+          replace("allContainers", "variables.allContainers") |
+          trim |
+          indent(6, blank=True) }}
+    message: {{ v.message | default(message) | quote }}
+    messageExpression: {{ v.messageExpression | default("") | quote }}
+    reason: {{ v.reason | default("Invalid") }}
+  {%- endfor %}
+
+{#- TODO:
+  - auditAnnotations
+  - Parameters
+
+  {%- if auditAnnotations %}
+  auditAnnotations:
+  {{ auditAnnotations | to_nice_yaml(2) | indent(2) }}
+  {%- endif %}
+#}
+
+{{ "{{- end }}" }}

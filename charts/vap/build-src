@@ -1,0 +1,128 @@
+#!/bin/bash
+
+set -eu
+
+if ! source .pyenv/bin/activate 2>/dev/null; then
+  python3 -m venv .pyenv
+  python3 -m pip install jinja2-cli jinja2-cli[yaml] jinja2-ansible-filters
+fi
+
+source .pyenv/bin/activate
+
+DEFAULT_FAILURE_POLICY=Ignore
+
+function process_template()
+{
+  local template_path="$1"
+  local source_path="$2"
+  local target_dir="$3"
+  local target_filename_prefix="${4:+$4}"
+
+  if [ -d "$source_path" ]; then
+    local sources=(
+      $(find $source_path -iregex '.*\.ya?ml$' -a '!' -iregex '.*_test.ya?ml$')
+    )
+  elif [ -f "$source_path" ]; then
+    local sources=( "$source_path" )
+  else
+    echo "Invalid or missing source file(s): $source_path"
+    exit 1
+  fi
+
+  for path in ${sources[@]}; do
+    source_filename=${path##*/}
+    source_filename=${source_filename//_/-}
+    if [ -f "$source_path" ]; then
+      target_path=${target_dir}
+    elif [ -n "${target_filename_prefix}" ] && [ "${source_filename:0:${#target_filename_prefix}}" == "${target_filename_prefix}" ] ;then
+      target_path=$target_dir/${source_filename}
+    else
+      target_path=$target_dir/${target_filename_prefix}-${source_filename}
+    fi
+    target_path=${target_path,,}
+
+    echo -n "- $path -> $target_path "
+#    if [ -e "$target_path" ]; then
+#      echo '(EXISTS)'
+#      continue
+#    fi
+
+    if grep -qE 'params\.' "$path"; then
+      NEED_PARAMS=1
+    else
+      NEED_PARAMS=0
+    fi
+
+    if grep -wqE '(podSpec|podMeta|allContainers|podContainers|workloadContainers|cronjobContainers|variables)' "$path"; then
+      NEED_VARIABLES=1
+    else
+      NEED_VARIABLES=0
+    fi
+
+    jinja2 \
+      --format=yaml \
+      -e jinja2_ansible_filters.AnsibleCoreFiltersExtension \
+      -e jinja2.ext.do \
+      -D defaultFailurePolicy=$DEFAULT_FAILURE_POLICY \
+      -D needParams=$NEED_PARAMS \
+      -D needVariables=$NEED_VARIABLES \
+      "$template_path" "$path" > "$target_path" || exit #&
+    echo
+  done
+  wait
+}
+
+copy_file()
+{
+  local src="$1"
+  local dst="$2"
+
+  echo -n "- $src -> $dst "
+  #if [ -e "$dst" ]; then
+  #  echo '(EXISTS)'
+  #  return
+  #fi
+
+  cp -f "$src" "$dst"
+  echo
+}
+
+echo '## Building marvin'
+
+MARVIN_GIT_REPO=https://github.com/undistro/marvin.git
+MARVIN_ROOT_DIR=vendor/marvin
+MARVIN_POLICY_DIR=internal/builtins
+MARVIN_TEMPLATE=marvin-policy.yaml.j2
+
+if ! [ -d $MARVIN_ROOT_DIR/$MARVIN_POLICY_DIR ]; then
+  git clone $MARVIN_GIT_REPO vendor/marvin
+fi
+
+process_template marvin-policy.yaml.j2 $MARVIN_ROOT_DIR/$MARVIN_POLICY_DIR templates marvin
+
+#echo
+#echo '## Building kubescape'
+#
+#KUBESCAPE_BASE_URL=https://github.com/kubescape/cel-admission-library
+#KUBESCAPE_ROOT_DIR=vendor/cel-admission-library
+#KUBESCAPE_POLICY_DIR=release/
+#KUBESCAPE_TEMPLATE=kubescape-policy.yaml.j2
+#
+#if ! [ -d $KUBESCAPE_ROOT_DIR ]; then
+#  git clone $KUBESCAPE_BASE_URL vendor/cel-admission-library
+#fi
+#
+## From cel-admission-library/.github/workflows/release.yaml
+#mkdir -p $KUBESCAPE_ROOT_DIR/release
+#kubectl kustomize $KUBESCAPE_ROOT_DIR/apis/k8s-v1/ > $KUBESCAPE_ROOT_DIR/$KUBESCAPE_POLICY_DIR/kubescape-validating-admission-policies.yaml
+#
+#(
+#  # Kubescape ships all policies in a single file, and we split each one into its own file.
+#  cd $KUBESCAPE_ROOT_DIR/release
+#  yq --no-doc -s '.metadata.name' kubescape-validating-admission-policies.yaml
+#  rm -f kubescape-validating-admission-policies.yaml
+#)
+#
+#process_template kubescape-policy.yaml.j2 $KUBESCAPE_ROOT_DIR/release templates kubescape
+#process_template kubescape-crd.yaml.j2 $KUBESCAPE_ROOT_DIR/configuration/policy-configuration-definition.yaml crds/kubescape-crd.yaml
+#process_template kubescape-config.yaml.j2 $KUBESCAPE_ROOT_DIR/configuration/basic-control-configuration.yaml templates/kubescape-config.yaml

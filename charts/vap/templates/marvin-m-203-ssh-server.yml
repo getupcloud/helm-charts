@@ -1,0 +1,93 @@
+{{- with or (get .Values.policy "marvin-m-203-ssh-server") (dict "_" "_") }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: {{ default "marvin-m-203-ssh-server" .nameOverride }}
+  labels:
+    {{- include "vap.labels" $ | nindent 4 }}
+spec:
+  failurePolicy: {{ default $.Values.defaultFailurePolicy .failurePolicy }}
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      resources:
+      - pods
+      - services
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+      - replicasets
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      resources:
+      - cronjobs
+      - jobs
+      operations:
+      - CREATE
+      - UPDATE
+  paramKind:
+   apiVersion: v1
+   kind: VAPConfig
+  variables:
+  - name: podMeta
+    expression: |-
+      has(object.spec.containers) ? object.metadata :
+        has(object.spec.template) ? object.spec.template.metadata :
+        has(object.spec.jobTemplate.spec.template.metadata) ?  object.spec.jobTemplate.spec.template.metadata :
+        {}
+  - name: podSpec
+    expression: |-
+      has(object.spec.containers) ? object.spec :
+        has(object.spec.template) ? object.spec.template.spec :
+        has(object.spec.jobTemplate.spec.template.spec) ?  object.spec.jobTemplate.spec.template.spec :
+        {}
+  - name: podContainers
+    expression: |-
+      object.spec.?containers.orValue([]) + object.spec.?initContainers.orValue([]) + object.spec.?ephemeralContainers.orValue([])
+  - name: workloadContainers
+    expression: |-
+      object.spec.?template.spec.containers.orValue([]) + object.spec.?template.spec.initContainers.orValue([])
+  - name: cronjobContainers
+    expression: |-
+      object.spec.?jobTemplate.spec.template.spec.containers.orValue([]) + object.spec.?jobTemplate.spec.template.spec.containers.orValue([])
+  - name: allContainers
+    expression: |-
+      variables.podContainers + variables.workloadContainers + variables.cronjobContainers
+
+  validations:
+  - expression: |-
+      object.kind != 'Service' || !has(object.spec.ports) || object.spec.ports.all(p,
+        !(p.port in params.settings.sshPorts) &&
+        !(p.?targetPort.orValue(0) in params.settings.sshPorts)
+      )
+    message: 'Service should not be routing to SSH server'
+    messageExpression: ''
+    reason: Invalid
+  - expression: |-
+      variables.allContainers.all(container,
+        !has(container.ports) ||
+        container.ports.all(port,
+          !(port.containerPort in params.settings.sshPorts)
+        )
+      )
+    message: 'Container could be running SSH server'
+    messageExpression: ''
+    reason: Invalid
+
+{{- end }}

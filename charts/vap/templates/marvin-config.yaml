@@ -1,0 +1,5 @@
+apiVersion: getup.io/v1
+kind: VAPConfig
+metadata:
+  name: config
+{{ .Values.params | toYaml }}
