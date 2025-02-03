@@ -26,6 +26,10 @@ spec:
               value: {{ .Values.targetNamespace }}
             - name: LABEL_SELECTOR
               value: {{ .Values.labelSelector }}
+            - name: CHUNKS_DIR
+              value: {{ .Values.lokiChunksDir }}
+            - name: RETENTION_DAYS
+              value: {{ .Values.lokiRetentionDays }}
             - name: CONTAINER_NAME
               value: {{ .Values.containerName }}
             command: {{ toYaml .Values.command | nindent 12 }}

@@ -91,7 +91,7 @@ command:
 - -c
 - |-
   kubectl get pods -l "$LABEL_SELECTOR" -n "$TARGET_NAMESPACE" -o name \
-  | xargs -I{} -n1 kubectl -n "$TARGET_NAMESPACE" exec -c "$CONTAINER_NAME" {} -- find /data/loki/chunks /var/loki/chunks -type f -mtime +30 -print -delete \
+  | xargs -I{} -n1 kubectl -n "$TARGET_NAMESPACE" exec -c "$CONTAINER_NAME" {} -- find "$CHUNKS_DIR" -type f -mtime "+$RETENTION_DAYS" -print -delete \
   || true
 
 targetNamespace: logging
@@ -99,5 +99,9 @@ targetNamespace: logging
 labelSelector: app.kubernetes.io/component=backend,app.kubernetes.io/name=loki
 
 containerName: loki
+
+lokiChunksDir: /data/loki/chunks
+
+lokiRetentionDays: 30
 
 restartPolicy: OnFailure
