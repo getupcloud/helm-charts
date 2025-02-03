@@ -104,13 +104,13 @@ params:
     - credential
 
     sensitiveValues:
-      - BEGIN \w+ PRIVATE KEY
-      - PRIVATE KEY
-      - eyJhbGciO
-      - JWT
-      - Bearer
-      - key
-      - secret
+    - BEGIN \w+ PRIVATE KEY
+    - PRIVATE KEY
+    - eyJhbGciO
+    - JWT
+    - Bearer
+    - key
+    - secret
 
     sshPorts:
     - 22
