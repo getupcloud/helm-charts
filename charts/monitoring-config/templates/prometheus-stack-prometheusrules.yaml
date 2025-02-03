@@ -258,7 +258,7 @@ spec:
     # This alert is used to inhibit node alerts when clusterautoscaler takes too long to remove de node
     - alert: ToBeDeletedByClusterAutoscaler
       annotations:
-        description: Node "{{ $labels.instance }}" is selected to be delete by ClusterAutoscaler
+        description: Node {{ "{{ $labels.instance }}" }} is selected to be delete by ClusterAutoscaler
         summary: Node will be deleted soon
       expr: kube_node_spec_taint{key="ToBeDeletedByClusterAutoscaler"}
       for: 5m
