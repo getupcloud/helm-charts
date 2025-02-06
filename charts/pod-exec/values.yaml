@@ -90,9 +90,11 @@ command:
 - /bin/sh
 - -c
 - |-
+  echo -n "Started: "; date
   kubectl get pods -l "$LABEL_SELECTOR" -n "$TARGET_NAMESPACE" -o name \
   | xargs -I{} -n1 kubectl -n "$TARGET_NAMESPACE" exec -c "$CONTAINER_NAME" {} -- find "$CHUNKS_DIR" -type f -mtime "+$RETENTION_DAYS" -print -delete \
   || true
+  echo -n "Finished: "; date
 
 targetNamespace: logging
 
