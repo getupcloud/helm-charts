@@ -11,6 +11,7 @@ echo Download repositories...
 ./helm-mirror repo/ harbor https://helm.goharbor.io &
 ./helm-mirror repo/ prometheus-msteams https://prometheus-msteams.github.io/prometheus-msteams/ &
 ./helm-mirror repo/ ot-helm https://ot-container-kit.github.io/helm-charts/ &
+./helm-mirror repo/ postfinance https://postfinance.github.io/kubelet-csr-approver/ &
 
 wait
 
