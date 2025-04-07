@@ -10,10 +10,13 @@ kubectl:
 
 serviceAccount:
   create: true
-  ## roleArn is Required if create=true
   roleArn: "" ## Example: arn:aws:iam::000000000000:role/ECRReadRole
   annotations: {}
   name: ""
+
+aws_credentials: {}
+# aws_access_key_id: XXXXXX
+# aws_secret_access_key: XXXXXX
 
 secret:
   # secret name to create for credentials

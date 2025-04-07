@@ -77,6 +77,14 @@ spec:
             env:
             - name: AWS_REGION
               value: {{ .Values.ecr.region }}
+            {{- if .Values.aws_credentials.aws_access_key_id }}
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.aws_credentials.aws_access_key_id }}
+            {{- end }}
+            {{- if .Values.aws_credentials.aws_secret_access_key }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.aws_credentials.aws_secret_access_key }}
+            {{- end }}
             image: {{ .Values.awscli.image.name }}:{{ .Values.awscli.image.tag }}
             imagePullPolicy: IfNotPresent
             name: get-token
