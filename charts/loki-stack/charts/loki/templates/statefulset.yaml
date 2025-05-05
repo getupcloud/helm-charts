@@ -128,8 +128,10 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: storage
+      {{- if .Values.persistence.annotations }}
       annotations:
         {{- toYaml .Values.persistence.annotations | nindent 8 }}
+      {{- end }}
     spec:
       accessModes:
         {{- toYaml .Values.persistence.accessModes | nindent 8 }}
