@@ -11,5 +11,8 @@ linkerd:
 rabbitmq:
   enabled: true
 
+istio:
+  enabled: true
+
 # Include extra files. Key is filename, value is json data
 extraDashboards: {}
