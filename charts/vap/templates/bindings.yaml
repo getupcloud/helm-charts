@@ -4,6 +4,13 @@
 {{- if .nameOverride }}
 {{- $policyName = .nameOverride }}
 {{- end }}
+
+{{- $validationActions := list "Warn" }}
+{{- if .validationActions }}
+{{- $validationActions = .validationActions }}
+{{- else if $.Values.enforce }}
+{{- $validationActions = list "Deny" "Audit" }}
+{{- end }}
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingAdmissionPolicyBinding
@@ -12,6 +19,7 @@ metadata:
 spec:
   {{- $spec := toYaml (default $.Values.bindingSpec .bindingSpec) }}
   {{- tpl $spec (dict "policyName" $policyName) | nindent 2 }}
+  validationActions: {{- toYaml $validationActions | nindent 2 }}
 {{- end }}
 {{- end }}
 {{- end }}

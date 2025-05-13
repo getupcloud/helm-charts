@@ -3,7 +3,8 @@
 # marvin-m-200-allowed-registries: fix expression. do not apply to all cases
 # marvin-m-409-deprecated-image-registry: parametrize
 
-defaultFailurePolicy: Ignore ## Fail|Ignore
+enforce: false
+defaultFailurePolicy: Fail ## Fail|Ignore
 
 params:
   settings:
@@ -136,10 +137,6 @@ bindingSpec:
         vap.getup.io/enabled: "true"
     objectSelector: {}
   policyName: '{{ .policyName }}'
-  validationActions:
-  - Warn
-  #- Audit
-  #- Deny
 
 policy:
 
@@ -159,9 +156,6 @@ policy:
         namespaceSelector: {}
         objectSelector: {}
       policyName: '{{ .policyName }}'
-      validationActions:
-      - Deny
-      - Audit
 
   marvin-m-100-host-process:
   marvin-m-101-host-namespaces:
