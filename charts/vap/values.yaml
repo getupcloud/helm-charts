@@ -158,6 +158,7 @@ policy:
         matchPolicy: Equivalent
         namespaceSelector: {}
         objectSelector: {}
+      policyName: '{{ .policyName }}'
       validationActions:
       - Deny
       - Audit
