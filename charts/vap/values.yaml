@@ -4,7 +4,7 @@
 # marvin-m-409-deprecated-image-registry: parametrize
 
 enforce: false
-defaultFailurePolicy: Fail ## Fail|Ignore
+defaultFailurePolicy: Ignore ## Fail|Ignore
 
 params:
   settings:
