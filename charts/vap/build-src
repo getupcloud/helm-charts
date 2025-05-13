@@ -47,10 +47,10 @@ function process_template()
 #      continue
 #    fi
 
-    if grep -qE 'params\.' "$path"; then
-      NEED_PARAMS=1
+    if grep -qw 'params\.settings' "$path"; then
+      NEED_PARAMS=true
     else
-      NEED_PARAMS=0
+      NEED_PARAMS=false
     fi
 
     if grep -wqE '(podSpec|podMeta|allContainers|podContainers|workloadContainers|cronjobContainers|variables)' "$path"; then

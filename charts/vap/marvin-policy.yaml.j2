@@ -33,7 +33,7 @@ spec:
       - UPDATE
     {%- endfor %}
 
-  {%- if needParams %}
+  {%- if needParams | bool %}
   paramKind:
    apiVersion: getup.io/v1
    kind: VAPConfig

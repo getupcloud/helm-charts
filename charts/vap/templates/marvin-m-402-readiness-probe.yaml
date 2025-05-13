@@ -30,9 +30,6 @@ spec:
       operations:
       - CREATE
       - UPDATE
-  paramKind:
-   apiVersion: v1
-   kind: VAPConfig
   variables:
   - name: podMeta
     expression: |-

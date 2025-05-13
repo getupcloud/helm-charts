@@ -20,6 +20,12 @@ spec:
   {{- $spec := toYaml (default $.Values.bindingSpec .bindingSpec) }}
   {{- tpl $spec (dict "policyName" $policyName) | nindent 2 }}
   validationActions: {{- toYaml $validationActions | nindent 2 }}
+  {{- if .needParams }}
+  paramRef:
+    name: {{ default "config" $.Values.params.name }}
+    #namespace: null
+    parameterNotFoundAction: Deny
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

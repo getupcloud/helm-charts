@@ -16,16 +16,23 @@ helm-install:
 	helm upgrade --install vap-system . -n vap-system --create-namespace
 
 helm-values:
-	@cd policies &>/dev/null
+	@cd templates &>/dev/null
 	echo policy:
-	for pol in $$(echo marvin-* | sort); do
-		echo "  $${pol%.*}:"
-		echo "    # enabled: false"
-		echo "    # failurePolicy: Fail"
-		echo "    # nameOverride: $${pol%.*}"
-		echo "    # bindingSpec: ## ValidatingAdmissionPolicyBinding.spec ##"
-		echo "    # validationsOverride: ## ValidatingAdmissionPolicy.spec.validations ##
+	echo
+	echo '  # To install a policy add it here. Each entry supports the following custom config:'
+	echo '  #'
+	echo '  # enabled:             bool. default=.Values.(marvin|kubescape).enabled'
+	echo '  # needParams:          bool. default=false'
+	echo '  # failurePolicy:       string(Fail|Ignore). default=.Values.defaultFailurePolicy'
+	echo '  # nameOverride:        string'
+	echo '  # bindingSpec:         ValidatingAdmissionPolicyBinding.spec. default=.Values.bindingSpec'
+	echo '  # validationsOverride: ValidatingAdmissionPolicy.spec.validations'
+	for pol in $$(echo getup-* marvin-* | sort); do
 		echo
+		echo "  $${pol%.*}:"
+		if grep -qw 'params\.settings' $$pol; then
+		echo "    needParams: true"
+		fi
 	done
 
 check-file-consistency: FILES = $(shell find vendor/marvin/internal/builtins/ -type f ! -name *_test.yaml -name *.yaml)
