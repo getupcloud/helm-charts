@@ -152,6 +152,16 @@ policy:
   # validationsOverride: ValidatingAdmissionPolicy.spec.validations
   #
 
+  getup-g-100-secure-namespace:
+    bindingSpec:
+      matchResources:
+        matchPolicy: Equivalent
+        namespaceSelector: {}
+        objectSelector: {}
+      validationActions:
+      - Deny
+      - Audit
+
   marvin-m-100-host-process:
   marvin-m-101-host-namespaces:
   marvin-m-102-privileged-containers:

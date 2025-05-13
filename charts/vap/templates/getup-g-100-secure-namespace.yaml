@@ -1,0 +1,30 @@
+{{- with or (get .Values.policy "getup-g-100-secure-namespace") (dict "_" "_") }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: {{ default "getup-g-100-secure-namespace" .nameOverride }}
+  labels:
+    {{- include "vap.labels" $ | nindent 4 }}
+spec:
+  failurePolicy: {{ default $.Values.defaultFailurePolicy .failurePolicy }}
+  matchConstraints:
+    matchPolicy: Equivalent
+    namespaceSelector: {}
+    objectSelector: {}
+    resourceRules:
+    - apiGroups:
+      - ""
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      resources:
+      - namespaces
+      scope: '*'
+  validations:
+  - expression: |-
+      has(object.metadata.labels) && "vap.getup.io/enabled" in object.metadata.labels
+    message: 'Namespace missing required label: vap.getup.io/enabled=true|false'
+    messageExpression: ''
+    reason: Invalid
+{{- end }}

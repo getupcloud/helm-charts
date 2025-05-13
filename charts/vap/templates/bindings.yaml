@@ -1,6 +1,6 @@
 {{- range $policyName, $policy := .Values.policy }}
-{{- with default (dict "_" "_") (get $.Values.policy $policyName) }}
-{{- if default true .enabled }}
+{{- with or (get $.Values.policy $policyName) (dict "_" "_") }}
+{{- if (default true .enabled) }}
 {{- if .nameOverride }}
 {{- $policyName = .nameOverride }}
 {{- end }}
@@ -10,7 +10,7 @@ kind: ValidatingAdmissionPolicyBinding
 metadata:
   name: {{ $policyName }}
 spec:
-  {{- $spec := toYaml (default .bindingSpec $.Values.bindingSpec) }}
+  {{- $spec := toYaml (default $.Values.bindingSpec .bindingSpec) }}
   {{- tpl $spec (dict "policyName" $policyName) | nindent 2 }}
 {{- end }}
 {{- end }}
