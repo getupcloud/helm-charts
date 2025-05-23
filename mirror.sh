@@ -18,7 +18,7 @@ wait
 echo Download karpenter from OCI...
 helm registry logout public.ecr.aws
 mkdir -p repo/karpenter
-for version in 0.35.{0..2} 0.35.{4..11} 0.36.{0..8} 0.37.{0..7}; do
+for version in 0.35.{0..2} 0.35.{4..11} 0.36.{0..8} 0.37.{0..7} 1.0.9; do
   if ! [ -s repo/karpenter/karpenter-${version}.tgz ]; then
     helm fetch oci://public.ecr.aws/karpenter/karpenter  --version $version --destination repo/karpenter
   fi
