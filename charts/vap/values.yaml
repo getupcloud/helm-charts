@@ -162,6 +162,8 @@ policy:
         objectSelector: {}
       policyName: '{{ .policyName }}'
 
+  getup-g-101-delete-protection.yaml:
+
   marvin-m-100-host-process:
 
   marvin-m-101-host-namespaces:

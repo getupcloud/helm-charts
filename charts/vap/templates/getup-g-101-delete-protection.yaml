@@ -1,0 +1,34 @@
+{{- with or (get .Values.policy "getup-g-101-delete-protection") (dict "_" "_") }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: {{ default "getup-g-101-delete-protection" .nameOverride }}
+  labels:
+    {{- include "vap.labels" $ | nindent 4 }}
+spec:
+  failurePolicy: {{ default $.Values.defaultFailurePolicy .failurePolicy }}
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - "*"
+      apiVersions:
+      - "*"
+      resources:
+      - "*"
+      operations:
+      - DELETE
+  validations:
+  - expression: |-
+      has(oldObject.metadata.annotations) &&
+      !(
+        "getup.io/delete-lock" in oldObject.metadata.annotations &&
+        oldObject.metadata.annotations["getup.io/delete-lock"] == "true"
+      )
+    message: 'Object locked for deletion by annotation getup.io/delete-lock=true'
+    messageExpression: |-
+      oldObject.kind + " "
+      + (has(oldObject.metadata.namespace) ? (oldObject.metadata.namespace+"/") : "")
+      + oldObject.metadata.name
+      + " locked for deletion by annotation \"getup.io/delete-lock=true\""
+    reason: Invalid
+{{- end }}
