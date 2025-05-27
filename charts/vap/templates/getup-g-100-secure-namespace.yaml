@@ -23,8 +23,9 @@ spec:
       scope: '*'
   validations:
   - expression: |-
-      has(object.metadata.labels) && "vap.getup.io/enabled" in object.metadata.labels
-    message: 'Namespace missing required label: vap.getup.io/enabled=true|false'
+      (has(object.metadata.labels) && "vap.getup.io/enabled" in object.metadata.labels) ||
+      (has(object.metadata.annotations) && "vap.getup.io/enabled" in object.metadata.annotations)
+    message: 'Namespace missing required label or annotation: vap.getup.io/enabled=true|false'
     messageExpression: ''
     reason: Invalid
 {{- end }}

@@ -17,18 +17,17 @@ spec:
       - "*"
       operations:
       - DELETE
+  matchConditions:
+    - name: hasDeleteLockAnnotation
+      expression: "has(oldObject.metadata.annotations) && 'vap.getup.io/delete-lock' in oldObject.metadata.annotations"
   validations:
   - expression: |-
-      has(oldObject.metadata.annotations) &&
-      !(
-        "getup.io/delete-lock" in oldObject.metadata.annotations &&
-        oldObject.metadata.annotations["getup.io/delete-lock"] == "true"
-      )
-    message: 'Object locked for deletion by annotation getup.io/delete-lock=true'
+      oldObject.metadata.annotations["vap.getup.io/delete-lock"] != "true"
+    message: 'Object locked for deletion by annotation vap.getup.io/delete-lock=true'
     messageExpression: |-
       oldObject.kind + " "
       + (has(oldObject.metadata.namespace) ? (oldObject.metadata.namespace+"/") : "")
       + oldObject.metadata.name
-      + " locked for deletion by annotation \"getup.io/delete-lock=true\""
+      + " locked for deletion by annotation \"vap.getup.io/delete-lock=true\""
     reason: Invalid
 {{- end }}

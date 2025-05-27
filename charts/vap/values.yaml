@@ -133,7 +133,7 @@ params:
 
 bindingSpec:
   matchResources:
-    # matchPolicy: Equivalent
+    matchPolicy: Equivalent
     namespaceSelector:
       matchLabels:
         vap.getup.io/enabled: "true"
@@ -154,6 +154,7 @@ policy:
   # validationsOverride: ValidatingAdmissionPolicy.spec.validations
   #
 
+  # getup-g-100-secure-namespace: forbids creating namespace without annotations vap.getup.io/enabled=true
   getup-g-100-secure-namespace:
     bindingSpec:
       matchResources:
@@ -162,7 +163,14 @@ policy:
         objectSelector: {}
       policyName: '{{ .policyName }}'
 
-  getup-g-101-delete-protection.yaml:
+  # getup-g-101-delete-protection: block deletion of objects with annotation vap.getup.io/delete-lock=true
+  getup-g-101-delete-protection:
+    bindingSpec:
+      matchResources:
+        matchPolicy: Equivalent
+        namespaceSelector: {}
+        objectSelector: {}
+      policyName: '{{ .policyName }}'
 
   marvin-m-100-host-process:
 
