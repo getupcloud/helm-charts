@@ -20,7 +20,7 @@ spec:
           containers:
           - command:
             - /bin/bash
-            - -xce
+            - -ec
             - |-
               SECRET_NAMESPACES=( $(</run/secrets/kubernetes.io/serviceaccount/namespace) )
               if [ -n "$NAMESPACE_LABEL_SELECTOR" ]; then
@@ -40,7 +40,7 @@ spec:
               | kubectl patch -f - -p '
                 metadata:
                   annotations:
-                    {{- toYaml .Values.secret.annotations | nindent 20 }}' \
+                    {{- toYaml .Values.secret.annotations | nindent 20 }}'
                   labels:
                     {{- toYaml .Values.secret.labels | nindent 20 }}' \
                 > /token/secret.yaml
