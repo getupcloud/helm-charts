@@ -37,7 +37,7 @@ spec:
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
                 --dry-run=client --output json --save-config \
-              | kubectl patch -f - -p '{
+              | kubectl patch -f - -o json -p '{
                   "metadata": {
                     "annotations":
                       {{- toYaml .Values.secret.annotations | nindent 22 }}
@@ -45,11 +45,14 @@ spec:
                       {{- toYaml .Values.secret.labels | nindent 22 }}
                   }
                 }' \
-              > /token/secret.yaml
+              > /token/secret.json
 
+              echo Secret content:
+              cat /token/secret.json | jq -M '.data[".dockerconfigjson"]="[REDACTED]"|.metadata.annotations["kubectl.kubernetes.io/last-applied-configuration"]="[REDACTED]"'
+              echo
               for namespace in "${SECRET_NAMESPACES[@]}"; do
                 echo Creating secret: $namespace/$SECRET_NAME
-                kubectl apply -f /token/secret.yaml --namespace ${namespace} || true
+                kubectl apply -f /token/secret.json --namespace ${namespace} || true
               done
 
               rm -f /token/secret.yaml
