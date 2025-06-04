@@ -37,7 +37,7 @@ spec:
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
                 --dry-run=client --output json --save-config \
-              | kubectl patch -f - -o json -p '{
+              | kubectl patch --local -f - -o json -p '{
                   "metadata": {
                     "annotations": {{ toJson .Values.secret.annotations }},
                     "labels": {{ toJson .Values.secret.labels }}
