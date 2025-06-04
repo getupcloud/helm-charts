@@ -20,7 +20,7 @@ spec:
           containers:
           - command:
             - /bin/bash
-            - -xce
+            - -ec
             - |-
               SECRET_NAMESPACES=( $(</run/secrets/kubernetes.io/serviceaccount/namespace) )
               if [ -n "$NAMESPACE_LABEL_SELECTOR" ]; then
@@ -36,14 +36,16 @@ spec:
                 --docker-server="$ECR_REGISTRY" \
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
-                --dry-run=client --output yaml --save-config \
-              | kubectl patch -f - -p '
-                metadata:
-                  annotations:
-                    {{- toYaml .Values.secret.annotations | nindent 20 }}' \
-                  labels:
-                    {{- toYaml .Values.secret.labels | nindent 20 }}' \
-                > /token/secret.yaml
+                --dry-run=client --output json --save-config \
+              | kubectl patch -f - -p '{
+                  "metadata": {
+                    "annotations":
+                      {{- toYaml .Values.secret.annotations | nindent 22 }}
+                    "labels":
+                      {{- toYaml .Values.secret.labels | nindent 22 }}
+                  }
+                }' \
+              > /token/secret.yaml
 
               for namespace in "${SECRET_NAMESPACES[@]}"; do
                 echo Creating secret: $namespace/$SECRET_NAME
