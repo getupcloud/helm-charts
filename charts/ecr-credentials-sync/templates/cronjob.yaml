@@ -22,18 +22,28 @@ spec:
             - /bin/bash
             - -xce
             - |-
-              SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_LABEL_SELECTOR" -o name | cut -f2 -d/) )
+              SECRET_NAMESPACES=( $(</run/secrets/kubernetes.io/serviceaccount/namespace) )
+              if [ -n "$NAMESPACE_LABEL_SELECTOR" ]; then
+                SECRET_NAMESPACES=( $( kubectl get namespaces -l "$NAMESPACE_LABEL_SELECTOR" -o name | cut -f2 -d/) )
 
-              if [ ${#SECRET_NAMESPACES[*]} -eq 0 ]; then
-                echo "No namespaces found with labels [$NAMESPACE_LABEL_SELECTOR]"
-                exit 0
+                if [ ${#SECRET_NAMESPACES[*]} -eq 0 ]; then
+                  echo "No namespaces found with labels [$NAMESPACE_LABEL_SELECTOR]"
+                  exit 0
+                fi
               fi
 
               kubectl create secret docker-registry $SECRET_NAME \
                 --docker-server="$ECR_REGISTRY" \
                 --docker-username=AWS \
                 --docker-password="$(</token/ecr-token)" \
-                --dry-run=client --output yaml --save-config > /token/secret.yaml
+                --dry-run=client --output yaml --save-config \
+              | kubectl patch -f - -p '
+                metadata:
+                  annotations:
+                    {{- toYaml .Values.secret.annotations | nindent 20 }}' \
+                  labels:
+                    {{- toYaml .Values.secret.labels | nindent 20 }}' \
+                > /token/secret.yaml
 
               for namespace in "${SECRET_NAMESPACES[@]}"; do
                 echo Creating secret: $namespace/$SECRET_NAME
@@ -47,7 +57,11 @@ spec:
             - name: NAMESPACE_LABEL_SELECTOR
               {{- $labels := list }}
               {{- range $k, $v := .Values.secret.namespaceLabelSelector }}
+                {{- if eq $v "" }}
+                {{- $labels = append $labels (print $k) }}
+                {{- else }}
                 {{- $labels = append $labels (print $k "=" $v) }}
+                {{- end }}
               {{- end }}
               value: "{{ join "," $labels }}"
             - name: ECR_REGISTRY

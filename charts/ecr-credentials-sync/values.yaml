@@ -19,12 +19,23 @@ aws_credentials: {}
 # aws_secret_access_key: XXXXXX
 
 secret:
-  # secret name to create for credentials
+  # secret name to store the docker credentials
   name: ecr-credentials
-  # labelselector for namespaces where to create credential secrets
+
+  # labelselector for namespace(s) where to create credential secret(s)
+  # An empty value means to create only inside the current namespace
   namespaceLabelSelector: {}
-  #  getup.io/ecr-credentials-sync: "true"
-  #  kubernetes.io/metadata.name: "flux-system"
+  #  kubernetes.io/metadata.name: ""                # all namespaces
+  #  getup.io/ecr-credentials-sync: "true"          # select all namespaces with this label
+  #  kubernetes.io/metadata.name: "flux-system"     # namespace `default` only
+
+  # Annotations to add to secret
+  annotations: {}
+  #  kubed.appscode.com/sync: ""           ## use kubed to sync across all namespaces
+  #  kubed.appscode.com/sync: "app=web"    ## use kubed to sync only into namespaces with label app=web
+
+  # Labels to add to secret
+  labels: {}
 
 awsAccountId: "000000000000"
 
