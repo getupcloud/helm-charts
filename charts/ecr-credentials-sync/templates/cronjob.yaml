@@ -39,10 +39,8 @@ spec:
                 --dry-run=client --output json --save-config \
               | kubectl patch -f - -o json -p '{
                   "metadata": {
-                    "annotations":
-                      {{- toYaml .Values.secret.annotations | nindent 22 }}
-                    "labels":
-                      {{- toYaml .Values.secret.labels | nindent 22 }}
+                    "annotations": {{ toJson .Values.secret.annotations }},
+                    "labels": {{ toJson .Values.secret.labels }}
                   }
                 }' \
               > /token/secret.json
