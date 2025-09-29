@@ -5,7 +5,7 @@ awscli:
 
 kubectl:
   image:
-    name: bitnami/kubectl
+    name: bitnamilegacy/kubectl
     tag: "" # discovered on install
 
 serviceAccount:
