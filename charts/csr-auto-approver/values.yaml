@@ -11,7 +11,7 @@ cronjob:
   schedule: "* * * * *"
 
 image:
-  repository: bitnami/kubectl
+  repository: bitnamilegacy/kubectl
   pullPolicy: IfNotPresent
   # tag defaults to kubernetes version
   tag: ""
